@@ -10,8 +10,9 @@
 # CONFIG_FILE (optional, defaults to ~/.edgerc, only settable via command line or env var)
 
 import ConfigParser,os,sys
-import urllib
 import httplib
+import urllib
+import urllib2
 import logging
 import uuid
 import hashlib
@@ -106,12 +107,16 @@ class EdgeGridClient:
 		params = ''
 		if parameters:
 			params = urllib.urlencode(parameters)
+		if parameters and http_method == 'GET':
+			url = '?'.join([url,params])
+			path = '?'.join([path,params])
 
 		auth_header = signer.get_auth_header(url, http_method, headers, data)
 
 		headers = {"Authorization": auth_header}
+		httplib.HTTPConnection.debuglevel = 1
 		conn = httplib.HTTPSConnection(self.host)
-		conn.request(http_method, path, params, headers)
+		conn.request(http_method, path, '', headers)
 		response = conn.getresponse()
 		if response.status != 200:
 			print "Bad response code: %s (%s)" % (response.status, response.reason)
