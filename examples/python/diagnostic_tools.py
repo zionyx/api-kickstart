@@ -3,6 +3,10 @@
 import EdgeClient
 
 client = EdgeClient.EdgeGridClient()
+return_object = client.make_call('/diagnostic-tools/v1/locations','GET')
+location = return_object['locations'][0]
+print location
+print return_object
 
 # Get locations
 # Pick first location

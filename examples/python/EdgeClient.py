@@ -11,12 +11,14 @@
 
 import ConfigParser,os,sys
 import urllib
+import httplib
 import logging
 import uuid
 import hashlib
 import hmac
 import base64
 import re
+import json
 from time import gmtime, strftime
 from urlparse import urlparse, parse_qsl, urlunparse
 
@@ -89,56 +91,65 @@ class EdgeGridClient:
 		else: # They must have just put in the string
 			self.base_url = "https://%s.luna.akamaiapis.net" % self.host
 			
-	def make_call(path, http_method, parameters, options):
-		request = requests.Request(
-			method = http_method,
-            		url=urljoin(self.base_url,path),   
-        	)
-		try:
-            		auth_header = auth.make_auth_header(
-                	request.prepare(), self.testdata['timestamp'], self.testdata['nonce']
-            	)
-
-        	except Exception, e:
-            		logger.debug('Got exception from make_auth_header', exc_info=True)
-            		return
-
+	def make_call(self, path, http_method, parameters=None, options=None):
 		signer = EGSigner(
 		    self.host,
                     self.client_token,
                     self.access_token,
 	   	    self.client_secret,
-                    self.max-body)
+		    self.verbose,
+                    self.max_body)
+		url = ''.join([self.base_url,path])
+		headers = []
+		data = None
 
-		auth_header = signer.get_auth_header(url, method, headers, data)
+		params = ''
+		if parameters:
+			params = urllib.urlencode(parameters)
+
+		auth_header = signer.get_auth_header(url, http_method, headers, data)
+
+		headers = {"Authorization": auth_header}
+		conn = httplib.HTTPSConnection(self.host)
+		conn.request(http_method, path, params, headers)
+		response = conn.getresponse()
+		if response.status != 200:
+			print "Bad response code: %s (%s)" % (response.status, response.reason)
+			return
+		data = json.loads(response.read())
+		return data	
 		# Grab and process the options
 		# Make the call
 		# Grab the results and add to the object
 
 class EGSigner(object):
-  def __init__(self, host, client_token, access_token, secret, max_body, signed_headers=None):
+  def __init__(self, host, client_token, access_token, secret, verbose, max_body, signed_headers=None):
     self.host = host
     self.client_token = client_token
     self.access_token = access_token
     self.secret = secret
+    self.verbose = verbose
     self.max_body = max_body
     self.signed_headers = signed_headers
 
+  def sign(self, data, key, algorithm):
+    result = hmac.new(key, data, algorithm)
+    return result.digest()
 
-  def get_auth_header(self, url, method, headers, data):  
+  def get_auth_header(self, url, method, headers=None, data=None):  
     timestamp = strftime("%Y%m%dT%H:%M:%S+0000", gmtime())
 
     request_data = self.get_request_data(url, method, headers, data)
     auth_data = self.get_auth_data(timestamp)
     request_data.append(auth_data)
     string_to_sign = '\t'.join(request_data)
-    if verbose: print "String-to-sign: %s" %(string_to_sign)
+    if self.verbose: print "String-to-sign: %s" %(string_to_sign)
 
-    key_bytes = sign(bytes(timestamp), bytes(self.secret), hashlib.sha256)
+    key_bytes = self.sign(bytes(timestamp), bytes(self.secret), hashlib.sha256)
     signing_key = base64.b64encode(key_bytes)
-    signature_bytes = sign(bytes(string_to_sign), bytes(signing_key), hashlib.sha256)
+    signature_bytes = self.sign(bytes(string_to_sign), bytes(signing_key), hashlib.sha256)
     signature = base64.b64encode(signature_bytes)
-    auth_header = 'Authorization: %ssignature=%s' %(auth_data, signature)
+    auth_header = '%ssignature=%s' %(auth_data, signature)
     return auth_header
 
 
@@ -151,7 +162,7 @@ class EGSigner(object):
     auth_fields.append('')
     auth_data = ';'.join(auth_fields)
     auth_data = 'EG1-HMAC-SHA256 ' + auth_data
-    if verbose: print "Auth data: %s" %(auth_data)
+    if self.verbose: print "Auth data: %s" %(auth_data)
     return auth_data
 
 
@@ -167,18 +178,30 @@ class EGSigner(object):
     request_data.append(method)
     
     parsed_url = urlparse(url)
-    requst_data.append(parsed_url.scheme)
-    requst_data.append(self.host)
-    requst_data.append(get_relative_url(url))
-    requst_data.append(self.get_canonicalize_headers(headers))
-    requst_data.append(self.get_content_hash(method, data))
-    return requst_data
+    request_data.append(parsed_url.scheme)
+    request_data.append(self.host)
+    request_data.append(self.get_relative_url(url))
+    request_data.append(self.get_canonicalize_headers(headers))
+    request_data.append(self.get_content_hash(method, data))
+    return request_data
+
+  def get_relative_url(self,url):
+    relative_url = ''
+    auth_index = url.find('//')
+    path_index = url.find('/', auth_index+2)
+    if path_index == -1:
+      relative_url = '/'
+    else:
+      relative_url = url[path_index:]
+    return relative_url
 
 
   def get_canonicalize_headers(self, headers):
     canonical_header = '' 
     headers_values = []
-    if verbose: print self.signed_headers
+    if headers == None or self.signed_headers == None:
+	return '' 
+    if self.verbose: print self.signed_headers
     for header_name in self.signed_headers:
       header_value = ''
       if header_name in headers:
@@ -191,7 +214,7 @@ class EGSigner(object):
         headers_values.append(canonical_header)
     headers_values.append('')
     canonical_header = '\t'.join(headers_values)
-    if verbose: print "Canonicalized header: %s" %(canonical_header)
+    if self.verbose: print "Canonicalized header: %s" %(canonical_header)
     return canonical_header
 
   def get_content_hash(self, method, data):
@@ -199,9 +222,9 @@ class EGSigner(object):
 
     if method == 'POST':
         if len(data) > self.max_body:
-          if verbose: print "Data length %s larger than maximum %s " % (len(data),self.max_body)
+          if self.verbose: print "Data length %s larger than maximum %s " % (len(data),self.max_body)
           data = data[0:self.max_body]
-          if verbose: print "Data truncated to %s for computing the hash" % len(data)
+          if self.verbose: print "Data truncated to %s for computing the hash" % len(data)
 
         # compute the hash
         md = hashlib.sha256(data).digest()
