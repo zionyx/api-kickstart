@@ -12,7 +12,7 @@
 	  export CLIENT_SECRET=xxxx
 	  export ACCESS_TOKEN=xxxx
 	  export HOST=xxxx.luna.akamaiapis.net
-	In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE 
+	In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE
 	in environment variables or on the command line
 	[default]
 	host = xxxx.luna.akamaiapis.net
@@ -22,12 +22,22 @@
 	max-body = 2048
 """
 
-import requests
+import requests, logging, json
+from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 session = requests.Session()
+
+# Uncomment to enable debugging for the requests module
+# import httplib as http_client
+# http_client.HTTPConnection.debuglevel = 1
+# logging.basicConfig()
+# logging.getLogger().setLevel(logging.DEBUG)
+# requests_log = logging.getLogger("requests.packages.urllib3")
+# requests_log.setLevel(logging.DEBUG)
+# requests_log.propagate = True
 
 # Set these in the script if desired, or
 # use the config options listed above
@@ -49,16 +59,26 @@ session.auth = EdgeGridAuth(
             access_token=config.access_token
 )
 
+# Request locations that support the diagnostic-tools
+print
+print "Requesting locations that support the diagnostic-tools API.\n"
 baseurl = 'https://%s/' % config.host
 location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
-location = location_result.json()['locations'][0]
-print location
+#print json.dumps(location_result.json(), indent=2)
 
+# Select a random locaiton to host our request
+print "There are %s locations that can run dig in the Akamai Network" % len(location_result.json()['locations'])
+rand_location = randint(0, len(location_result.json()['locations']))
+location = location_result.json()['locations'][rand_location]
+print "We will make our call from " + location + "\n"
+
+# Request the dig request the {OPEN} Developer Site IP informantion
+print "Running dig from " + location
 dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
 parameter_string = urllib.urlencode(dig_parameters)
-
 path = ''.join(['/diagnostic-tools/v1/dig?',parameter_string])
-
 dig_result = session.get(urljoin(baseurl,path))
 
-print dig_result.json()
+# Display the results from dig
+print "Raw dig response: \n"
+print json.dumps(dig_result.json(), indent=2)
