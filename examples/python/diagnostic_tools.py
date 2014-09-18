@@ -52,17 +52,31 @@ config_values = {
 # use the config
 config = EdgeGridConfig(config_values)
 
-# Set the config options
+# Used only for internal testing
 session.auth = EdgeGridAuth(
             client_token=config.client_token,
             client_secret=config.client_secret,
-            access_token=config.access_token
+            access_token=config.access_token,
+	    testurl = '%s://%s' % (config.scheme, config.host)
 )
+
+# Set the config options
+#session.auth = EdgeGridAuth(
+#            client_token=config.client_token,
+#            client_secret=config.client_secret,
+#            access_token=config.access_token
+#)
+
+if config.headers:
+	session.headers.update(config.headers)
 
 # Request locations that support the diagnostic-tools
 print
 print "Requesting locations that support the diagnostic-tools API.\n"
-baseurl = 'https://%s/' % config.host
+# Needed for testing on QA box
+baseurl = '%s://%s/' % (config.scheme, config.testghost)
+
+#baseurl = '%s://%s/' % (config.scheme, config.host)
 location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
 #print json.dumps(location_result.json(), indent=2)
 

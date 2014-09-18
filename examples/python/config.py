@@ -34,7 +34,7 @@ class EdgeGridConfig():
 	def __init__(self, config_values):
 		
 		required_options = ['client_token','client_secret','host','access_token','path']
-		optional_options = {'max_body':1024,'verbose':False}
+		optional_options = {'max_body':1024,'verbose':False, 'schema':'https'}
 		arguments = {}
 		for argument in required_options:
 			if argument in config_values and config_values[argument]:
@@ -51,7 +51,7 @@ class EdgeGridConfig():
 		# Environment variables are next
 		for key in os.environ:
 			lower_key = key.lower()
-			if lower_key not in arguments:
+			if lower_key not in arguments and (lower_key in required_options or lower_key in optional_options):
 				arguments[lower_key] = os.environ[key]
 
 		if "config_file" not in arguments:
@@ -67,6 +67,14 @@ class EdgeGridConfig():
 				# ConfigParser lowercases magically
 				if key not in arguments:
 					arguments[key] = value
+				if key == 'headers':
+					arguments['headers'] = {}
+					for header in value.split(','):
+						headkey,headvalue = header.split(':')
+						arguments['headers'][headkey] = headvalue
+				if key == 'testghost':
+					arguments['testghost'] = value
+			
 		missing_args = []
 		for argument in required_options:
 			if argument not in arguments:
