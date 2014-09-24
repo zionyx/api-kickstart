@@ -29,15 +29,17 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 session = requests.Session()
+debug = False
 
-# Uncomment to enable debugging for the requests module
-# import httplib as http_client
-# http_client.HTTPConnection.debuglevel = 1
-# logging.basicConfig()
-# logging.getLogger().setLevel(logging.DEBUG)
-# requests_log = logging.getLogger("requests.packages.urllib3")
-# requests_log.setLevel(logging.DEBUG)
-# requests_log.propagate = True
+# Enable debugging for the requests module
+if debug:
+  import httplib as http_client
+  http_client.HTTPConnection.debuglevel = 1
+  logging.basicConfig()
+  logging.getLogger().setLevel(logging.DEBUG)
+  requests_log = logging.getLogger("requests.packages.urllib3")
+  requests_log.setLevel(logging.DEBUG)
+  requests_log.propagate = True
 
 # Set these in the script if desired, or
 # use the config options listed above
@@ -78,7 +80,7 @@ baseurl = '%s://%s/' % (config.scheme, config.testghost)
 
 #baseurl = '%s://%s/' % (config.scheme, config.host)
 location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
-#print json.dumps(location_result.json(), indent=2)
+if debug: print ">>>\n" + json.dumps(location_result.json(), indent=2) + "\n<<<\n"
 
 # Select a random locaiton to host our request
 print "There are %s locations that can run dig in the Akamai Network" % len(location_result.json()['locations'])
@@ -94,5 +96,5 @@ path = ''.join(['/diagnostic-tools/v1/dig?',parameter_string])
 dig_result = session.get(urljoin(baseurl,path))
 
 # Display the results from dig
-print "Raw dig response: \n"
-print json.dumps(dig_result.json(), indent=2)
+if debug: print ">>>\n" + json.dumps(dig_result.json(), indent=2) + "\n<<<\n"
+print dig_result.json()['dig']['result']
