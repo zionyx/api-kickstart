@@ -68,7 +68,7 @@ location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations')
 
 # Select a random locaiton to host our request
 print "There are %s locations that can run dig in the Akamai Network" % len(location_result.json()['locations'])
-rand_location = randint(0, len(location_result.json()['locations']))
+rand_location = randint(0, len(location_result.json()['locations'])-1)
 location = location_result.json()['locations'][rand_location]
 print "We will make our call from " + location + "\n"
 
