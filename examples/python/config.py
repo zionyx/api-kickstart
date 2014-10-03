@@ -52,7 +52,7 @@ class EdgeGridConfig():
 	def __init__(self, config_values, configuration):
 		
 		required_options = ['client_token','client_secret','host','access_token']
-		optional_options = {'max_body':1024,'verbose':False}
+		optional_options = {'max_body':131072,'verbose':False}
 		options = Set(required_options) | Set(optional_options.keys())
 		arguments = {}
 		for argument in required_options:
