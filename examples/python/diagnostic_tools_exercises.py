@@ -12,6 +12,11 @@
 	  export CLIENT_SECRET=xxxx
 	  export ACCESS_TOKEN=xxxx
 	  export HOST=xxxx.luna.akamaiapis.net
+
+    Optionally:
+      export AKA_VERBOSE=True
+      export AKA_MAX_BODY=2048
+
 	In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE
 	in environment variables or on the command line
 	[default]
@@ -42,7 +47,7 @@ config_values = {
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig(config_values,"default")
+config = EdgeGridConfig(config_values,"broken")
 if hasattr(config, 'verbose'):
 	debug = config.verbose
 
@@ -64,14 +69,18 @@ session.auth = EdgeGridAuth(
             access_token=config.access_token
 )
 
-if hasattr(config, 'headers'):
-	session.headers.update(config.headers)
+# Set the baseurl for all calls
+baseurl = '%s://%s/' % ('https', config.host)
+
+# Get our company information using billing-usage
+#id_result = session.get(urljoin(baseurl, '/billing-usage/v1/reportSources'))
+#cid = id_result.json()['contents'][0]['id']
+#if debug: print "Found %s for contract id" % cid
 
 # Request locations that support the diagnostic-tools
 print
 print "Requesting locations that support the diagnostic-tools API.\n"
 
-baseurl = '%s://%s/' % ('https', config.host)
 location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
 if debug: print ">>>\n" + json.dumps(location_result.json(), indent=2) + "\n<<<\n"
 
@@ -83,7 +92,7 @@ print "We will make our call from " + location + "\n"
 
 # Request the dig request the {OPEN} Developer Site IP informantion
 print "Running dig from " + location
-dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
+dig_parameters = { "hostname":"developer.akamai.com.", "location":location, "queryType":"A" }
 parameter_string = urllib.urlencode(dig_parameters)
 path = ''.join(['/diagnostic-tools/v1/dig?',parameter_string])
 dig_result = session.get(urljoin(baseurl,path))

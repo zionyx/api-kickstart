@@ -1,13 +1,30 @@
 # Python edgegrid module
-# Handles command line options and environment variables
-# Options: 
-# CLIENT_TOKEN
-# CLIENT_SECRET
-# HOST
-# ACCESS_TOKEN
-# MAX_BODY (optional)
-# VERBOSE (optional)
-# CONFIG_FILE (optional, defaults to ~/.edgerc, only settable via command line or env var)
+"""
+    This requires the following to be set (in order of priority to the script):
+    CLIENT_TOKEN, CLIENT_SECRET, ACCESS_TOKEN, HOST
+    optionally you can set VERBOSE to True or max-body to a different buffer size
+
+    These can all be set (case insensitive) in the following ways:
+    On the command line:
+      --client_token=xxxxx --client_secret=xxxx access_token=xxxx, host=xxxx
+    In environment variables:
+      export AKA_CLIENT_TOKEN=xxxx
+      export AKA_CLIENT_SECRET=xxxx
+      export AKA_ACCESS_TOKEN=xxxx
+      export AKA_HOST=xxxx.luna.akamaiapis.net
+
+    Optionally:
+      export AKA_VERBOSE=True
+      export AKA_MAX_BODY=2048
+    In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE
+    in environment variables or on the command line
+    [default]
+    host = xxxx.luna.akamaiapis.net
+    client_token = xxxx
+    client_secret = xxxx
+    access_token = xxxx
+    max-body = 2048
+"""
 
 import ConfigParser,os,sys
 import httplib
@@ -20,6 +37,7 @@ import hmac
 import base64
 import re
 import json
+from sets import Set
 from time import gmtime, strftime
 from urlparse import urlparse, parse_qsl, urlunparse
 
@@ -31,10 +49,11 @@ logger = logging.getLogger(__name__)
 
 class EdgeGridConfig():
 
-	def __init__(self, config_values):
+	def __init__(self, config_values, configuration):
 		
-		required_options = ['client_token','client_secret','host','access_token','path']
+		required_options = ['client_token','client_secret','host','access_token']
 		optional_options = {'max_body':1024,'verbose':False}
+		options = Set(required_options) | Set(optional_options.keys())
 		arguments = {}
 		for argument in required_options:
 			if argument in config_values and config_values[argument]:
@@ -49,8 +68,9 @@ class EdgeGridConfig():
 				arguments[arg] = val
 
 		# Environment variables are next
-		for key in os.environ:
-			lower_key = key.lower()
+        	akamai_options = Set(['AKA_%s' % option.upper() for option in options])
+		for key in Set(os.environ) & akamai_options:
+			lower_key = re.sub('AKA_','',key).lower()
 			if lower_key not in arguments:
 				arguments[lower_key] = os.environ[key]
 
@@ -63,10 +83,13 @@ class EdgeGridConfig():
 		if os.path.isfile(arguments["config_file"]):
 			config = ConfigParser.ConfigParser()
 			config.readfp(open(arguments["config_file"]))
-			for key, value in config.items("default"):
+			for key, value in config.items(configuration):
 				# ConfigParser lowercases magically
 				if key not in arguments:
 					arguments[key] = value
+		print arguments['host']
+		arguments['host'] = re.sub(r'"?https?:\/\/(.*)/+?"?$', r'\1', arguments['host'])
+		print arguments['host']
 		missing_args = []
 		for argument in required_options:
 			if argument not in arguments:
@@ -75,6 +98,7 @@ class EdgeGridConfig():
 		if len(missing_args) > 0:
 			print "Missing args: %s" % missing_args
 			exit()
+
 
 		for key in optional_options:
 			lower_key = key.lower()
