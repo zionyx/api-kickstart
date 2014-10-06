@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Akamai API Bootcamp</title>
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.css" rel="stylesheet">
+  <link href="css/docs.min.css" rel="stylesheet">
+  <link href="css/sticky-footer.css" rel="stylesheet">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+  <style>
+    a, a:hover {color: #7C7C7C;}
+  	div#profile-container { width: 600px; padding-left: 100px; display: flex; justify-content: space-between; }
+  	div#profile-container figure {
+  	  display: inline-block;
+  	}
+  	div#profile-container figure div {
+  	  border-radius: 50%;
+  	  overflow: hidden;
+  	  background-blend-mode: luminosity;
+  	  border: 5px solid #444;
+  	  width: 10rem; height: 10rem;
+  	  transition: .4s linear;
+  	}
+  	div#profile-container figure div:hover {
+  	  border: 8px solid #aaa;
+  	  background-color: transparent;
+  	}
+  	div#profile-container figcaption {
+  	  margin-top: 1rem;
+  	  text-align: center;
+  	}
+  	.kirsten {
+  	  background: url(./img/kirsten_Jones.jpg) no-repeat center
+  	    hsl(200,50%,50%);
+  	  background-size: cover;
+  	}
+  	.darius {
+  	  background: url(./img/266454.png) no-repeat center
+  	    hsl(200,50%,50%);
+  	  background-size: cover;
+  	}
+  	.michael {
+  	  background: url(./img/aglietti.jpg) no-repeat center
+  	    hsl(200,50%,50%);
+  	  background-size: cover;
+  	}
+  </style>
+
+</head>
+<body>
+  <div class="navbar navbar-default navbar-static-top min-480" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <div class="inline-block">
+          <a class="brand akamai" href="http://www.akamai.com">Akamai</a>
+        </div>
+        <a class="navbar-brand open-logo" href="http://developer.akamai.com/"><span class="gray">{</span>Open<span class="gray">}</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="page-header">
+      <h1>Welcome to the Akamai API Bootcamp!</h1>
+    </div>
+
+    <p class="lead">This worksheet is designed to give you all the context you need to get the most out of our workshop - and has links to supplemental information if you want to dive deeper into the topics we're presenting.
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Introduction - 9:00 to 9:15 </h4>
+      <p class="lead">To start off the day we'll introduce each of the team members, give you an overview of what we'll be covering, and tell you how the day will be structured.</p>
+      <br />
+
+    	<div id="profile-container">
+    		<figure>
+    		  <div class="kirsten"></div>
+    		  <figcaption>Kirsten Hunter</figcaption>
+    		</figure>
+    		<figure>
+    		  <div class="darius"></div>
+    		  <figcaption>Darius Kazemi</figcaption>
+    		</figure>
+    		<figure>
+    		  <div class="michael"></div>
+    		<figcaption>Michael Aglietti</figcaption>
+    		</figure>
+    	</div>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 1: The Akamai Open Initiative - 9:15 - 10:00 </h4>
+      <p>Presented by Michael Aglietti</p>
+      <p class="lead">After the introduction, we'll jump right into the Akamai Open Initiative.</p>
+      <p> Michael will present the goals and general roadmap for the Open initiative.  The API First plan will be featured and explained.  Self service (Luna), automation and integration (APIs), developer relations goals and plans will be covered, followed by a high level discussion of the API Bootcamp.</p>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 2: Getting Started - 10:00 - 11:00</h4>
+      <p>Presented by: Kirsten Hunter, Darius Kazemi</p>
+      <p class="lead">Let's get started with a sample application, which we'll use throughout the workshop to demonstrate the topics we're covering.</p>
+      <p>Pre-requisites for the workshop (we'll help you get them done):</p>
+      <ul>
+        <li>Python 2.7</li>
+        <li><a href="https://pypi.python.org/pypi/setuptools">Download and install Setuptools</a></li>
+        <li>If for some reason we have trouble getting your system set up we will pair you with someone who has a working system</li>
+	<li>While our team is heavily mac-based, we've installed this setup on Windows by following <a href="http://www.anthonydebarros.com/2014/02/16/setting-up-python-in-windows-8-1/">this guide</a> to get python 2.7 installed (don't install 3) and grabbing <a href="http://www.github.com">the Github client</a>, which comes with the git command line tool.  After that's done it's a very similar process and we can help you make it work.</li>
+      </ul>
+      <p>First, <a href="http://developer.akamai.com/introduction/DnLoad_Sample.html">Download the Sample Client</a></p>
+      <p>We've provisioned a special key for this workshop so you don't need to do the provisioning today - but you'll need to do that when you want to set up your own clients.  You'll need to create an .edgerc file in your home directory to track your credentials.  Please copy and paste the following into that file.</p>
+
+<pre>
+[default]
+host = akaa-k2mlyt6louqq4l5h-2wcmfuwxnyhtkt4l.luna.akamaiapis.net/
+client_token = akab-rigfxzzx634mi437-6dmsvwiprlbr7w5a
+client_secret = HDSmzELKYVztFqv+2KF+d2Mo0g8ZKLlpuAFWk92UTns=
+access_token = akab-63atbs66tia6yf26-vwxi2imo4pwddx6v
+max-body = 131072
+
+[broken]
+host = "https://akab-k2mlyt6louqq4l5h-2wcmfuwxnyhtkt4l.luna.akamaiapis.net/"
+client_token = akaa-rigfxzzx634mi437-6dmsvwiprlbr7w5a
+client_secret = HEzyhsvP6LujKc4Tt4jjsrZVzyCeq0yePC18DwITq94=
+access_token = kab-63atbs66tia6yf26-vwxi2imo4pwddx6v
+</pre>
+
+      <p>Now, you're ready to <a href="http://bos-lpubs.kendall.corp.akamai.com:5003/introduction/First_Call.html">Make your first API Call</a></p>
+      <p>In addition to the code, you'll want to have an HTTP/HTTPs sniffer installed on your system, to help with inspecting, debugging and troubleshooting the traffic from your client to the server.</p>
+      <p>Links to HTTP Sniffers:</p>
+      <ul>
+        <li><a href="http://www.charlesproxy.com">Charles</a> (Windows, Macintosh, Linux)</li>
+        <li><a href="https://www.wireshark.org">Wireshark</a> (Windows, Macintosh, Unix)</li>
+        <li><a href="http://www.tuffcode.com">HTTPScoop</a> (Macintosh only, no HTTPS)</li>
+        <li><a href="http://www.telerik.com/fiddler">Fiddler</a> (Windows, with beta versions for macintosh and linux)</li>
+      </ul>
+      <p>To verify that it's working and play a bit with the sniffer, you can visit some of the following URLs.  Note that we'll be covering what each piece means in a later part of the day, but you can play around to see how it works for now.</p>
+      <ul>
+        <li><a href="http://www.google.com">Web Example</a></li>
+        <li><a href="http://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&format=xml&titles=Main%20Page">XML Example</a></li>
+        <li><a href="https://www.googleapis.com/books/v1/volumes?q=isbn:0747532699">JSON Example</a></li>
+      </ul>
+    </div>
+
+    <div class="bs-callout bs-callout-warning">
+      <h4>BREAK - 10:45 - 11:00 </h4>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 3: Design and Documentation - 11:00 - 12:00</h4>
+      <p>Presented by: Darius Kazemi</p>
+      <p class="lead">What is Apiary and how is it used at Akamai?</p>
+      <p>This presentation includes an overview of Blueprint for schema modeling, a discussion of how it is used in development and deployment.  Finally, there will be a API reference documentation walkthrough with workshop attendees. </p>
+    </div>
+
+    <div class="bs-callout bs-callout-warning">
+      <h4>LUNCH 12:00 - 1:00 </h4>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 4: REST Explained - 1:00 - 1:45</h4>
+      <p>Presented by: Kirsten Hunter</p>
+      <p class="lead">HTTP basics and REST overview.</p>
+      <p>Includes interactive troubleshooting exercise using HTTP sniffers.  Coding guidelines will also be discussed.</p>
+      <p>Related information</p>
+      <ul>
+        <li><a href="http://www.infoworld.com/article/2614859/application-development/how-to--rest-web-services-demystified.html">REST Web Services Demystified</a></li>
+        <li><a href="http://apicodex.3scale.net">API Codex: Curated information about APIs, REST and related topics</a></li>
+        <li><a href="http://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml">HTTP Status Code Registry</a></li>
+      </ul>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 5: Provisioning - 1:45 - 2:15</h4>
+      <p>Presented by: Darius Kazemi</p>
+      <p class="lead">Detailed demonstration of provisioning process in the Luna portal.  </p>
+      <ul>
+        <li><a href="https://developer.akamai.com/introduction/Prov_Creds.html">Getting Started with Authentication</a></li>
+        <li><a href="https://control.akamai.com/">Luna Control Center</a></li>
+      </ul>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 6: Authentication - 2:15 - 3:00</h3>
+      <p>Presented by: Darius Kazemi</p>
+      <p class="lead">Detailed demonstration of authentication process using sample code.</p>
+      <p>Demonstration using sample code with logging, discussion of how the authentication is working.</p>
+    </div>
+
+    <div class="bs-callout bs-callout-warning">
+      <h4>BREAK - 3:00 - 3:15 </h4>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Session 7: Working with the Sample Application - 3:15 - 3:45</h4>
+      <p>Presented by: Kirsten Hunter</p>
+      <p class="lead">Interactive session using sample code, viewing and fixing broken calls, handling errors gracefully</p>
+      <p>We'll be using the diagnostic_tools_exercises.py example, which has several broken pieces:</p>
+      <ul>
+      <li>Authentication errors</li>
+      <li>Coding errors</li>
+      <li>Formatting errors</li>
+      <ul>
+      <p>During this section we'll discuss how a successful call is made, and troubleshoot issues with the broken script.</p>
+    </div>
+
+    <div class="bs-callout bs-callout-info">
+      <h4>Summary - 3:45 - 4:00 </h4>
+      <p class="lead">To finish up we'll quickly review the topics we covered, and provide assignments and handouts for further learning about the Akamai APIs.</p>
+    </div>
+
+  </div>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
+
+</body>
+</html>

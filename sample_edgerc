@@ -1,0 +1,12 @@
+[default]
+host = akaa-k2mlyt6louqq4l5h-2wcmfuwxnyhtkt4l.luna.akamaiapis.net/
+client_token = akab-rigfxzzx634mi437-6dmsvwiprlbr7w5a
+client_secret = HDSmzELKYVztFqv+2KF+d2Mo0g8ZKLlpuAFWk92UTns=
+access_token = akab-63atbs66tia6yf26-vwxi2imo4pwddx6v
+max-body = 131072
+
+[broken]
+host = "https://akab-k2mlyt6louqq4l5h-2wcmfuwxnyhtkt4l.luna.akamaiapis.net/"
+client_token = akaa-rigfxzzx634mi437-6dmsvwiprlbr7w5a
+client_secret = HEzyhsvP6LujKc4Tt4jjsrZVzyCeq0yePC18DwITq94=
+access_token = kab-63atbs66tia6yf26-vwxi2imo4pwddx6v
