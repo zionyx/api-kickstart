@@ -72,11 +72,6 @@ session.auth = EdgeGridAuth(
 # Set the baseurl for all calls
 baseurl = '%s://%s/' % ('https', config.host)
 
-# Get our company information using billing-usage
-#id_result = session.get(urljoin(baseurl, '/billing-usage/v1/reportSources'))
-#cid = id_result.json()['contents'][0]['id']
-#if debug: print "Found %s for contract id" % cid
-
 # Request locations that support the diagnostic-tools
 print
 print "Requesting locations that support the diagnostic-tools API.\n"

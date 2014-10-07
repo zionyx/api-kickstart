@@ -19,12 +19,13 @@
   <![endif]-->
 
   <style>
-    a, a:hover {color: #7C7C7C;}
+    a, a:hover {color: #f89821;}
   	div#profile-container { width: 600px; padding-left: 100px; display: flex; justify-content: space-between; }
   	div#profile-container figure {
   	  display: inline-block;
   	}
   	div#profile-container figure div {
+      margin-left: 23px;
   	  border-radius: 50%;
   	  overflow: hidden;
   	  background-blend-mode: luminosity;
@@ -84,15 +85,15 @@
     	<div id="profile-container">
     		<figure>
     		  <div class="kirsten"></div>
-    		  <figcaption>Kirsten Hunter</figcaption>
+    		  <figcaption>Kirsten Hunter<br><a href="https://twitter.com/synedra">@synedra</a><br><a href="mailto:khunter@akamai.com">khunter@akamai.com</a></figcaption>
     		</figure>
     		<figure>
     		  <div class="darius"></div>
-    		  <figcaption>Darius Kazemi</figcaption>
+    		  <figcaption>Darius Kazemi<br><a href="https://twitter.com/tinysubversions">@tinysubversions</a><br><a href="mailto:dkazemi@akamai.com">dkazemi@akamai.com</a></figcaption>
     		</figure>
     		<figure>
     		  <div class="michael"></div>
-    		<figcaption>Michael Aglietti</figcaption>
+    		  <figcaption>Michael Aglietti<br><a href="https://twitter.com/maglietti_AKAM">@maglietti_AKAM</a><br><a href="mailto:magliett@akamai.com">magliett@akamai.com</a></figcaption>
     		</figure>
     	</div>
     </div>
@@ -105,7 +106,7 @@
     </div>
 
     <div class="bs-callout bs-callout-info">
-      <h4>Session 2: Getting Started - 10:00 - 11:00</h4>
+      <h4>Session 2: Getting Started - 10:00 - 10:45</h4>
       <p>Presented by: Kirsten Hunter, Darius Kazemi</p>
       <p class="lead">Let's get started with a sample application, which we'll use throughout the workshop to demonstrate the topics we're covering.</p>
       <p>Pre-requisites for the workshop (we'll help you get them done):</p>
@@ -116,11 +117,9 @@
 	<li>While our team is heavily mac-based, we've installed this setup on Windows by following <a href="http://www.anthonydebarros.com/2014/02/16/setting-up-python-in-windows-8-1/">this guide</a> to get python 2.7 installed (don't install 3) and grabbing <a href="http://www.github.com">the Github client</a>, which comes with the git command line tool.  After that's done it's a very similar process and we can help you make it work.</li>
       </ul>
       <p>First, <a href="http://developer.akamai.com/introduction/DnLoad_Sample.html">Download the Sample Client</a></p>
-      <p>We've provisioned a special key for this workshop so you don't need to do the provisioning today - but you'll need to do that when you want to set up your own clients.  You'll need to create an .edgerc file in your home directory to track your credentials. </p> 
+      <p>We've provisioned a special key for this workshop so you don't need to do the provisioning today - but you'll need to do that when you want to set up your own clients.  You'll need to create an .edgerc file in your home directory to track your credentials. Copy the sampleedgerc file to a file named .edgerc in your home directory.</p>
 
-<p>Find the sampleedgerc file in the directory, and copy it to your home directory as a file named .edgerc - this is the default name for a configuration file, and can be used to keep your credentials between sessions for multiple servers.</p>
-
-      <p>Now, you're ready to <a href="http://bos-lpubs.kendall.corp.akamai.com:5003/introduction/First_Call.html">Make your first API Call</a></p>
+      <p>Now, you're ready to <a href="http://developer.akamai.com/introduction/First_Call.html">Make your first API Call</a></p>
       <p>In addition to the code, you'll want to have an HTTP/HTTPs sniffer installed on your system, to help with inspecting, debugging and troubleshooting the traffic from your client to the server.</p>
       <p>Links to HTTP Sniffers:</p>
       <ul>
@@ -153,7 +152,7 @@
     </div>
 
     <div class="bs-callout bs-callout-info">
-      <h4>Session 4: REST Explained - 1:00 - 1:45</h4>
+      <h4>Session 4: REST Explained - 1:00 - 2:00</h4>
       <p>Presented by: Kirsten Hunter</p>
       <p class="lead">HTTP basics and REST overview.</p>
       <p>Includes interactive troubleshooting exercise using HTTP sniffers.  Coding guidelines will also be discussed.</p>
@@ -166,20 +165,13 @@
     </div>
 
     <div class="bs-callout bs-callout-info">
-      <h4>Session 5: Provisioning - 1:45 - 2:15</h4>
+      <h4>Session 5: Provisioning & Authentication - 2:00 - 3:00</h4>
       <p>Presented by: Darius Kazemi</p>
-      <p class="lead">Detailed demonstration of provisioning process in the Luna portal.  </p>
+      <p class="lead">Detailed demonstration of provisioning process in the Luna portal, and a high level overview of authentication.</p>
       <ul>
         <li><a href="https://developer.akamai.com/introduction/Prov_Creds.html">Getting Started with Authentication</a></li>
         <li><a href="https://control.akamai.com/">Luna Control Center</a></li>
       </ul>
-    </div>
-
-    <div class="bs-callout bs-callout-info">
-      <h4>Session 6: Authentication - 2:15 - 3:00</h3>
-      <p>Presented by: Darius Kazemi</p>
-      <p class="lead">Detailed demonstration of authentication process using sample code.</p>
-      <p>Demonstration using sample code with logging, discussion of how the authentication is working.</p>
     </div>
 
     <div class="bs-callout bs-callout-warning">
@@ -187,7 +179,7 @@
     </div>
 
     <div class="bs-callout bs-callout-info">
-      <h4>Session 7: Working with the Sample Application - 3:15 - 3:45</h4>
+      <h4>Session 6: Working with the Sample Application - 3:15 - 3:45</h4>
       <p>Presented by: Kirsten Hunter</p>
       <p class="lead">Interactive session using sample code, viewing and fixing broken calls, handling errors gracefully</p>
       <p>We'll be using the diagnostic_tools_exercises.py example, which has several broken pieces:</p>
