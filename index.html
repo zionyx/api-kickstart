@@ -116,22 +116,9 @@
 	<li>While our team is heavily mac-based, we've installed this setup on Windows by following <a href="http://www.anthonydebarros.com/2014/02/16/setting-up-python-in-windows-8-1/">this guide</a> to get python 2.7 installed (don't install 3) and grabbing <a href="http://www.github.com">the Github client</a>, which comes with the git command line tool.  After that's done it's a very similar process and we can help you make it work.</li>
       </ul>
       <p>First, <a href="http://developer.akamai.com/introduction/DnLoad_Sample.html">Download the Sample Client</a></p>
-      <p>We've provisioned a special key for this workshop so you don't need to do the provisioning today - but you'll need to do that when you want to set up your own clients.  You'll need to create an .edgerc file in your home directory to track your credentials.  Please copy and paste the following into that file.</p>
+      <p>We've provisioned a special key for this workshop so you don't need to do the provisioning today - but you'll need to do that when you want to set up your own clients.  You'll need to create an .edgerc file in your home directory to track your credentials. </p> 
 
-<pre>
-[default]
-host = akaa-k2mlyt6louqq4l5h-2wcmfuwxnyhtkt4l.luna.akamaiapis.net/
-client_token = akab-rigfxzzx634mi437-6dmsvwiprlbr7w5a
-client_secret = HDSmzELKYVztFqv+2KF+d2Mo0g8ZKLlpuAFWk92UTns=
-access_token = akab-63atbs66tia6yf26-vwxi2imo4pwddx6v
-max-body = 131072
-
-[broken]
-host = "https://akab-k2mlyt6louqq4l5h-2wcmfuwxnyhtkt4l.luna.akamaiapis.net/"
-client_token = akaa-rigfxzzx634mi437-6dmsvwiprlbr7w5a
-client_secret = HEzyhsvP6LujKc4Tt4jjsrZVzyCeq0yePC18DwITq94=
-access_token = kab-63atbs66tia6yf26-vwxi2imo4pwddx6v
-</pre>
+<p>Find the sampleedgerc file in the directory, and copy it to your home directory as a file named .edgerc - this is the default name for a configuration file, and can be used to keep your credentials between sessions for multiple servers.</p>
 
       <p>Now, you're ready to <a href="http://bos-lpubs.kendall.corp.akamai.com:5003/introduction/First_Call.html">Make your first API Call</a></p>
       <p>In addition to the code, you'll want to have an HTTP/HTTPs sniffer installed on your system, to help with inspecting, debugging and troubleshooting the traffic from your client to the server.</p>
