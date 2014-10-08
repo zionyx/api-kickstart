@@ -28,3 +28,7 @@ has some broken pieces along with the authentication errors you'll be fixing fir
 
 Future libraries and clients will be developed for other languages as we can, and developers are welcome to send pull requests
 for examples they have created.
+
+Contact khunter@akamai.com, dkazemi@akamai.com or open-developer@akamai.com for help, comments, suggestions.
+
+Tweet your thoughts to @synedra, @tinysubversions
