@@ -67,6 +67,8 @@ session.auth = EdgeGridAuth(
 if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
+baseurl = '%s://%s/' % ('https', config.host)
+
 # Get our company information using billing-usage
 id_result = session.get(urljoin(baseurl, '/billing-usage/v1/reportSources'))
 cid = id_result.json()['contents'][0]['id']
@@ -77,7 +79,6 @@ if debug: print "Found %s for contract id" % cid
 print
 print "Requesting locations that support the diagnostic-tools API.\n"
 
-baseurl = '%s://%s/' % ('https', config.host)
 location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
 if debug: print ">>>\n" + json.dumps(location_result.json(), indent=2) + "\n<<<\n"
 
