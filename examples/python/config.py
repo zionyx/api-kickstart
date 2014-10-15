@@ -87,9 +87,7 @@ class EdgeGridConfig():
 				# ConfigParser lowercases magically
 				if key not in arguments:
 					arguments[key] = value
-		print arguments['host']
 		arguments['host'] = re.sub(r'"?https?:\/\/(.*)/+?"?$', r'\1', arguments['host'])
-		print arguments['host']
 		missing_args = []
 		for argument in required_options:
 			if argument not in arguments:
