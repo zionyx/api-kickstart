@@ -54,8 +54,8 @@ class EdgeGridConfig():
 
 	def __init__(self, config_values, configuration):
 
-		parser.add_argument('--verbose', '-v', action='store_true')
-		parser.add_argument('--debug', '-d', action='store_true')
+		parser.add_argument('--verbose', '-v', action='count')
+		parser.add_argument('--debug', '-d', action='count')
 
 		required_options = ['client_token','client_secret','host','access_token']
 		optional_options = {'max_body':131072}
@@ -75,6 +75,9 @@ class EdgeGridConfig():
 
 		args = parser.parse_args()
 		arguments = vars(args)
+
+		if arguments['debug'] != None:
+			arguments['verbose'] = arguments['debug']
 
 		# Environment variables are next
 		# Only use AKA_<VAR> environment options
