@@ -1,5 +1,5 @@
 #! /usr/bin/python
-""" Sample client for diagnostic tools
+""" Sample client 
   	This requires the following to be set (in order of priority to the script):
 	CLIENT_TOKEN, CLIENT_SECRET, ACCESS_TOKEN, HOST
 	optionally you can set VERBOSE to True or max-body to a different buffer size
