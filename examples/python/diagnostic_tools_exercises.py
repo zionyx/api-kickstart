@@ -6,7 +6,7 @@
 
 	These can all be set (case insensitive) in the following ways:
 	On the command line:
-	  --client_token=xxxxx --client_secret=xxxx access_token=xxxx, host=xxxx
+	  --client_token xxxxx --client_secret xxxx access_token xxxx, host xxxx
 	In environment variables:
 	  export CLIENT_TOKEN=xxxx
 	  export CLIENT_SECRET=xxxx
