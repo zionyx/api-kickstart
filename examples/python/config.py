@@ -56,6 +56,7 @@ class EdgeGridConfig():
 
 		parser.add_argument('--verbose', '-v', action='count')
 		parser.add_argument('--debug', '-d', action='count')
+		parser.add_argument('--write', '-w', action='store_true')
 
 		required_options = ['client_token','client_secret','host','access_token']
 		optional_options = {'max_body':131072}
