@@ -71,7 +71,7 @@ class EdgeGridConfig():
 			parser.add_argument('--' + argument)
 			if argument in config_values and config_values[argument]:
 				arguments[argument] = config_values[argument]
-				if option in required_options:
+				if argument in required_options:
 					required_options.remove(argument)		
 
 		args = parser.parse_args()
@@ -85,7 +85,7 @@ class EdgeGridConfig():
         	akamai_options = Set(['AKA_%s' % option.upper() for option in options])
 		for key in Set(os.environ) & akamai_options:
 			lower_key = re.sub('AKA_','',key).lower()
-			if arguments[lower_key] == None:
+			if lower_key not in arguments or arguments[lower_key] == None:
 				arguments[lower_key] = os.environ[key]
 
 		arguments["config_file"] = os.path.expanduser(arguments["config_file"])	
@@ -97,7 +97,7 @@ class EdgeGridConfig():
 			config.readfp(open(arguments["config_file"]))
 			for key, value in config.items(configuration):
 				# ConfigParser lowercases magically
-				if arguments[key] == None:
+				if key not in arguments or arguments[key] == None:
 					arguments[key] = value
 
 		missing_args = []
