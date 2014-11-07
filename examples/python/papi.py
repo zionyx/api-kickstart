@@ -1,26 +1,26 @@
 #! /usr/bin/python
 """ Sample client 
-  	This requires the following to be set (in order of priority to the script):
-	CLIENT_TOKEN, CLIENT_SECRET, ACCESS_TOKEN, HOST
-	optionally you can set VERBOSE to True or max-body to a different buffer size
+In order to use this papi client you will need to have access turned
+on for your account.  Send the contract IDs you want activated in a 
+request to open-developer@akamai.com.
 
-	These can all be set (case insensitive) in the following ways:
-	On the command line:
-	  --client_token xxxxx --client_secret xxxx access_token xxxx, host xxxx
-	In environment variables:
-	  export CLIENT_TOKEN=xxxx
-	  export CLIENT_SECRET=xxxx
-	  export ACCESS_TOKEN=xxxx
-	  export HOST=xxxx.luna.akamaiapis.net
-	In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE
-	in environment variables or on the command line
-	[default]
-	host = xxxx.luna.akamaiapis.net
-	client_token = xxxx
-	client_secret = xxxx
-	access_token = xxxx
-	max-body = 2048
+This script pulls the contract groups, products for that group, and
+then looks for a property named "Papitest1".  You can change the 
+particular items it's looking for easily enough - right now all it
+does is pull the first group, first contract, first product, which
+is where the test property lives.
+
+When you run the script with the --write flag, it will toggle the
+prefetch bit on the test property.
+
+Please send any comments, questions or ideas to open-developer@akamai.com
+
+Thanks!
+The Akamai Developer Relations Team
+
 """
+
+
 
 import requests, logging, json
 from random import randint
