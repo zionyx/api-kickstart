@@ -47,7 +47,7 @@ config_values = {
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig(config_values,"broken")
+config = EdgeGridConfig(config_values,"default")
 if hasattr(config, 'verbose'):
 	debug = config.verbose
 
