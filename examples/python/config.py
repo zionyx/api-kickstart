@@ -6,7 +6,7 @@
 
     These can all be set (case insensitive) in the following ways:
     On the command line:
-      --client_token=xxxxx --client_secret=xxxx access_token=xxxx, host=xxxx
+      --client_token xxxxx --client_secret xxxx access_token xxxx, host xxxx
     In environment variables:
       export AKA_CLIENT_TOKEN=xxxx
       export AKA_CLIENT_SECRET=xxxx
@@ -27,6 +27,7 @@
 """
 
 import ConfigParser,os,sys
+import argparse
 import httplib
 import urllib
 import urllib2
@@ -47,35 +48,46 @@ if sys.version_info[0] != 2 or sys.version_info[1] < 7:
 
 logger = logging.getLogger(__name__)
 
+parser = argparse.ArgumentParser(description='Process command line options.')
+
 class EdgeGridConfig():
 
 	def __init__(self, config_values, configuration):
-		
+
+		parser.add_argument('--verbose', '-v', action='count')
+		parser.add_argument('--debug', '-d', action='count')
+		parser.add_argument('--write', '-w', action='store_true')
+
 		required_options = ['client_token','client_secret','host','access_token']
-		optional_options = {'max_body':131072,'verbose':False}
+		optional_options = {'max_body':131072}
+
 		options = Set(required_options) | Set(optional_options.keys())
 		arguments = {}
+
+		parser.add_argument('--max_body', default=131072, type=int)
+		parser.add_argument('--config_file', default='~/.edgerc')
+
 		for argument in required_options:
+			parser.add_argument('--' + argument)
 			if argument in config_values and config_values[argument]:
 				arguments[argument] = config_values[argument]
-				required_options.remove(argument)		
-		
-		# sys.argv (command line) trumps all
-		for command_line_arg in sys.argv:
-			if command_line_arg.startswith('--') and command_line_arg not in arguments:
-				(arg,val) = command_line_arg.split('=')
-				arg = arg[2:].lower()
-				arguments[arg] = val
+				if argument in required_options:
+					required_options.remove(argument)		
+
+		args = parser.parse_args()
+		arguments = vars(args)
+
+		if arguments['debug'] != None:
+			arguments['verbose'] = arguments['debug']
 
 		# Environment variables are next
+		# Only use AKA_<VAR> environment options
         	akamai_options = Set(['AKA_%s' % option.upper() for option in options])
 		for key in Set(os.environ) & akamai_options:
 			lower_key = re.sub('AKA_','',key).lower()
-			if lower_key not in arguments:
+			if lower_key not in arguments or arguments[lower_key] == None:
 				arguments[lower_key] = os.environ[key]
 
-		if "config_file" not in arguments:
-			arguments["config_file"] = "~/.edgerc"	
 		arguments["config_file"] = os.path.expanduser(arguments["config_file"])	
 	
 		# The config file is actually optional,
@@ -85,11 +97,9 @@ class EdgeGridConfig():
 			config.readfp(open(arguments["config_file"]))
 			for key, value in config.items(configuration):
 				# ConfigParser lowercases magically
-				if key not in arguments:
+				if key not in arguments or arguments[key] == None:
 					arguments[key] = value
-		print arguments['host']
-		arguments['host'] = re.sub(r'"?https?:\/\/(.*)/+?"?$', r'\1', arguments['host'])
-		print arguments['host']
+
 		missing_args = []
 		for argument in required_options:
 			if argument not in arguments:
@@ -99,27 +109,14 @@ class EdgeGridConfig():
 			print "Missing args: %s" % missing_args
 			exit()
 
-
-		for key in optional_options:
-			lower_key = key.lower()
-			if key not in arguments:
-				arguments[lower_key] = optional_options[key]
-
 		for option in arguments:
 			setattr(self,option,arguments[option])
 
 		self.create_base_url()
 
 	def create_base_url(self):
-		if "https" in self.host:
-			self.base_url = self.host
+		self.base_url = "https://%s" % self.host
 
-		elif "luna.akamaiapis.net" in self.host:
-			self.base_url = "https://%s" % self.host
-
-		else: # They must have just put in the string
-			self.base_url = "https://%s.luna.akamaiapis.net" % self.host
-			
 	def make_call(self, path, http_method, parameters=None, options=None):
 		signer = EGSigner(
 		    self.host,

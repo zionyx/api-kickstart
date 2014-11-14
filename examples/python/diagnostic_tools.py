@@ -6,7 +6,7 @@
 
 	These can all be set (case insensitive) in the following ways:
 	On the command line:
-	  --client_token=xxxxx --client_secret=xxxx access_token=xxxx, host=xxxx
+	  --client_token xxxxx --client_secret xxxx access_token xxxx, host xxxx
 	In environment variables:
 	  export CLIENT_TOKEN=xxxx
 	  export CLIENT_SECRET=xxxx
@@ -19,7 +19,7 @@
 	client_token = xxxx
 	client_secret = xxxx
 	access_token = xxxx
-	max-body = 2048
+	max_body = 2048
 """
 
 import requests, logging, json
@@ -67,17 +67,12 @@ session.auth = EdgeGridAuth(
 if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
-# Get our company information using billing-usage
-id_result = session.get(urljoin(baseurl, '/billing-usage/v1/reportSources'))
-cid = id_result.json()['contents'][0]['id']
-if debug: print "Found %s for contract id" % cid
-
+baseurl = '%s://%s/' % ('https', config.host)
 
 # Request locations that support the diagnostic-tools
 print
 print "Requesting locations that support the diagnostic-tools API.\n"
 
-baseurl = '%s://%s/' % ('https', config.host)
 location_result = session.get(urljoin(baseurl, '/diagnostic-tools/v1/locations'))
 if debug: print ">>>\n" + json.dumps(location_result.json(), indent=2) + "\n<<<\n"
 
