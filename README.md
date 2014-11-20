@@ -9,6 +9,9 @@ Currently, this repository has:
 After cloning, get the needed libraries by doing the following:
 python setup.py install --user
 
+If you have issues with the setup command, check the following link:
+http://stackoverflow.com/questions/4495120/combine-user-with-prefix-error-with-setup-py-install
+
 The easiest way to walk through the needed provisioning and authentication to get your 
 credentials is under "provisioning" in the Getting started guide on our site:
 https://developer.akamai.com/introduction/index.html
