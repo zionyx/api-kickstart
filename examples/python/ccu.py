@@ -18,13 +18,11 @@ from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
+import os
 session = requests.Session()
 debug = False
 
-config = EdgeGridConfig({},"ccu")
-
-if config.debug or config.verbose:
-	debug = True
+config = EdgeGridAuth.from_edgerc(os.path.join(os.path.expanduser('~'), '.edgerc'), 'ccu')
 
 # Enable debugging for the requests module
 if debug:
@@ -35,14 +33,6 @@ if debug:
   requests_log = logging.getLogger("requests.packages.urllib3")
   requests_log.setLevel(logging.DEBUG)
   requests_log.propagate = True
-
-
-# Set the config options
-session.auth = EdgeGridAuth(
-            client_token=config.client_token,
-            client_secret=config.client_secret,
-            access_token=config.access_token
-)
 
 if hasattr(config, 'headers'):
 	session.headers.update(config.headers)

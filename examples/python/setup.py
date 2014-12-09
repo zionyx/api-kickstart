@@ -11,7 +11,7 @@ setup(
     url='https://github.com/akamai-open/api-kickstart',
     packages=find_packages(),
     install_requires = [
-        'edgegrid-python>=1.0.3'
+        'edgegrid-python>=1.0.5'
     ],
     license='MIT'
 )
