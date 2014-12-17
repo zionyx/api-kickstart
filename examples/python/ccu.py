@@ -85,6 +85,6 @@ def postPurgeRequest():
 if __name__ == "__main__":
 	Id = {}
 	getQueue()
-	#purge_post_result = postPurgeRequest()	
-	#seconds_to_wait = purge_post_result['pingAfterSeconds']
-	#print "You should wait %s seconds before checking queue again..." % seconds_to_wait
+	purge_post_result = postPurgeRequest()	
+	seconds_to_wait = purge_post_result['pingAfterSeconds']
+	print "You should wait %s seconds before checking queue again..." % seconds_to_wait

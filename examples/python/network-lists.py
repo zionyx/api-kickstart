@@ -14,7 +14,7 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 session = requests.Session()
-debug = True
+debug = False
 
 config = EdgeGridConfig({},"networklists")
 
@@ -56,6 +56,7 @@ def getNetworkLists():
 	print "Requesting the list of network lists"
 
 	events_result = getResult('/network-list/v1/network_lists')
+	return events_result
 
 def createNetworkList(name,ips):
 	print "Creating a network list %s for ip addresses %s" % (name, json.dumps(ips))
@@ -71,6 +72,9 @@ def createNetworkList(name,ips):
 
 if __name__ == "__main__":
 	Id = {}
-	getNetworkLists()
+	lists = getNetworkLists()["network_lists"]
+	def mapper(x):
+		print str(x["numEntries"]) + ", " + x["name"]
+	map(mapper, lists)
 	#createNetworkList("test",["1.2.3.4"])
 

@@ -8,6 +8,7 @@ import urllib
 session = requests.Session()
 debug = False
 
+
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({},"default")
