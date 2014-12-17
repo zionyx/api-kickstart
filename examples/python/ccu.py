@@ -22,7 +22,7 @@ import os
 session = requests.Session()
 debug = False
 
-config = EdgeGridAuth.from_edgerc(os.path.join(os.path.expanduser('~'), '.edgerc'), 'ccu')
+config = EdgeGridConfig({},"ccu")
 
 # Enable debugging for the requests module
 if debug:
@@ -33,6 +33,13 @@ if debug:
   requests_log = logging.getLogger("requests.packages.urllib3")
   requests_log.setLevel(logging.DEBUG)
   requests_log.propagate = True
+
+# Set the config options
+session.auth = EdgeGridAuth(
+            client_token=config.client_token,
+            client_secret=config.client_secret,
+            access_token=config.access_token
+)
 
 if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
@@ -78,6 +85,6 @@ def postPurgeRequest():
 if __name__ == "__main__":
 	Id = {}
 	getQueue()
-	purge_post_result = postPurgeRequest()	
-	seconds_to_wait = purge_post_result['pingAfterSeconds']
-	print "You should wait %s seconds before checking queue again..." % seconds_to_wait
+	#purge_post_result = postPurgeRequest()	
+	#seconds_to_wait = purge_post_result['pingAfterSeconds']
+	#print "You should wait %s seconds before checking queue again..." % seconds_to_wait
