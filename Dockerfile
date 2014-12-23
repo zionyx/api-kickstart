@@ -1,7 +1,7 @@
 FROM ubuntu:12.04
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all python-pip wget vim
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vim
 ADD ./examples /opt/examples
 WORKDIR /opt/examples/python
-RUN pip install -r /opt/examples/python/requirements.txt
+RUN python /opt/examples/python/setup.py install
