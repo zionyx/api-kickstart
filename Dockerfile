@@ -4,4 +4,4 @@ RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all python-pip wget vim
 ADD ./examples /opt/examples
 WORKDIR /opt/examples/python
-RUN pip install -r examples/python/requirements.txt
+RUN pip install -r /opt/examples/python/requirements.txt
