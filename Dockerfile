@@ -5,3 +5,5 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vi
 ADD ./examples /opt/examples
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/setup.py install
+ADD ./MOTD /opt/MOTD
+RUN echo "cat /opt/MOTD" >> /root/.bashrc
