@@ -1,27 +1,4 @@
 #! /usr/bin/python
-""" Sample client 
-  	This requires the following to be set (in order of priority to the script):
-	CLIENT_TOKEN, CLIENT_SECRET, ACCESS_TOKEN, HOST
-	optionally you can set VERBOSE to True or max-body to a different buffer size
-
-	These can all be set (case insensitive) in the following ways:
-	On the command line:
-	  --client_token xxxxx --client_secret xxxx access_token xxxx, host xxxx
-	In environment variables:
-	  export CLIENT_TOKEN=xxxx
-	  export CLIENT_SECRET=xxxx
-	  export ACCESS_TOKEN=xxxx
-	  export HOST=xxxx.luna.akamaiapis.net
-	In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE
-	in environment variables or on the command line
-	[default]
-	host = xxxx.luna.akamaiapis.net
-	client_token = xxxx
-	client_secret = xxxx
-	access_token = xxxx
-	max-body = 2048
-"""
-
 import requests, logging, json
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
@@ -81,32 +58,18 @@ def getResult(endpoint, parameters=None):
 	if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
 	return endpoint_result.json()
 
-def getGroup():
-	"""
-	Request the list of groups for the property.  Print out
-	how many groups there are, then use the first group where
-	the test property lives.
-
-	"""
-	print
-	print "Requesting the list of groups for this property"
-
+def getIds():
 	groups_result = getResult('/papi/v0/groups')
-
-	print "There are %s groups associated with the account:" % len(groups_result['groups']['items'])
-	print "    %s (%s)" % (groups_result['accountName'], groups_result['accountId'])
-
 	group = groups_result['groups']['items'][0]
 	groupId = group['groupId']
 	groupName = group['groupName']
-	print
-	print "Using group %s (%s)" % (groupName, groupId)
+	print "Using group Id %s" % groupId
 
 	# Use the first contractId for requests, will work fine
 	contractId = group['contractIds'][0]
 	print "Using contract ID %s" % (contractId)
-	print
-
+	product_parameters = { "contractId":contractId }
+	products_result = getResult('/papi/v0/products', product_parameters)
 	return (groupId, contractId)
 
 def getProperties(Id,propertyName):
@@ -195,12 +158,7 @@ if __name__ == "__main__":
 	Id = {}
 	testProperty = "papiTest1"
 	testRule = "prefetching"
-	(Id['group'], Id['contract']) = getGroup()
-	(Id['property'], propertyVersion) = getProperties(Id,testProperty)
-	(rules) = getPropertyRules(Id,propertyVersion,testRule)
-	print
-	if config.write:
-		switchPropertyStatus(Id,propertyVersion,testRule,rules)
-		getPropertyRules(Id,propertyVersion,testRule)
+	(Id['group'], Id['contract']) = getIds()
+
 
 

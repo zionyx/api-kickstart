@@ -22,7 +22,7 @@ import os
 session = requests.Session()
 debug = True
 
-config = EdgeGridConfig({},"ccu")
+config = EdgeGridConfig({},"user")
 
 # Enable debugging for the requests module
 if debug:
@@ -67,24 +67,47 @@ def postResult(endpoint, body, parameters=None):
         if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
         return endpoint_result.json()
 
-def getQueue():
-	print
-	purge_queue_result = getResult('/ccu/v2/queues/default')
-	print "The queue currently has %s items in it" % int(purge_queue_result['queueLength'])
+def putResult(endpoint, body, parameters=None):
+	headers = {'content-type': 'application/json'}
+        if parameters:
+                parameter_string = urllib.urlencode(parameters)
+                path = ''.join([endpoint + '?',parameter_string])
+        else:
+                path = endpoint
+        endpoint_result = session.put(urljoin(baseurl,path), data=body, headers=headers)
+        if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+        return endpoint_result.json()
 
-def postPurgeRequest():
-	purge_obj = {
-			"objects" : [
-				"https://developer.akamai.com/stuff/openProgramGA.html"
-			]
-		    }
-	print "Adding %s to queue" % json.dumps(purge_obj)
-	purge_post_result = postResult('/ccu/v2/queues/default', json.dumps(purge_obj))
-	return purge_post_result
+def getUsers():
+	print
+	user_result = getResult('/user-admin/v1/accounts/B-3-112OHLC/users')
+
+def createUserRequest():
+    	user_obj = {
+    		"roleAssignments": [
+      			{
+        		"roleId": 14, 
+        		"groupId": 41241
+      			}
+    		], 
+    		"firstName": "Kirsten", 
+    		"phone": "8315887563", 
+    		"lastName": "Hunter", 
+    		"email": "kirsten.hunter@akamai.com"
+   	}
+
+	print "creating user"
+	purge_post_result = postResult('/user-admin/v1/users', json.dumps(user_obj))
+	print
+	print purge_post_result
+	return purge_post_result["contactId"]
+
+def deleteUserRequest(contactid):
+	print "Deleting user %s" % contactid
+	delete_result = endpoint_result = session.delete(urljoin(baseurl,'/user-admin/v1/users/%s' % contactid))
 
 if __name__ == "__main__":
 	Id = {}
-	getQueue()
-	purge_post_result = postPurgeRequest()	
-	seconds_to_wait = purge_post_result['pingAfterSeconds']
-	print "You should wait %s seconds before checking queue again..." % seconds_to_wait
+	contactid = createUserRequest()
+	deleteUserRequest(contactid)
+	getUsers()

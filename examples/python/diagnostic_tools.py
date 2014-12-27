@@ -33,8 +33,7 @@ session.auth = EdgeGridAuth(
             access_token=config.access_token
 )
 
-if hasattr(config, 'headers'):
-	session.headers.update(config.headers)
+session.headers.update({'x-testheader': 'testdata'})
 
 baseurl = '%s://%s/' % ('https', config.host)
 
