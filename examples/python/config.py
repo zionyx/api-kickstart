@@ -90,8 +90,6 @@ class EdgeGridConfig():
 
 		arguments["config_file"] = os.path.expanduser(arguments["config_file"])	
 	
-		# The config file is actually optional,
-		# so only try to parse it if it's there
 		if os.path.isfile(arguments["config_file"]):
 			config = ConfigParser.ConfigParser()
 			config.readfp(open(arguments["config_file"]))
@@ -99,7 +97,9 @@ class EdgeGridConfig():
 				# ConfigParser lowercases magically
 				if key not in arguments or arguments[key] == None:
 					arguments[key] = value
-
+		else:
+			print "Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA."
+			exit()
 		missing_args = []
 		for argument in required_options:
 			if argument not in arguments:
