@@ -5,7 +5,9 @@
 Licensed under Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
-                        
+
+Author: Kelly Kane <kelly.kane@openx.com>
+
 Note that in order for this to work you need to provision credentials
 specifically for CCU - you cannot extend existing credentials to add
 CCU as it's managed under "CCU" in the API credential system.
@@ -23,6 +25,11 @@ client_token = akab-blah-blah
 client_secret = longstring+sosecret=
 access_token = akab-getthis-fromtheportal
 
+Usage:
+   ccu.py --cpcode #####
+   ccu.py --file file.txt
+   ccu.py --check UUID-from-prior-run
+
 """
 
 import requests, logging, json
@@ -35,11 +42,22 @@ import argparse
 import ConfigParser
 
 #Snag some arguments, namely invalidate by CPCode or URL/ARLs in a file.
-parser = argparse.ArgumentParser()
+parser = argparse.ArgumentParser(
+								formatter_class=argparse.RawDescriptionHelpFormatter,
+								description="""
+Implements the Akamai Content Control Utility
+
+Example Commands:
+   ccu.py --cpcode #####
+   ccu.py --file file.txt
+   ccu.py --check UUID-from-prior-run
+   ccu.py --debug --network staging --config_file /etc/edgerc --config_section globalcreds --cpcode 0123456
+""")
 
 parser.add_argument('--config_file', default='~/.edgerc', type=str, metavar='FILENAME',
 					help='Path to your edgerc config file.')
-parser.add_argument('--debug', action='store_true')
+parser.add_argument('--debug', action='store_true',
+					help='Way too much information.')
 parser.add_argument('--network', default="production", choices=['production','staging'],
 					help='Act on the production or staging network.')
 parser.add_argument('--config_section', default='ccu', type=str,
