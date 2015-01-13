@@ -6,8 +6,8 @@ Examples and libraries to get started using the Akamai {OPEN} APIs
 Currently, this repository has:
 * Libraries and clients for python
 
-After cloning, get the needed libraries by doing the following:
-python setup.py install --user
+After cloning, get the needed libraries by doing the following from the examples/python directory:
+python tools/setup.py install --user
 
 If you have issues with the setup command, check the following link:
 http://stackoverflow.com/questions/4495120/combine-user-with-prefix-error-with-setup-py-install
