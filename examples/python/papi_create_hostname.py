@@ -46,6 +46,14 @@ session.auth = EdgeGridAuth(
 if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
+contractId = 
+groupId = 
+productId =
+domainPrefix = "www.example.com"
+domainSuffix = "edgesuite.net"
+propertyName = "TEST PROPERTY FOR KIRSTEN"
+
+
 baseurl = '%s://%s/' % ('https', config.host)
 
 def getResult(endpoint, parameters=None):
@@ -58,107 +66,13 @@ def getResult(endpoint, parameters=None):
 	if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
 	return endpoint_result.json()
 
-def getIds():
-	groups_result = getResult('/papi/v0/groups')
-	group = groups_result['groups']['items'][0]
-	groupId = group['groupId']
-	groupName = group['groupName']
-	print "Using group Id %s" % groupId
+def createNewProperty():
 
-	# Use the first contractId for requests, will work fine
-	contractId = group['contractIds'][0]
-	print "Using contract ID %s" % (contractId)
-	product_parameters = { "contractId":contractId }
-	products_result = getResult('/papi/v0/products', product_parameters)
-	return (groupId, contractId)
+def addHostname():
 
-def getProperties(Id,propertyName):
-	"""
-	Get the properties for the associated group/contract combination
-	"""
-	property_parameters = { "contractId":Id['contract'], "groupId":Id['group'] }
-	property_result = getResult('/papi/v0/properties', property_parameters)
-	property_items = property_result['properties']['items']
-	print "Grabbing specific information about the %s property" % propertyName
-
-	"""
-	Just go ahead and iterate over the dictionary, we're just
-	finding a particular property
-	"""
-
-	testproperty_item = {}
-
-	for item in property_items:
-		if item['propertyName'] != propertyName:
-			continue
-
-		testproperty_item = item
-
-	if not testproperty_item:
-		print "  No %s found" % propertyName
-		exit()
-
-	print "  Found the property %s" % propertyName
-	print "    Name: %s" % testproperty_item['propertyName']
-	print "    Latest Version: %s"  % testproperty_item['latestVersion']
-	print "    Property ID: %s"  % testproperty_item['propertyId']
-	print "    Group ID: %s"  % Id['group']
-	print "    Contract ID: %s"  % Id['contract']
-	return (testproperty_item['propertyId'],testproperty_item['latestVersion'])
-
-def getPropertyRules(Id,propertyVersion,behaviorName):
-	"""
-	Now we're going to grab the property rules for this guy
-	"""
-	print
-	print "Retrieving property rules"
-	path = "/papi/v0/properties/%s/versions/%s/rules" % (Id['property'],propertyVersion)
-	rule_parameters = { "contractId":Id['contract'], "groupId":Id['group'] }
-	rule_result = getResult(path, rule_parameters)
-	
-	for item in rule_result['rules']['behaviors']:
-		if item['name'] != behaviorName:
-			continue
-		print "Current status is %s" % item['options']['enabled']
-		return (rule_result)
-
-def toggleOffOn(value):
-	switch_dict = {"on":"off","off":"on"}
-	if value in switch_dict:
-		return switch_dict[value]
-	return None
-
-def switchPropertyStatus(Id,propertyVersion,behaviorName,rules):
-	"""
-	Now we're going to switch the prefetch rule for this guy
-	"""
-	print "Switching status, please be patient..."
-	headers = {'Content-Type': 'application/vnd.akamai.papirules.latest+json'}
-	headers["Accept"] = "application/vnd.akamai.papirules.latest+json,application/problem+json,application/json"
-	path = "/papi/v0/properties/%s/versions/%s/rules" % (Id['property'],propertyVersion)
-	
-	newBehaviors = []
-	for item in rules['rules']['behaviors']:
-		if item['name'] != behaviorName:
-			newBehaviors.append(item)
-		else:
-			item['options']['enabled'] = toggleOffOn(item['options']['enabled'])
-			newBehaviors.append(item)
-
-	rules['rules']['behaviors'] = newBehaviors
-
-	status_parameters = { "contractId":Id['contract'], "groupId":Id['group'] }
-	parameter_string = urllib.urlencode(status_parameters)
-	path = ''.join([path + '?',parameter_string])
-
-	create_result = session.put(urljoin(baseurl,path),data=json.dumps(rules), headers=headers)
+def createRuleset():
 
 
 if __name__ == "__main__":
 	Id = {}
-	testProperty = "papiTest1"
-	testRule = "prefetching"
 	(Id['group'], Id['contract']) = getIds()
-
-
-

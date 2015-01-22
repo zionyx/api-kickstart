@@ -9,8 +9,7 @@ from os.path import expanduser
 if len(sys.argv) > 1:
 	section_name = sys.argv[1]
 else:
-	section_name = "default"
-
+	section_name = "diagnostic_tools"
 print "Please paste the credentials file information here, followed by control-D"
 print "Section name will be %s" % section_name
 print "If you wish to use a different section name, call the script with %s 'section_name'" % sys.argv[0]
