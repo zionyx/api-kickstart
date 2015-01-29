@@ -46,9 +46,9 @@ session.auth = EdgeGridAuth(
 if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
-contractId = 
-groupId = 
-productId =
+contractId = "ctr_C-FKL41U" 
+groupId =    "grp_34382"
+productId =  q
 domainPrefix = "www.example.com"
 domainSuffix = "edgesuite.net"
 propertyName = "TEST PROPERTY FOR KIRSTEN"
