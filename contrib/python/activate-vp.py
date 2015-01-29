@@ -89,7 +89,7 @@ def getPolicies():
         obj = json.loads(result.text)
         return obj
 
-def setPolicy(activation):
+def activatePolicy(activation):
 	print "Setting policy"
 	pprint.pprint(activation)
         headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
@@ -104,7 +104,7 @@ if __name__ == "__main__":
 	print "Starting..."
 	#print getPolicies()
 	activation = getActivation(VERSION)
-	result = setPolicy(activation)
+	result = activatePolicy(activation)
 	pprint.pprint(result)
 
 		
