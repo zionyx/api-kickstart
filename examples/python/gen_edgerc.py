@@ -10,10 +10,10 @@ from os.path import expanduser
 # For the sample diagnostic tools application the section name is set to 
 # diagnostic_tools. If you wish to use a different section name, call the  
 # script with a new section name as the argument.
-if len(sys.argv) > 1:
+if len(sys.argv) > 1 and not re.search(sys.argv[1],'default'):
 	section_name = sys.argv[1]
 else:
-	section_name = "diagnostic_tools"
+	section_name = "----DEFAULT----"
 
 print "After authorizing your client in the {OPEN} API Administration tool,"
 print "export the credentials and paste the contents of the export file below," 
@@ -37,7 +37,16 @@ while index < len(fieldlist):
 # Process the config data
 Config = ConfigParser.ConfigParser()
 filename = "%s/.edgerc" % home
-open(filename, 'a').close()
+
+# First, if we have a 'default' section protect it here
+with open (filename, "r") as myfile:
+ 	data=myfile.read().replace('default','----DEFAULT----')
+	myfile.close()
+with open (filename, "w") as myfile:
+	myfile.write(data)
+	myfile.close()
+
+
 Config.read(filename)
 configfile = open(filename,'w')
 
@@ -52,4 +61,14 @@ Config.set(section_name,'client_secret',fields['Secret:'])
 Config.set(section_name,'host',fields['URL:'].replace('https://',''))
 Config.set(section_name,'access_token',fields['Tokens:'])
 Config.set(section_name,'client_token',fields['token:'])
-Config.write(configfile)	
+Config.write(configfile)
+
+configfile.close()
+
+with open (filename, "r") as myfile:
+ 	data=myfile.read().replace('----DEFAULT----','default')
+	myfile.close()
+with open (filename, "w") as myfile:
+	myfile.write(data)
+	myfile.close()
+	

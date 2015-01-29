@@ -16,13 +16,20 @@ The easiest way to walk through the needed provisioning and authentication to ge
 credentials is under "provisioning" in the Getting started guide on our site:
 https://developer.akamai.com/introduction/index.html
 
-Copy the sample_edgerc file into ~/.edgerc on your system.  Replace the authentication items with your credentials.
+You can get your credentials set up by using the gen_edgerc.py command in the examples/python directory:
+python gen_edgerc.py
+
+For examples other than diagnostic_tools you'll want to pass the name of the appropriate section as an
+argument, for example this is how you'd set up ccu.py:
+
+python gen_edgerc.py ccu
+python ccu.py
 
 To debug this library, you can turn on debugging:
 python diagnostic_tools.py --verbose
 
 The diagnostic_tools.py script will work automatically, and the diagnostic_tools_exercises.py
-has some broken pieces  to play with and fix
+has some broken pieces to play with and fix
 
 Future libraries and clients will be developed for other languages as we can, and developers are welcome to send pull requests for examples they have created.
 

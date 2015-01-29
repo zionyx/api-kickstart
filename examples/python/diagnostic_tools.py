@@ -11,7 +11,7 @@ debug = False
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig({},"diagnostic_tools")
+config = EdgeGridConfig({},"default")
 if hasattr(config, 'verbose'):
 	debug = config.verbose
 
