@@ -17,8 +17,8 @@ VERSION = "1"
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({},"default")
-#if hasattr(config, 'verbose'):
-#	debug = config.verbose
+if hasattr(config, 'verbose'):
+	debug = config.verbose
 
 # Enable debugging for the requests module
 if debug:
