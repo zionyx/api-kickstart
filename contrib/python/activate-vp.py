@@ -1,4 +1,23 @@
 #! /usr/bin/python
+
+""" Sample client for CCU
+Licensed under Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+Author: Ian Cass <ian@wheep.co.uk>
+
+For this to work, you need an activated site configuration that has
+Visitor Prioritization enabled on it. Please make sure that the
+configuration exists in the default group for the api user.
+
+You then need to create one or more VP policies and ensure that you 
+can activate using Luna.
+
+Also, make sure that your API user has read/write permissions for 
+Visitor Prioritization API
+"""
+
 import time
 import requests, logging, json
 from random import randint
@@ -7,11 +26,13 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 import pprint
+
 session = requests.Session()
 debug = False
 
 VPNAME = 'icass_vptest2'
 VERSION = "1"
+NETWORK = "staging"
 
 
 # If all parameters are set already, use them.  Otherwise
@@ -94,7 +115,7 @@ def activatePolicy(activation):
 	pprint.pprint(activation)
         headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
         path = "/config-visitor-prioritization-data/api/v1/policymanager"
-	parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation['policyVersionId'] ], "arlId": str(activation['fileId']), "assetId": str(activation['assetId']), "network": "staging" } } } }
+	parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation['policyVersionId'] ], "arlId": str(activation['fileId']), "assetId": str(activation['assetId']), "network": NETWORK } } } }
         data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
         result = session.post(urljoin(baseurl,path),data=data_string, headers=headers)
         obj = json.loads(result.text)
