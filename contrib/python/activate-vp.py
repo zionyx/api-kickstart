@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-""" Sample client for VP
+""" Sample client for VP API
 Licensed under Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
@@ -30,15 +30,15 @@ import pprint
 session = requests.Session()
 debug = False
 
-VPNAME = 'icass_vptest2'
-VERSION = "1"
-NETWORK = "staging"
+VPNAME = "POLICY_NAME"		# This is the name of your policy
+VERSION = "1" 			# This is the version of your policy
+NETWORK = "staging"		# staging or production
 
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({},"default")
-if hasattr(config, 'verbose'):
+if hasattr(config, "verbose"):
 	debug = config.verbose
 
 # Enable debugging for the requests module
@@ -61,69 +61,67 @@ session.auth = EdgeGridAuth(
 )
 
 
-session.headers.update({'x-testheader': 'testdata'})
+session.headers.update({"x-testheader": "testdata"})
 
-baseurl = '%s://%s/' % ('https', config.host)
+baseurl = "%s://%s/" % ("https", config.host)
 
 def getResult(endpoint, parameters=None):
 	if parameters:
 		parameter_string = urllib.urlencode(parameters)
-		path = ''.join([endpoint + '?',parameter_string])
+		path = "".join([endpoint + "?",parameter_string])
 	else:
 		path = endpoint
 		endpoint_result = session.get(urljoin(baseurl,path))
 	return endpoint_result.json()
 
+def getPostResult(endpoint, parameters):
+        headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Accept":"application/json"}
+        data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
+        result = session.post(urljoin(baseurl,endpoint),data=data_string, headers=headers)
+        obj = json.loads(result.text)
+        return obj
+
 def getAllActivations():
-	activations = getResult('/config-visitor-prioritization-data/api/v1/common/activation?historyOnly=false');
-        return activations
+	return getResult("/config-visitor-prioritization-data/api/v1/common/activation?historyOnly=false");
 
 def getVPActivation():
 	activations = getAllActivations()
 	for activation in activations:
-		if activation['name'] == VPNAME:
+		if activation["name"] == VPNAME:
 			return activation
-	raise RuntimeException('No VP Activation records found')
+	raise RuntimeError("Can't find the VP Activation record")
 
 def getActivation(v):
 	print
 	print "Getting Activation record for version " + v
 	vpactivation = getVPActivation()
-	for policy in vpactivation['policies']:
-		for version in policy['versions']:
-			if version['version'] == v:
-				activation = {'fileId':vpactivation['fileId'], 'assetId':vpactivation['assetId'], 'policyVersionId':version['policyVersionId']}
+	for policy in vpactivation["policies"]:
+		for version in policy["versions"]:
+			if version["version"] == v:
+				activation = {"fileId":vpactivation["fileId"], "assetId":vpactivation["assetId"], "policyVersionId":version["policyVersionId"]}
 				if debug:
 					pprint.pprint(activation)
 				return activation
-	raise RuntimeException('No VP Activation records found with the requested version')
+	raise RuntimeError("No VP Activation records found with the requested version")
 
 def getPolicies():
 	print
 	print "Requesting VP policies"
 
-        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
         path = "/config-visitor-prioritization-data/api/v1/policymanager?command=getAllPolicyInfoMaps"
         parameters = { "query": {"policyManagerRequest": { "command": "getPolicyInfoMapUsingACGIDs", "getPolicyInfoMapUsingACGIDs":{} } } }
-        data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
-        result = session.post(urljoin(baseurl,path),data=data_string, headers=headers)
-        obj = json.loads(result.text)
-        return obj
+	return getPostResult(path, parameters)
 
 def activatePolicy(activation):
 	print "Setting policy"
 	pprint.pprint(activation)
-        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
         path = "/config-visitor-prioritization-data/api/v1/policymanager"
-	parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation['policyVersionId'] ], "arlId": str(activation['fileId']), "assetId": str(activation['assetId']), "network": NETWORK } } } }
-        data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
-        result = session.post(urljoin(baseurl,path),data=data_string, headers=headers)
-        obj = json.loads(result.text)
-        return obj
+	parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation["policyVersionId"] ], "arlId": str(activation["fileId"]), "assetId": str(activation["assetId"]), "network": NETWORK } } } }
+	return getPostResult(path, parameters)
 
 if __name__ == "__main__":
 	print "Starting..."
-	#print getPolicies()
+	print getPolicies()
 	activation = getActivation(VERSION)
 	result = activatePolicy(activation)
 	pprint.pprint(result)
