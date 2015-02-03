@@ -5,7 +5,7 @@ Licensed under Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
 
-Author: Ian Cass <ian@wheep.co.uk>
+Author: Ian Cass <icass@akamai.com>
 
 For this to work, you need an activated site configuration that has
 Edge Redirector enabled on it. Please make sure that the
