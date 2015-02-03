@@ -30,7 +30,7 @@ import pprint
 session = requests.Session()
 debug = False
 
-VPNAME = "icass_vptest2"	# This is the name of your policy
+VPNAME = "POLICY_NAME"		# This is the name of your policy
 VERSION = "1" 			# This is the version of your policy
 NETWORK = "staging"		# staging or production
 
@@ -81,6 +81,29 @@ def getPostResult(endpoint, parameters):
         obj = json.loads(result.text)
         return obj
 
+def getAllActivations():
+        return getResult("/config-edgeredirector-data/api/v1/common/activation?historyOnly=false");
+
+def getVPActivation():
+        activations = getAllActivations()
+        for activation in activations:
+                if activation["name"] == VPNAME:
+                        return activation
+        raise RuntimeError("Can't find the VP Activation record")
+
+def getActivation(v):
+        print
+        print "Getting Activation record for version " + v
+        vpactivation = getVPActivation()
+        for policy in vpactivation["policies"]:
+                for version in policy["versions"]:
+                        if version["version"] == v:
+                                activation = {"fileId":vpactivation["fileId"], "assetId":vpactivation["assetId"], "policyVersionId":version["policyVersionId"]}
+                                if debug:
+                                        pprint.pprint(activation)
+                                return activation
+        raise RuntimeError("No VP Activation records found with the requested version")
+
 def getPolicies():
 	print
 	print "Requesting VP policies"
@@ -89,6 +112,19 @@ def getPolicies():
         parameters = { "query": { "policyManagerRequest": { "command": "getPolicyInfoMapUsingACGIDs", "getPolicyInfoMapUsingACGIDs": {} } } }
 	return getPostResult(path, parameters)
 
+def activatePolicy(activation):
+        print "Setting policy"
+        pprint.pprint(activation)
+        path = "/config-edgeredirector-data/api/v1/policymanager"
+        parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation["policyVersionId"] ], "arlId": str(activation["fileId"]), "assetId": str(activation["assetId"]), "network": NETWORK } } } }
+        return getPostResult(path, parameters)
+
+
 if __name__ == "__main__":
 	print "Starting..."
 	print getPolicies()
+
+        activation = getActivation(VERSION)
+        result = activatePolicy(activation)
+        pprint.pprint(result)
+
