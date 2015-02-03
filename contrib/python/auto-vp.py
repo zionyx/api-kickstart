@@ -52,8 +52,8 @@ import pprint
 session = requests.Session()
 debug = True
 
-CONFIGNAME = "icass_vptest2"      # This is the name of your site configuration
-VPNAME = "icass"          # This is the name of your policy
+CONFIGNAME = "CONFIG_NAME"      # This is the name of your site configuration
+VPNAME = "POLICY_NAME"          # This is the name of your policy
 NETWORK = "staging"             # staging or production
 LOWVER = "1"			# The version of your VP Policy for low traffic
 HIGHVER = "2"			# The version of your VP Policy for high traffic
