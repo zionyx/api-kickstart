@@ -1,4 +1,16 @@
 #! /usr/bin/python
+
+""" Sample client for Alerts API
+Licensed under Apache License
+Version 2.0, January 2004
+http://www.apache.org/licenses/
+
+Author: Ian Cass <icass@akamai.com>
+
+This will list the alerts that are available for the given CPCode
+
+"""
+
 import time
 import requests, logging, json
 from random import randint

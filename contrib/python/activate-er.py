@@ -98,7 +98,6 @@ def getActivation(v):
         print "Getting Activation record for version " + v
         vpactivation = getVPActivation()
         for policy in vpactivation["policies"]:
-		pprint.pprint(policy)
 		if policy["policyName"] == VPNAME:
 			for version in policy["versions"]:
 				if version["version"] == v:
