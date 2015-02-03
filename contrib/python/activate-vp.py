@@ -30,6 +30,7 @@ import pprint
 session = requests.Session()
 debug = False
 
+CONFIGNAME = "CONFIG_NAME"	# This is the name of your site configuration
 VPNAME = "POLICY_NAME"		# This is the name of your policy
 VERSION = "1" 			# This is the version of your policy
 NETWORK = "staging"		# staging or production
@@ -87,26 +88,27 @@ def getAllActivations():
 def getVPActivation():
 	activations = getAllActivations()
 	for activation in activations:
-		if activation["name"] == VPNAME:
+		if activation["name"] == CONFIGNAME:
 			return activation
-	raise RuntimeError("Can't find the VP Activation record")
+	raise RuntimeError("Can't find the Activation record")
 
 def getActivation(v):
 	print
 	print "Getting Activation record for version " + v
 	vpactivation = getVPActivation()
 	for policy in vpactivation["policies"]:
-		for version in policy["versions"]:
-			if version["version"] == v:
-				activation = {"fileId":vpactivation["fileId"], "assetId":vpactivation["assetId"], "policyVersionId":version["policyVersionId"]}
-				if debug:
-					pprint.pprint(activation)
-				return activation
-	raise RuntimeError("No VP Activation records found with the requested version")
+		if policy["policyName"] == VPNAME:
+			for version in policy["versions"]:
+				if version["version"] == v:
+					activation = {"fileId":vpactivation["fileId"], "assetId":vpactivation["assetId"], "policyVersionId":version["policyVersionId"]}
+					if debug:
+						pprint.pprint(activation)
+					return activation
+	raise RuntimeError("No Activation records found with the requested version")
 
 def getPolicies():
 	print
-	print "Requesting VP policies"
+	print "Requesting policies"
 
         path = "/config-visitor-prioritization-data/api/v1/policymanager?command=getAllPolicyInfoMaps"
         parameters = { "query": {"policyManagerRequest": { "command": "getPolicyInfoMapUsingACGIDs", "getPolicyInfoMapUsingACGIDs":{} } } }
