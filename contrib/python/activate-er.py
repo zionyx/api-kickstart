@@ -5,7 +5,7 @@ Licensed under Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
 
-Author: Ian Cass <icass@akamai.com>
+Author: Ian Cass <ian@wheep.co.uk>
 
 For this to work, you need an activated site configuration that has
 Edge Redirector enabled on it. Please make sure that the
@@ -31,7 +31,7 @@ session = requests.Session()
 debug = False
 
 CONFIGNAME = "CONFIG_NAME"	# This is the name of your site configuration
-VPNAME = "POLICY_NAME"		# This is the name of your policy
+POLICYNAME = "POLICY_NAME"	# This is the name of your policy
 VERSION = "1" 			# This is the version of your policy
 NETWORK = "staging"		# staging or production
 
@@ -39,8 +39,8 @@ NETWORK = "staging"		# staging or production
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({},"default")
-if hasattr(config, "verbose"):
-	debug = config.verbose
+#if hasattr(config, "verbose"):
+#	debug = config.verbose
 
 # Enable debugging for the requests module
 if debug:
@@ -85,31 +85,31 @@ def getPostResult(endpoint, parameters):
 def getAllActivations():
         return getResult("/config-edgeredirector-data/api/v1/common/activation?historyOnly=false");
 
-def getVPActivation():
+def getERActivation():
         activations = getAllActivations()
         for activation in activations:
                 if activation["name"] == CONFIGNAME:
                         return activation
-        raise RuntimeError("Can't find the VP Activation record")
+        raise RuntimeError("Can't find the Activation record")
 
 
 def getActivation(v):
         print
         print "Getting Activation record for version " + v
-        vpactivation = getVPActivation()
-        for policy in vpactivation["policies"]:
-		if policy["policyName"] == VPNAME:
+        eractivation = getERActivation()
+        for policy in eractivation["policies"]:
+		if policy["policyName"] == POLICYNAME:
 			for version in policy["versions"]:
 				if version["version"] == v:
-					activation = {"fileId":vpactivation["fileId"], "assetId":vpactivation["assetId"], "policyVersionId":version["policyVersionId"]}
+					activation = {"fileId":eractivation["fileId"], "assetId":eractivation["assetId"], "policyVersionId":version["policyVersionId"]}
 					if debug:
 						pprint.pprint(activation)
 					return activation
-        raise RuntimeError("No VP Activation records found with the requested version")
+        raise RuntimeError("No Activation records found with the requested version")
 
 def getPolicies():
 	print
-	print "Requesting VP policies"
+	print "Requesting policies"
 
         path = "/config-edgeredirector-data/api/v1/policymanager?command=getAllPolicyInfoMaps"
         parameters = { "query": { "policyManagerRequest": { "command": "getPolicyInfoMapUsingACGIDs", "getPolicyInfoMapUsingACGIDs": {} } } }
@@ -117,7 +117,6 @@ def getPolicies():
 
 def activatePolicy(activation):
         print "Setting policy"
-        pprint.pprint(activation)
         path = "/config-edgeredirector-data/api/v1/policymanager"
         parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation["policyVersionId"] ], "arlId": str(activation["fileId"]), "assetId": str(activation["assetId"]), "network": NETWORK } } } }
         return getPostResult(path, parameters)
