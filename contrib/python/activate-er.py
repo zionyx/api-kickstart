@@ -1,21 +1,21 @@
 #! /usr/bin/python
 
-""" Sample client for VP API
+""" Sample client for ER API
 Licensed under Apache License
 Version 2.0, January 2004
 http://www.apache.org/licenses/
 
-Author: Ian Cass <icass@akamai.com>
+Author: Ian Cass <ian@wheep.co.uk>
 
 For this to work, you need an activated site configuration that has
-Visitor Prioritization enabled on it. Please make sure that the
+Edge Redirector enabled on it. Please make sure that the
 configuration exists in the default group for the api user.
 
-You then need to create one or more VP policies and ensure that you 
+You then need to create one or more ER policies and ensure that you 
 can activate using Luna.
 
 Also, make sure that your API user has read/write permissions for 
-Visitor Prioritization API
+Edge Redirector API
 """
 
 import time
@@ -31,7 +31,7 @@ session = requests.Session()
 debug = False
 
 CONFIGNAME = "CONFIG_NAME"	# This is the name of your site configuration
-VPNAME = "POLICY_NAME"		# This is the name of your policy
+POLICYNAME = "POLICY_NAME"	# This is the name of your policy
 VERSION = "1" 			# This is the version of your policy
 NETWORK = "staging"		# staging or production
 
@@ -83,49 +83,50 @@ def getPostResult(endpoint, parameters):
         return obj
 
 def getAllActivations():
-	return getResult("/config-visitor-prioritization-data/api/v1/common/activation?historyOnly=false");
+        return getResult("/config-edgeredirector-data/api/v1/common/activation?historyOnly=false");
 
-def getVPActivation():
-	activations = getAllActivations()
-	for activation in activations:
-		if activation["name"] == CONFIGNAME:
-			return activation
-	raise RuntimeError("Can't find the Activation record")
+def getERActivation():
+        activations = getAllActivations()
+        for activation in activations:
+                if activation["name"] == CONFIGNAME:
+                        return activation
+        raise RuntimeError("Can't find the Activation record")
+
 
 def getActivation(v):
-	print
-	print "Getting Activation record for version " + v
-	vpactivation = getVPActivation()
-	for policy in vpactivation["policies"]:
-		if policy["policyName"] == VPNAME:
+        print
+        print "Getting Activation record for version " + v
+        eractivation = getERActivation()
+        for policy in eractivation["policies"]:
+		if policy["policyName"] == POLICYNAME:
 			for version in policy["versions"]:
 				if version["version"] == v:
-					activation = {"fileId":vpactivation["fileId"], "assetId":vpactivation["assetId"], "policyVersionId":version["policyVersionId"]}
+					activation = {"fileId":eractivation["fileId"], "assetId":eractivation["assetId"], "policyVersionId":version["policyVersionId"]}
 					if debug:
 						pprint.pprint(activation)
 					return activation
-	raise RuntimeError("No Activation records found with the requested version")
+        raise RuntimeError("No Activation records found with the requested version")
 
 def getPolicies():
 	print
 	print "Requesting policies"
 
-        path = "/config-visitor-prioritization-data/api/v1/policymanager?command=getAllPolicyInfoMaps"
-        parameters = { "query": {"policyManagerRequest": { "command": "getPolicyInfoMapUsingACGIDs", "getPolicyInfoMapUsingACGIDs":{} } } }
+        path = "/config-edgeredirector-data/api/v1/policymanager?command=getAllPolicyInfoMaps"
+        parameters = { "query": { "policyManagerRequest": { "command": "getPolicyInfoMapUsingACGIDs", "getPolicyInfoMapUsingACGIDs": {} } } }
 	return getPostResult(path, parameters)
 
 def activatePolicy(activation):
-	print "Setting policy"
-	pprint.pprint(activation)
-        path = "/config-visitor-prioritization-data/api/v1/policymanager"
-	parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation["policyVersionId"] ], "arlId": str(activation["fileId"]), "assetId": str(activation["assetId"]), "network": NETWORK } } } }
-	return getPostResult(path, parameters)
+        print "Setting policy"
+        path = "/config-edgeredirector-data/api/v1/policymanager"
+        parameters = { "query": { "policyManagerRequest": { "command": "activate", "activate": { "tapiocaIDs": [ activation["policyVersionId"] ], "arlId": str(activation["fileId"]), "assetId": str(activation["assetId"]), "network": NETWORK } } } }
+        return getPostResult(path, parameters)
+
 
 if __name__ == "__main__":
 	print "Starting..."
-	print getPolicies()
-	activation = getActivation(VERSION)
-	result = activatePolicy(activation)
-	pprint.pprint(result)
+	#print getPolicies()
 
-		
+        activation = getActivation(VERSION)
+        result = activatePolicy(activation)
+        pprint.pprint(result)
+
