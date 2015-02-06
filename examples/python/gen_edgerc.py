@@ -12,12 +12,18 @@ from os.path import expanduser
 # script with a new section name as the argument.
 if len(sys.argv) > 1 and not re.search(sys.argv[1],'default'):
 	section_name = sys.argv[1]
+	section_name_pretty = sys.argv[1]
 else:
 	section_name = "----DEFAULT----"
+	section_name_pretty = "default"
 
 print "After authorizing your client in the {OPEN} API Administration tool,"
 print "export the credentials and paste the contents of the export file below," 
 print "followed by control-D."
+print
+
+print "This program will create a section named %s" % section_name_pretty
+print
 sys.stdout.write('>>> ')
 
 # Slurp in config
@@ -51,10 +57,10 @@ Config.read(filename)
 configfile = open(filename,'w')
 
 if section_name in Config.sections():
-	print "\n\nReplacing section: %s" % section_name
+	print "\n\nReplacing section: %s" % section_name_pretty
 	Config.remove_section(section_name)
 else:
-	print "\n\nCreating section: %s" % section_name
+	print "\n\nCreating section: %s" % section_name_pretty
 
 Config.add_section(section_name)
 Config.set(section_name,'client_secret',fields['Secret:'])
