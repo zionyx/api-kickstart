@@ -1,15 +1,11 @@
 #! /usr/bin/python
-""" Sample client for CCU
-Note that in order for this to work you need to provision credentials
-specifically for CCU - you cannot extend existing credentials to add
-CCU as it's managed under "CCU" in the API credential system.
+"""
+A simple script demonstrating how to add new users and delete them.
+Note that this isn't a great script to run on your production system,
+but it will create a user unlikely to conflict with the ones you have.
+This is more of sample code than anything else.
 
-Configure->Organization->Manage APIs
-Select "CCU APIs"
-Create client collections/clients
-Add authorization
 
-Put the credentials in ~/.edgerc as demonstrated by api-kickstart/sample_edgerc
 """
 
 import requests, logging, json

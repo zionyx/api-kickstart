@@ -16,6 +16,11 @@ can activate using Luna.
 
 Also, make sure that your API user has read/write permissions for 
 Visitor Prioritization API
+
+If you want to pass parameters, you can do so as follows.  
+
+activate-vp.py --config=<config> --policy=<policy> --version=<version> --network=<network>
+
 """
 
 import time
@@ -30,17 +35,14 @@ import pprint
 session = requests.Session()
 debug = False
 
-CONFIGNAME = "CONFIG_NAME"	# This is the name of your site configuration
-VPNAME = "POLICY_NAME"		# This is the name of your policy
-VERSION = "1" 			# This is the version of your policy
-NETWORK = "staging"		# staging or production
-
-
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig({},"default")
-if hasattr(config, "verbose"):
-	debug = config.verbose
+config = EdgeGridConfig({"configuration":"Visitor Prioritization",
+			 "policy":"store_poc",
+			 "version":"4",
+			 "network":"staging"},
+			"default")
+
 
 # Enable debugging for the requests module
 if debug:
@@ -73,12 +75,16 @@ def getResult(endpoint, parameters=None):
 	else:
 		path = endpoint
 		endpoint_result = session.get(urljoin(baseurl,path))
+	if debug:
+		print endpoint_result.json()
 	return endpoint_result.json()
 
 def getPostResult(endpoint, parameters):
         headers = {"Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Accept":"application/json"}
         data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
         result = session.post(urljoin(baseurl,endpoint),data=data_string, headers=headers)
+	if debug:
+		print result.text
         obj = json.loads(result.text)
         return obj
 
@@ -88,7 +94,7 @@ def getAllActivations():
 def getVPActivation():
 	activations = getAllActivations()
 	for activation in activations:
-		if activation["name"] == CONFIGNAME:
+		if activation["name"] == config.configuration:
 			return activation
 	raise RuntimeError("Can't find the Activation record")
 
@@ -124,7 +130,7 @@ def activatePolicy(activation):
 if __name__ == "__main__":
 	print "Starting..."
 	print getPolicies()
-	activation = getActivation(VERSION)
+	activation = getActivation(config.version)
 	result = activatePolicy(activation)
 	pprint.pprint(result)
 

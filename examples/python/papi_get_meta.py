@@ -61,7 +61,7 @@ def getResult(endpoint, parameters=None):
 		path = endpoint
 	endpoint_result = session.get(urljoin(baseurl,path))
 	# Since this script is all about metadata, just print it out
-	#print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+	print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
 	return endpoint_result.json()
 
 def getGroup():
