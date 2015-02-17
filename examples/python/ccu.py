@@ -20,7 +20,7 @@ from urlparse import urljoin
 import urllib
 import os
 session = requests.Session()
-debug = False
+debug = True
 
 config = EdgeGridConfig({},"ccu")
 

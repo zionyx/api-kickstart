@@ -74,6 +74,7 @@ def getReportSources():
 	print "Requesting the list of report sources"
 
 	events_result = getResult('/billing-usage/v1/reseller/reportSources')
+	print events_result['contents']
 	return events_result['contents']
 
 def getProducts(parameter_obj,startdate,enddate):

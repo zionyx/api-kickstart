@@ -43,6 +43,7 @@ while index < len(fieldlist):
 # Process the config data
 Config = ConfigParser.ConfigParser()
 filename = "%s/.edgerc" % home
+open(filename, 'a').close()
 
 # First, if we have a 'default' section protect it here
 with open (filename, "r") as myfile:
