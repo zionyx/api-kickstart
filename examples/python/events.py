@@ -77,8 +77,8 @@ def getEvents(account_id):
 	#event_result = getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/requests' % (account_id))
 
 	# Status can be retrieved for a particular event.  Available choices are origin or edge
-	#event_result = getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/status' % (account_id))
-	#event_result = getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/origin/status' % (account_id))
+	event_result = getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/status' % (account_id))
+	event_result = getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/origin/status' % (account_id))
 
 
 if __name__ == "__main__":

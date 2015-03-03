@@ -1,30 +1,4 @@
 # Python edgegrid module
-"""
-    This requires the following to be set (in order of priority to the script):
-    CLIENT_TOKEN, CLIENT_SECRET, ACCESS_TOKEN, HOST
-    optionally you can set VERBOSE to True or max-body to a different buffer size
-
-    These can all be set (case insensitive) in the following ways:
-    On the command line:
-      --client_token xxxxx --client_secret xxxx access_token xxxx, host xxxx
-    In environment variables:
-      export AKA_CLIENT_TOKEN=xxxx
-      export AKA_CLIENT_SECRET=xxxx
-      export AKA_ACCESS_TOKEN=xxxx
-      export AKA_HOST=xxxx.luna.akamaiapis.net
-
-    Optionally:
-      export AKA_VERBOSE=True
-      export AKA_MAX_BODY=2048
-    In a configuration file - default is ~/.edgerc - can be changed using CONFIG_FILE
-    in environment variables or on the command line
-    [default]
-    host = xxxx.luna.akamaiapis.net
-    client_token = xxxx
-    client_secret = xxxx
-    access_token = xxxx
-    max-body = 2048
-"""
 
 import ConfigParser,os,sys
 import argparse
@@ -71,9 +45,16 @@ class EdgeGridConfig():
 			parser.add_argument('--' + argument)
 			if argument in config_values and config_values[argument]:
 				arguments[argument] = config_values[argument]
+				config_values.remove[argument]
 				if argument in required_options:
 					required_options.remove(argument)		
 
+		for argument in config_values:
+			if config_values[argument] == "False" or config_values[argument] == "True":
+				parser.add_argument('--' + argument, action='count')
+			parser.add_argument('--' + argument)
+			arguments[argument] = config_values[argument]
+			
 		args = parser.parse_args()
 		arguments = vars(args)
 

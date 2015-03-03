@@ -72,10 +72,15 @@ def getQueue():
 	purge_queue_result = getResult('/ccu/v2/queues/default')
 	print "The queue currently has %s items in it" % int(purge_queue_result['queueLength'])
 
+def checkProgress(resource):
+        print
+        purge_queue_result = getResult(resource)
+        print purge_queue_result
+
 def postPurgeRequest():
 	purge_obj = {
 			"objects" : [
-				"https://developer.akamai.com/stuff/openProgramGA.html"
+				"https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaiTimeReference.html"
 			]
 		    }
 	print "Adding %s to queue" % json.dumps(purge_obj)
@@ -85,6 +90,10 @@ def postPurgeRequest():
 if __name__ == "__main__":
 	Id = {}
 	getQueue()
-	purge_post_result = postPurgeRequest()	
+	purge_post_result = postPurgeRequest()
+	purge_post_result = postPurgeRequest()
+	
 	seconds_to_wait = purge_post_result['pingAfterSeconds']
+	resource_to_check = purge_post_result['progressUri']
+	checkProgress(resource_to_check)
 	print "You should wait %s seconds before checking queue again..." % seconds_to_wait
