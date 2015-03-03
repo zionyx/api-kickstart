@@ -33,7 +33,7 @@ class EdgeGridConfig():
 		parser.add_argument('--write', '-w', action='store_true')
 
 		required_options = ['client_token','client_secret','host','access_token']
-		optional_options = {'max_body':131072}
+		optional_options = {'max-body':131072}
 
 		options = Set(required_options) | Set(optional_options.keys())
 		arguments = {}
@@ -50,10 +50,11 @@ class EdgeGridConfig():
 					required_options.remove(argument)		
 
 		for argument in config_values:
-			if config_values[argument] == "False" or config_values[argument] == "True":
-				parser.add_argument('--' + argument, action='count')
-			parser.add_argument('--' + argument)
-			arguments[argument] = config_values[argument]
+			if config_values[argument]:
+				if config_values[argument] == "False" or config_values[argument] == "True":
+					parser.add_argument('--' + argument, action='count')
+				parser.add_argument('--' + argument)
+				arguments[argument] = config_values[argument]
 			
 		args = parser.parse_args()
 		arguments = vars(args)
