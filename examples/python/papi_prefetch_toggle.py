@@ -31,19 +31,10 @@ import urllib
 session = requests.Session()
 debug = False
 
-
-# Set these in the script if desired, or
-# use the config options listed above
-config_values = {
-	"client_token"  : '',
-	"client_secret" : '',
-	"access_token"  : '',
-	"host"          : ''
-}
-
-# If all parameters are set already, use them.  Otherwise
-# use the config
-config = EdgeGridConfig(config_values,"papi")
+# Use the credentials from the 'papi' section in ~/.edgerc
+config = EdgeGridConfig({},"papi")
+if hasattr(config, 'verbose'):
+	debug = config.verbose
 
 if config.debug or config.verbose:
 	debug = True
@@ -189,11 +180,13 @@ def switchPropertyStatus(Id,propertyVersion,behaviorName,rules):
 	path = ''.join([path + '?',parameter_string])
 
 	create_result = session.put(urljoin(baseurl,path),data=json.dumps(rules), headers=headers)
-
+	if create_result.status_code != requests.codes.ok:
+		if debug: print ">>>\n" + json.dumps(create_result.json(), indent=2) + "\n<<<\n"
+		create_result.raise_for_status()
 
 if __name__ == "__main__":
 	Id = {}
-	testProperty = "papiTest1"
+	testProperty = "developer.akamai.com"
 	testRule = "prefetching"
 	(Id['group'], Id['contract']) = getGroup()
 	(Id['property'], propertyVersion) = getProperties(Id,testProperty)
