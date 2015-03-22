@@ -1,5 +1,6 @@
 #! /usr/bin/python
-# Very basic script demonstrating diagnostic tools functionality
+# Very basic script template.  Use this to build new
+# examples for use in the api-kickstart repository
 #
 import requests, logging, json
 from random import randint
@@ -13,11 +14,12 @@ debug = False
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
+# In this template, you need to replace "default" with the name of the 
+# .edgerc credentials section you wish to use
 config = EdgeGridConfig({"verbose":debug},"default")
 
-if config.verbose or config.debug:
-  debug = True
-
+if config.debug or config.verbose:
+	debug = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -61,25 +63,23 @@ def putResult(endpoint, body, parameters=None):
   if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
   return endpoint_result.json()
 
+if __name__ == "__main__":
+	# If you're just doing a simple GET the call is very simple
+	# endpoint_result = getResult("ENDPOINT")
+	# result_value = endpoint_result["VARIABLE")
 
-# Request locations that support the diagnostic-tools
-print
-print "Requesting locations that support the diagnostic-tools API.\n"
+	# Add parameters
+	# request_parameters = { "name1":value1, "name2":value2 } 
+	# endpoint_result = getResult("ENDPOINT",request_parameters)
+	# result_value = endpoint_result["VARIABLE")
 
-location_result = getResult('/diagnostic-tools/v1/locations')
+	# POST example
+	#     	sample_obj = { "roleAssignments": [ { "roleId": 14, "groupId": 41241 } ], 
+    	#		"firstName": "Kirsten", 
+    	#		"phone": "8315887563", 
+    	#		"lastName": "Hunter", 
+    	#		"email": "kirsten.hunter@akamai.com"
+   	#	}
+	# sample_post_result = postResult('/user-admin/v1/users', json.dumps(user_obj))
 
-# Select a random location to host our request
-location_count = len(location_result['locations'])
-
-print "There are %s locations that can run dig in the Akamai Network" % location_count
-rand_location = randint(0, location_count)
-location = location_result['locations'][rand_location]
-print "We will make our call from " + location + "\n"
-
-# Request the dig request the {OPEN} Developer Site IP informantion
-print "Running dig from " + location
-dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
-dig_result = getResult("/diagnostic-tools/v1/dig",dig_parameters)
-
-# Display the results from dig
-print dig_result['dig']['result']
+	print "Waiting for some fabulous code here!"

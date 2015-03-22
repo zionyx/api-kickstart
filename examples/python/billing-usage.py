@@ -25,18 +25,10 @@ import urllib
 session = requests.Session()
 debug = False
 
-config = EdgeGridConfig({},"billingusage")
+config = EdgeGridConfig({"verbose":debug},"billingusage")
 
-# Enable debugging for the requests module
-if debug:
-  import httplib as http_client
-  http_client.HTTPConnection.debuglevel = 1
-  logging.basicConfig()
-  logging.getLogger().setLevel(logging.DEBUG)
-  requests_log = logging.getLogger("requests.packages.urllib3")
-  requests_log.setLevel(logging.DEBUG)
-  requests_log.propagate = True
-
+if config.debug or config.verbose:
+	debug = True
 
 # Set the config options
 session.auth = EdgeGridAuth(

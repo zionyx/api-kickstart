@@ -18,17 +18,10 @@ import os
 session = requests.Session()
 debug = False
 
-config = EdgeGridConfig({},"user")
+config = EdgeGridConfig({"verbose":debug},"user")
 
-# Enable debugging for the requests module
-if debug:
-  import httplib as http_client
-  http_client.HTTPConnection.debuglevel = 1
-  logging.basicConfig()
-  logging.getLogger().setLevel(logging.DEBUG)
-  requests_log = logging.getLogger("requests.packages.urllib3")
-  requests_log.setLevel(logging.DEBUG)
-  requests_log.propagate = True
+if config.debug or config.verbose:
+  debug = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -75,8 +68,9 @@ def putResult(endpoint, body, parameters=None):
         return endpoint_result.json()
 
 def getUsers():
-	print
-	user_result = getResult('/user-admin/v1/accounts/B-3-112OHLC/users')
+  print
+  user_result = getResult('/user-admin/v1/accounts/B-3-112OHLC/users')
+  print "Users: %s" % user_result
 
 def createUserRequest():
     	user_obj = {
@@ -103,7 +97,7 @@ def deleteUserRequest(contactid):
 	delete_result = endpoint_result = session.delete(urljoin(baseurl,'/user-admin/v1/users/%s' % contactid))
 
 if __name__ == "__main__":
-	Id = {}
-	contactid = createUserRequest()
-	deleteUserRequest(contactid)
-	getUsers()
+  getUsers()
+  contactid = createUserRequest()
+  deleteUserRequest(contactid)
+  getUsers()

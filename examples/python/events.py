@@ -16,9 +16,9 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 session = requests.Session()
-debug = True
+debug = False
 
-config = EdgeGridConfig({},"events")
+config = EdgeGridConfig({"verbose":debug},"events")
 
 if config.debug or config.verbose:
 	debug = True
