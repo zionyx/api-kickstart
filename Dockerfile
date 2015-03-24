@@ -1,4 +1,4 @@
-FROM ubuntu:12.04
+FROM ubuntu:15.04
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vim
