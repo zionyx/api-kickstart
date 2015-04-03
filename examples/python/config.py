@@ -31,6 +31,14 @@ class EdgeGridConfig():
         parser.add_argument('--verbose', '-v', action='count')
         parser.add_argument('--debug', '-d', action='count')
         parser.add_argument('--write', '-w', action='store_true')
+        parser.add_argument('--find', '-f', action='store_true')
+        parser.add_argument('--diff', action='store_true')
+        parser.add_argument('--prop', action='store')
+        parser.add_argument('--propId', action='store')
+        parser.add_argument('--contractId', action='store')
+        parser.add_argument('--groupId', action='store')
+        parser.add_argument('--from_ver', action='store')
+        parser.add_argument('--to_ver', action='store')
 
         required_options = ['client_token','client_secret','host','access_token']
         optional_options = {'max-body':131072}

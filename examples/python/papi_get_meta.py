@@ -80,13 +80,16 @@ def getGroup():
 	print "    %s (%s)" % (groups_result['accountName'], groups_result['accountId'])
 
 	group = groups_result['groups']['items'][0]
-	groupId = group['groupId']
-	groupName = group['groupName']
+	#groupId = group['groupId']
+	groupId = "grp_34382"
+	#groupName = group['groupName']
+	groupName = "PAPI"
 	print
 	print "Using group %s (%s)" % (groupName, groupId)
 
 	# Use the first contractId for requests, will work fine
-	contractId = group['contractIds'][0]
+	#contractId = group['contractIds'][0]
+	contractId = "ctr_C-FKL41U"
 	print "Using contract ID %s" % (contractId)
 	print
 
