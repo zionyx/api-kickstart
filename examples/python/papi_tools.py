@@ -108,11 +108,9 @@ def getSingleProperty(propertyId, groupId, contractId ):
 								property_parameters)
 	return (property_result)
 
-def findProperty(config):
-	if not hasattr(config, "propId") and not hasattr(config, "prop"):
-		print "You gotta have a property"
-		exit(0)
-	if not config.groupId or not config.contractId:
+def findProperty(propertyName, config):
+	print "Propname is %s" % propertyName
+	if config.prop and not config.groupId or not config.contractId:
 		groups = getGroup()["groups"]["items"]
 	else:
 		groups = [{	
@@ -123,14 +121,9 @@ def findProperty(config):
 		groupId = group["groupId"]
 		if "contractIds" in group:
 			for contractId in group["contractIds"]:
-				if hasattr(config, "prop") and config.prop:
-					property = getPropertyInfo(		config.prop, 
+				if propertyName:
+					property = getPropertyInfo(		propertyName, 
 													groupId, 
-													contractId)
-					return property
-				elif hasattr(config, "propId") and config.propId:
-					property = getSingleProperty(	config.propId,
-													groupId,
 													contractId)
 					return property
 				else:
@@ -170,25 +163,24 @@ def getPropertyVersion(property, version):
 	#print json.dumps(result, indent=2)
 	return (result)	
 
-def getDiff(from_ver, to_ver, property):
-	from_ver = getRealValue(from_ver, property)
-	to_ver = getRealValue(to_ver, property)
+def getDiff(from_ver, from_property, to_ver, to_property):
+	from_ver = getRealValue(from_ver, from_property)
+	to_ver = getRealValue(to_ver, to_property)
 
 	print "Getting difference between version %s and %s" % (from_ver, to_ver)
-	from_content = getPropertyVersion(property, from_ver)
-	to_content = getPropertyVersion(property, to_ver)
+	from_content = getPropertyVersion(from_property, from_ver)
+	to_content = getPropertyVersion(to_property, to_ver)
 
 	version_diff = {"rules":{},"meta":{},"hostnames":{}}
-	top_from_ver = "VERSION %s" % from_ver
-	top_to_ver = "VERSION %s" % to_ver
+	top_from_ver = "%s VERSION %s" % (from_property["propertyName"], from_ver)
+	top_to_ver = "%s VERSION %s" % (to_property["propertyName"], to_ver)
 	diff = compareDeeply(from_content, to_content, version_diff, top_from_ver, top_to_ver)
 	return diff
 
 def compareDeeply(from_version, to_version, version_diff, top_from_ver, top_to_ver):
 	if from_version == to_version:
 		return
-
-	if type(from_version) in [str,int,unicode]:
+	if type(from_version) in [str,int,unicode, bool]:
 		version_diff[top_from_ver] = from_version
 		version_diff[top_to_ver] = to_version
 		return version_diff
@@ -227,45 +219,36 @@ def compareDeeply(from_version, to_version, version_diff, top_from_ver, top_to_v
 
 if __name__ == "__main__":
 	if hasattr(config, "find") and config.find:
-		property = findProperty(config)
+		property = findProperty(config.prop, config)
 		print json.dumps(property, indent=2) + "\n"
 		exit(0)
 		
 	if hasattr(config, "diff") and config.diff:
-		property = findProperty(config)
-		
 		if not config.from_ver:
 			setattr(config, "from_ver", 1)
 		if not config.to_ver:
 			setattr(config, "to_ver", "LATEST")
 
-		diff = getDiff(config.from_ver, config.to_ver, property)
-		keys = diff.keys()
+	if not config.prop:
+			if not hasattr(config, "from_ver") or not hasattr(config, "to_ver"):
+				print "Can't do it, man"
+				exit()
+			else:
+				(from_property_name, from_version) = config.from_ver.split('@')
+				(to_property_name, to_version) = config.to_ver.split('@')
+				if not from_version and to_version:
+					print "Use <property>@<version> for to_ver and from_ver"
+					exit()
+				from_property = findProperty(from_property_name, config)
+				to_property = findProperty(to_property_name, config)
+				diff = getDiff(from_version, from_property, to_version, to_property)
+	else:
+			property = findProperty(config.prop, config)
+			diff = getDiff(config.from_ver, property, config.to_ver, property)
+	keys = diff.keys()
 
-		for key in keys:
-			if diff[key] == {}:
-				del diff[key]
+	for key in keys:
+		if diff[key] == {}:
+			del diff[key]
 
-
-		print json.dumps(diff, indent=2) + "\n"
-			
-		
-
-	# If diff is what we want, get the two configurations
-	# If the user hasn't specified a group, get the groups to check them out
-
-				
-		# Get all group/contract combinations
-		# Grab the contracts
-		# Look through the group/contract examples for the property in question
-		
-		# At the end, tell them what the group and contract ID were to make future
-	#	  runs faster.  Comment that this can be stored in a DB.  TODO: Store
-		# in a sqlite db locally all groups/contracts/property names
-		
-	#property_name = config.property # Property has to be required, can't do this without it
-	#if config.diff:
-	#	version1 = config.from
-	#	version2 = config.to
-	#	print version1
-	#	print version2
+	print json.dumps(diff, indent=2) + "\n"		
