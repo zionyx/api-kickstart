@@ -82,7 +82,7 @@ def getGroup():
 	group = groups_result['groups']['items'][0]
 	groupId = group['groupId']
 	groupName = group['groupName']
-	groupName = "PAPI"
+	#groupName = "PAPI"
 	print
 	print "Using group %s (%s)" % (groupName, groupId)
 
