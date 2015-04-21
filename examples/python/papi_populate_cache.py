@@ -125,9 +125,10 @@ def findProperty(propertyName, config):
 		if "contractIds" in group:
 			for contractId in group["contractIds"]:
 				if propertyName:
-					property = getPropertyInfo(		propertyName, 
-													groupId, 
-													contractId)
+					property = getPropertyInfo(
+									propertyName, 
+									groupId, 
+									contractId)
 					return property
 				else:
 					print "Need a property to make this go."
@@ -230,6 +231,12 @@ if __name__ == "__main__":
 		os.makedirs("gitcache")
 	os.chdir("gitcache")
 	call(["git", "init"])
+	hostnames = open('hostnames', 'w+')
+	meta = open('meta', 'w+')
+	rules = open('rules', 'w+')
+	call(["git", "add", "meta", "rules", "hostnames"])
+	call(["git", "commit", "-a", "-m", "Initializing repository with a clean slate"])
+
 	groups = getGroup()["groups"]["items"]
 	for group in groups:
 		groupId = group["groupId"]
@@ -237,7 +244,8 @@ if __name__ == "__main__":
 			for contractId in group["contractIds"]:
 				properties = getProperties(groupId, contractId)
 				for property in properties:
-					call (["git", "checkout", "-b", property["propertyId"] + "-" + property["propertyName"]])
+					call (["git", "checkout", "master"])
+					call (["git", "checkout", "-b", property["propertyName"]])
 					print "Latest Version is %s for %s" % (property["latestVersion"], property["propertyName"])
 					for version in range(1, property["latestVersion"]+1):
 						property_version = getPropertyVersion(property, version)
