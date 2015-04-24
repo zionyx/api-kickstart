@@ -233,7 +233,9 @@ if __name__ == "__main__":
 	call(["git", "init"])
 	hostnames = open('hostnames', 'w+')
 	meta = open('meta', 'w+')
+	meta.write(" ")
 	rules = open('rules', 'w+')
+	rules.write(" ")
 	call(["git", "add", "meta", "rules", "hostnames"])
 	call(["git", "commit", "-a", "-m", "Initializing repository with a clean slate"])
 
@@ -267,5 +269,6 @@ if __name__ == "__main__":
 						print author_string
 						date = property_version["meta"]["updatedDate"]
 						call(["git", "commit", "--author=" + author_string, "--date=" + date, "-a", "-m", "Version " + property["propertyName"] + " : " + str(version)])
+						call(["git", "tag", property["propertyName"] + "@" + str(version)])
 					
 						
