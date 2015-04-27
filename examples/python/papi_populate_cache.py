@@ -14,7 +14,7 @@ The Akamai Developer Relations Team
 
 """
 
-import requests, logging, json, random, sys
+import requests, logging, json, random, sys, re
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
@@ -23,7 +23,7 @@ import urllib
 from subprocess import call
 import os
 session = requests.Session()
-debug = False
+debug = True
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
@@ -63,7 +63,7 @@ def getResult(endpoint, parameters=None):
 	else:
 		path = endpoint
 	endpoint_result = session.get(urljoin(baseurl,path))
-	#if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+	if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
 	return endpoint_result.json()
 
 def getGroup():
@@ -230,6 +230,7 @@ if __name__ == "__main__":
 	if not os.path.exists("gitcache"):
 		os.makedirs("gitcache")
 	os.chdir("gitcache")
+	users = {}
 	call(["git", "init"])
 	hostnames = open('hostnames', 'w+')
 	meta = open('meta', 'w+')
@@ -239,9 +240,19 @@ if __name__ == "__main__":
 	call(["git", "add", "meta", "rules", "hostnames"])
 	call(["git", "commit", "-a", "-m", "Initializing repository with a clean slate"])
 
-	groups = getGroup()["groups"]["items"]
+	groupInfo = getGroup()
+	first_account = groupInfo["accountId"]
+	first_account_string = re.search('act_(.+?)$', first_account) 
+	first_account = first_account_string.group(1)
+	userInfo = getResult('/user-admin/v1/accounts/%s/users' % (first_account))
+	for user in userInfo:
+		username = user["username"]
+		users[username] = user["firstName"] + " " + user["lastName"] + "<" + user["email"] + ">"
+	groups = groupInfo["groups"]["items"]
+	# Get the list of users here from first group
 	for group in groups:
 		groupId = group["groupId"]
+		print "GroupId = " + groupId
 		if "contractIds" in group:
 			for contractId in group["contractIds"]:
 				properties = getProperties(groupId, contractId)
@@ -265,8 +276,11 @@ if __name__ == "__main__":
 						if version == 1:
 							call(["git", "add", "rules", "hostnames", "meta"])
 						author = property_version["meta"]["updatedByUser"] 
-						author_string = author + " <" + author + "@akamai.com>"
-						print author_string
+						if author in users:
+							author_string = users[author]
+						else:
+							author_string = author + " <" + author + "@akamai.com>" 
+						#print "AUTHOR STRING for %s: %s" (author, author_string)
 						date = property_version["meta"]["updatedDate"]
 						call(["git", "commit", "--author=" + author_string, "--date=" + date, "-a", "-m", "Version " + property["propertyName"] + " : " + str(version)])
 						call(["git", "tag", property["propertyName"] + "@" + str(version)])

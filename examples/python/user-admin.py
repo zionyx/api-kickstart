@@ -69,7 +69,7 @@ def putResult(endpoint, body, parameters=None):
 
 def getUsers():
   print
-  user_result = getResult('/user-admin/v1/accounts/B-3-112OHLC/users')
+  user_result = getResult('/user-admin/v1/accounts/1-1TJZFB/users')
   print "Users: %s" % user_result
 
 def createUserRequest():
