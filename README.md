@@ -33,6 +33,12 @@ has some broken pieces to play with and fix
 
 Future libraries and clients will be developed for other languages as we can, and developers are welcome to send pull requests for examples they have created.
 
+Some more complete applications have been placed into the /apps subdirectory, and they can be retrieved using Git submodules:
+% git submodule init
+% git submodule update
+
+Each has a README explaining what it is and how it works.
+
 Contact khunter@akamai.com, dkazemi@akamai.com or open-developer@akamai.com for help, comments, suggestions.
 
 Tweet your thoughts to @synedra, @tinysubversions
