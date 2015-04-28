@@ -259,11 +259,18 @@ if __name__ == "__main__":
 				for property in properties:
 					call (["git", "checkout", "master"])
 					call (["git", "checkout", "-b", property["propertyName"]])
+					LATEST = property["latestVersion"]
+					STAGING = property["stagingVersion"]
+					PRODUCTION = property["productionVersion"]
+					if not os.path.exists('branch'):
+						with open('branch', 'w+') as file:
+							file.write(json.dumps(property, indent=2))
+							call(["git", "commit", "-a", "-m", "Version " + property["propertyName"] + " : " + str(version)])
+							call(["git", "tag", property["propertyName"] + "_META"])
 					print "Latest Version is %s for %s" % (property["latestVersion"], property["propertyName"])
 					for version in range(1, property["latestVersion"]+1):
 						property_version = getPropertyVersion(property, version)
 						print ">>>\n" + json.dumps(property_version, indent=2) + "\n<<<\n"
-						print property_version
 						with open('hostnames', 'w+') as file:
 							if "hostnames" in property_version:
 								file.write(json.dumps(property_version["hostnames"], indent=2))
@@ -284,5 +291,12 @@ if __name__ == "__main__":
 						date = property_version["meta"]["updatedDate"]
 						call(["git", "commit", "--author=" + author_string, "--date=" + date, "-a", "-m", "Version " + property["propertyName"] + " : " + str(version)])
 						call(["git", "tag", property["propertyName"] + "@" + str(version)])
+						if property_version == LATEST:
+							call (["git", "tag", property["propertyName"] + "@" + "LATEST"])
+						if property_version == STAGING:
+							call (["git", "tag", property["propertyName"] + "@" + "STAGING"])
+						if property_version == PRODUCTION:
+							call (["git", "tag", property["propertyName"] + "@" + "PRODUCTION"])
+
 					
 						
