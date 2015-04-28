@@ -23,7 +23,7 @@ import urllib
 from subprocess import call
 import os
 session = requests.Session()
-debug = True
+debug = False
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
@@ -265,7 +265,7 @@ if __name__ == "__main__":
 					if not os.path.exists('branch'):
 						with open('branch', 'w+') as file:
 							file.write(json.dumps(property, indent=2))
-							call(["git", "commit", "-a", "-m", "Version " + property["propertyName"] + " : " + str(version)])
+							call(["git", "commit", "-a", "-m", "Metadata for " + property["propertyName"]])
 							call(["git", "tag", property["propertyName"] + "_META"])
 					print "Latest Version is %s for %s" % (property["latestVersion"], property["propertyName"])
 					for version in range(1, property["latestVersion"]+1):
