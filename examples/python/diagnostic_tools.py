@@ -9,11 +9,17 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
-
+section_name = "default"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig({"verbose":debug},"default")
+try:
+	config = EdgeGridConfig({"verbose":debug},section_name)
+except:
+	print "ERROR: No section named %s was found in your ~/.edgerc file" % section_name
+	print "ERROR: Please generate credentials for the script functionality"
+	print "ERROR: and run 'gen_edgerc %s' to generate the credential file" % section_name
+	exit(1)
 
 if config.verbose or config.debug:
   debug = True
