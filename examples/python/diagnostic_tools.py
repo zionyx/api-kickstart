@@ -57,6 +57,15 @@ def getResult(endpoint, parameters=None):
 	print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
 	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
 	exit(1)
+
+  if endpoint_result.status_code in [404]:
+	print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
+	print "ERROR: This means that the page does not exist as requested."
+	print "ERROR: Please ensure that the URL you're calling is correctly formatted"
+	print "ERROR: or look at other examples to make sure yours matches."
+	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+	exit(1)
+
   if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
   return endpoint_result.json()
 
