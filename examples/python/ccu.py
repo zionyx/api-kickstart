@@ -21,12 +21,20 @@ import urllib
 import os
 session = requests.Session()
 debug = False
+section_name = "ccu"
 
-config = EdgeGridConfig({"verbose":debug},"ccu")
+# If all parameters are set already, use them.  Otherwise
+# use the config
+try:
+	config = EdgeGridConfig({"verbose":False},section_name)
+except:
+	print "ERROR: No section named %s was found in your ~/.edgerc file" % section_name
+	print "ERROR: Please generate credentials for the script functionality"
+	print "ERROR: and run 'gen_edgerc %s' to generate the credential file" % section_name
+	exit(1)
 
 if config.debug or config.verbose:
 	debug = True
-
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -41,14 +49,38 @@ if hasattr(config, 'headers'):
 baseurl = '%s://%s/' % ('https', config.host)
 
 def getResult(endpoint, parameters=None):
-	if parameters:
-		parameter_string = urllib.urlencode(parameters)
-		path = ''.join([endpoint + '?',parameter_string])
-	else:
-		path = endpoint
-	endpoint_result = session.get(urljoin(baseurl,path))
-	if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
-	return endpoint_result.json()
+  if parameters:
+    parameter_string = urllib.urlencode(parameters)
+    path = ''.join([endpoint + '?',parameter_string])
+  else:
+    path = endpoint
+  endpoint_result = session.get(urljoin(baseurl,path))
+  if endpoint_result.status_code == 403:
+	print "ERROR: Call to %s failed with a 403 result" % endpoint
+	print "ERROR: This indicates a problem with authorization."
+	print "ERROR: Please ensure that the credentials you created for this script"
+	print "ERROR: have the necessary permissions in the Luna portal."
+	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+	exit(1)
+
+  if endpoint_result.status_code in [400, 401]:
+	print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
+	print "ERROR: This indicates a problem with authentication or headers."
+	print "ERROR: Please ensure that the .edgerc file is formatted correctly."
+	print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
+	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+	exit(1)
+
+  if endpoint_result.status_code in [404]:
+	print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
+	print "ERROR: This means that the page does not exist as requested."
+	print "ERROR: Please ensure that the URL you're calling is correctly formatted"
+	print "ERROR: or look at other examples to make sure yours matches."
+	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+	exit(1)
+
+  if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+  return endpoint_result.json()
 
 def postResult(endpoint, body, parameters=None):
 	headers = {'content-type': 'application/json'}
@@ -69,7 +101,7 @@ def getQueue():
 def checkProgress(resource):
         print
         purge_queue_result = getResult(resource)
-        print purge_queue_result
+	return purge_queue_result
 
 def postPurgeRequest():
 	purge_obj = {
@@ -85,9 +117,7 @@ if __name__ == "__main__":
 	Id = {}
 	getQueue()
 	purge_post_result = postPurgeRequest()
-	purge_post_result = postPurgeRequest()
 	
-	seconds_to_wait = purge_post_result['pingAfterSeconds']
-	resource_to_check = purge_post_result['progressUri']
-	checkProgress(resource_to_check)
+	check_result = checkProgress(purge_post_result["progressUri"])
+	seconds_to_wait = check_result['pingAfterSeconds']
 	print "You should wait %s seconds before checking queue again..." % seconds_to_wait

@@ -10,13 +10,15 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
+config_section = "default"
 
-
-# If all parameters are set already, use them.  Otherwise
-# use the config
-# In this template, you need to replace "default" with the name of the 
-# .edgerc credentials section you wish to use
-config = EdgeGridConfig({"verbose":debug},"default")
+try:
+        config = EdgeGridConfig({"verbose":debug},section_name)
+except:
+        print "ERROR: No section named %s was found in your ~/.edgerc file" % section_name
+        print "ERROR: Please generate credentials for the script functionality"
+        print "ERROR: and run 'gen_edgerc %s' to generate the credential file" % section_name
+        exit(1)
 
 if config.debug or config.verbose:
 	debug = True
@@ -38,6 +40,30 @@ def getResult(endpoint, parameters=None):
   else:
     path = endpoint
   endpoint_result = session.get(urljoin(baseurl,path))
+  if endpoint_result.status_code == 403:
+        print "ERROR: Call to %s failed with a 403 result" % endpoint
+        print "ERROR: This indicates a problem with authorization."
+        print "ERROR: Please ensure that the credentials you created for this script"
+        print "ERROR: have the necessary permissions in the Luna portal."
+        print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+        exit(1)
+
+  if endpoint_result.status_code in [400, 401]:
+        print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
+        print "ERROR: This indicates a problem with authentication or headers."
+        print "ERROR: Please ensure that the .edgerc file is formatted correctly."
+        print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
+        print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+        exit(1)
+
+  if endpoint_result.status_code in [404]:
+        print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
+        print "ERROR: This means that the page does not exist as requested."
+        print "ERROR: Please ensure that the URL you're calling is correctly formatted"
+        print "ERROR: or look at other examples to make sure yours matches."
+        print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+        exit(1)
+
   if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
   return endpoint_result.json()
 
