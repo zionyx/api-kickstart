@@ -9,7 +9,7 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
-section_name = "default"
+section_name = "diagnostic_tools"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
@@ -42,6 +42,21 @@ def getResult(endpoint, parameters=None):
   else:
     path = endpoint
   endpoint_result = session.get(urljoin(baseurl,path))
+  if endpoint_result.status_code == 403:
+	print "ERROR: Call to %s failed with a 403 result" % endpoint
+	print "ERROR: This indicates a problem with authorization."
+	print "ERROR: Please ensure that the credentials you created for this script"
+	print "ERROR: have the necessary permissions in the Luna portal."
+	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+	exit(1)
+
+  if endpoint_result.status_code in [400, 401]:
+	print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
+	print "ERROR: This indicates a problem with authentication or headers."
+	print "ERROR: Please ensure that the .edgerc file is formatted correctly."
+	print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
+	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
+	exit(1)
   if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
   return endpoint_result.json()
 
@@ -78,7 +93,7 @@ location_result = getResult('/diagnostic-tools/v1/locations')
 location_count = len(location_result['locations'])
 
 print "There are %s locations that can run dig in the Akamai Network" % location_count
-rand_location = randint(0, location_count)
+rand_location = randint(0, location_count-1)
 location = location_result['locations'][rand_location]
 print "We will make our call from " + location + "\n"
 
