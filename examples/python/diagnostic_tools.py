@@ -42,51 +42,50 @@ def getResult(endpoint, parameters=None):
   else:
     path = endpoint
   endpoint_result = session.get(urljoin(baseurl,path))
-  if endpoint_result.status_code == 403:
-	print
-	print "ERROR: Call to %s failed with a 403 result" % endpoint
-	print "ERROR: This indicates a problem with authorization."
-	print "ERROR: Please ensure that the credentials you created for this script"
-	print "ERROR: have the necessary permissions in the Luna portal."
-	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
-	exit(1)
-
-  if endpoint_result.status_code in [400, 401]:
-	print
-	print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
-	print "ERROR: This indicates a problem with authentication or headers."
-	print "ERROR: Please ensure that the .edgerc file is formatted correctly."
-	print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
-	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
-	exit(1)
-
-  if endpoint_result.status_code in [404]:
-	print
-	print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
-	print "ERROR: This means that the page does not exist as requested."
-	print "ERROR: Please ensure that the URL you're calling is correctly formatted"
-	print "ERROR: or look at other examples to make sure yours matches."
-	print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
-	exit(1)
-
-  return_value = endpoint_result.json()
-  error_string = None
-  if "errorString" in return_value:
-	if return_value["errorString"]:
-		error_string = return_value["errorString"]	
-  else:
-	for key in return_value:
-		if "errorString" in return_value[key] and return_value[key]["errorString"]:
-			error_string = return_value[key]["errorString"]
-  if error_string:
-	print
-	print "ERROR: Call caused a server fault."
-	print "ERROR: Please check the problem details for more information:"
-	print "ERROR: Problem details: %s" % error_string
-	exit(1)
+  httpErrors(endpoint_result.status_code, path, endpoint_result.json())
 
   if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
   return endpoint_result.json()
+
+def httpErrors(status_code, endpoint, result):
+        if status_code == 403:
+                print "ERROR: Call to %s failed with a 403 result" % endpoint
+                print "ERROR: This indicates a problem with authorization."
+                print "ERROR: Please ensure that the credentials you created for this script"
+                print "ERROR: have the necessary permissions in the Luna portal."
+                print "ERROR: Problem details: %s" % result["detail"]
+                exit(1)
+
+        if status_code in [400, 401]:
+                print "ERROR: Call to %s failed with a %s result" % (endpoint, status_code)
+                print "ERROR: This indicates a problem with authentication or headers."
+                print "ERROR: Please ensure that the .edgerc file is formatted correctly."
+                print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
+                print "ERROR: Problem details: %s" % result["detail"]
+                exit(1)
+
+        if status_code in [404]:
+                print "ERROR: Call to %s failed with a %s result" % (endpoint, status_code)
+                print "ERROR: This means that the page does not exist as requested."
+                print "ERROR: Please ensure that the URL you're calling is correctly formatted"
+                print "ERROR: or look at other examples to make sure yours matches."
+                print "ERROR: Problem details: %s" % result["detail"]
+                exit(1)
+		
+		error_string = None
+		if "errorString" in return_value:
+			if return_value["errorString"]:
+                		error_string = return_value["errorString"]
+  		else:
+        		for key in return_value:
+                		if "errorString" in return_value[key] and return_value[key]["errorString"]:
+                        		error_string = return_value[key]["errorString"]
+	if error_string:
+        	print
+        	print "ERROR: Call caused a server fault."
+        	print "ERROR: Please check the problem details for more information:"
+        	print "ERROR: Problem details: %s" % error_string
+        	exit(1)
 
 # Request locations that support the diagnostic-tools
 print

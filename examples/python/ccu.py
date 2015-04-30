@@ -110,7 +110,7 @@ def postPurgeRequest():
 			]
 		    }
 	print "Adding %s to queue" % json.dumps(purge_obj)
-	purge_post_result = postResult('/ccu/v2/queues/default', json.dumps(purge_obj))
+	purge_post_result = postResult('/ccu/v2/queue/default', json.dumps(purge_obj))
 	return purge_post_result
 
 if __name__ == "__main__":
