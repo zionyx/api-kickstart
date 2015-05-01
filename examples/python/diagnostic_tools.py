@@ -70,7 +70,7 @@ def httpErrors(status_code, endpoint, result):
                 print "ERROR: Please ensure that the URL you're calling is correctly formatted"
                 print "ERROR: or look at other examples to make sure yours matches."
                 print "ERROR: Problem details: %s" % result["detail"]
-                exit(1)a
+                exit(1)
 
 	error_string = None
 	if "errorString" in result:
