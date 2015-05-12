@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # Very basic script demonstrating diagnostic tools functionality
 #
-import requests, logging, json
+import requests, logging, json, sys
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
@@ -16,10 +16,10 @@ section_name = "default"
 try:
 	config = EdgeGridConfig({"verbose":debug},section_name)
 except:
-	print "ERROR: No section named %s was found in your ~/.edgerc file" % section_name
-	print "ERROR: Please generate credentials for the script functionality"
-	print "ERROR: and run 'gen_edgerc %s' to generate the credential file" % section_name
-	exit(1)
+	error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
+	error_msg += "ERROR: Please generate credentials for the script functionality\n"
+	error_msg += "ERROR: and run 'gen_edgerc %s' to generate the credential file\n" % section_name
+	sys.exit(error_msg)
 
 if config.verbose or config.debug:
   debug = True

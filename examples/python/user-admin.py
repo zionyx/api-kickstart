@@ -58,6 +58,7 @@ def getResult(endpoint, parameters=None):
   return endpoint_result.json()
 
 def httpErrors(status_code, endpoint, result):
+	error_string = ""
 	if status_code == 403:
         	print "ERROR: Call to %s failed with a 403 result" % endpoint
         	print "ERROR: This indicates a problem with authorization."
@@ -111,21 +112,21 @@ def postResult(endpoint, body, parameters=None):
 
 def getUsers():
   print
-  user_result = getResult('/user-admin/v1/account/1-1TJZFB/users')
+  user_result = getResult('/user-admin/v1/accounts/B-3-112OHLC/users')
   print "Users: %s" % user_result
 
 def createUserRequest():
     	user_obj = {
     		"roleAssignments": [
       			{
-        		"rolesId": 14, 
+        		"roleId": 14, 
         		"groupId": 41241
       			}
     		], 
     		"firstName": "Kirsten", 
     		"phone": "8315887563", 
     		"lastName": "Hunter", 
-    		"email": "kirsten.hunter@akamai.com"
+    		"email": "synedra@princesspolymath.com"
    	}
 
 	print "creating user"
