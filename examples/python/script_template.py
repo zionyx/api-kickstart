@@ -15,10 +15,10 @@ config_section = "default"
 try:
         config = EdgeGridConfig({"verbose":debug},section_name)
 except:
-        print "ERROR: No section named %s was found in your ~/.edgerc file" % section_name
-        print "ERROR: Please generate credentials for the script functionality"
-        print "ERROR: and run 'gen_edgerc %s' to generate the credential file" % section_name
-        exit(1)
+        error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
+        error_msg += "ERROR: Please generate credentials for the script functionality\n"
+        error_msg += "ERROR: and run 'gen_edgerc %s' to generate the credential file\n" % section_name
+        exit(error_msg)
 
 if config.debug or config.verbose:
 	debug = True
@@ -40,32 +40,50 @@ def getResult(endpoint, parameters=None):
   else:
     path = endpoint
   endpoint_result = session.get(urljoin(baseurl,path))
-  if endpoint_result.status_code == 403:
-        print "ERROR: Call to %s failed with a 403 result" % endpoint
-        print "ERROR: This indicates a problem with authorization."
-        print "ERROR: Please ensure that the credentials you created for this script"
-        print "ERROR: have the necessary permissions in the Luna portal."
-        print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
-        exit(1)
-
-  if endpoint_result.status_code in [400, 401]:
-        print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
-        print "ERROR: This indicates a problem with authentication or headers."
-        print "ERROR: Please ensure that the .edgerc file is formatted correctly."
-        print "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials"
-        print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
-        exit(1)
-
-  if endpoint_result.status_code in [404]:
-        print "ERROR: Call to %s failed with a %s result" % (endpoint, endpoint_result.status_code)
-        print "ERROR: This means that the page does not exist as requested."
-        print "ERROR: Please ensure that the URL you're calling is correctly formatted"
-        print "ERROR: or look at other examples to make sure yours matches."
-        print "ERROR: Problem details: %s" % endpoint_result.json()["detail"]
-        exit(1)
-
+  httpErrors(endpoint_result.status_code, path, endpoint_result.json())
   if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
   return endpoint_result.json()
+
+def httpErrors(status_code, endpoint, result):
+  if status_code == 403:
+                error_msg =  "ERROR: Call to %s failed with a 403 result\n" % endpoint
+                error_msg +=  "ERROR: This indicates a problem with authorization.\n"
+                error_msg +=  "ERROR: Please ensure that the credentials you created for this script\n"
+                error_msg +=  "ERROR: have the necessary permissions in the Luna portal.\n"
+                error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
+                exit(error_msg)
+
+  if status_code in [400, 401]:
+                error_msg =  "ERROR: Call to %s failed with a %s result\n" % (endpoint, status_code)
+                error_msg +=  "ERROR: This indicates a problem with authentication or headers.\n"
+                error_msg +=  "ERROR: Please ensure that the .edgerc file is formatted correctly.\n"
+                error_msg +=  "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials\n"
+                error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
+                exit(error_msg)
+
+  if status_code in [404]:
+                error_msg =  "ERROR: Call to %s failed with a %s result\n" % (endpoint, status_code)
+                error_msg +=  "ERROR: This means that the page does not exist as requested.\n"
+                error_msg +=  "ERROR: Please ensure that the URL you're calling is correctly formatted\n"
+                error_msg +=  "ERROR: or look at other examples to make sure yours matches.\n"
+                error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
+                exit(error_msg)
+
+  error_string = None
+  if "errorString" in result:
+               if result["errorString"]:
+                       error_string = result["errorString"]
+  else:
+    for key in result:
+      if type(key) is not str:
+        continue
+      if type(result[key]["errorString"]) is str:
+        error_string = result[key]["errorString"]
+  if error_string:
+                error_msg =  "ERROR: Call caused a server fault.\n"
+                error_msg +=  "ERROR: Please check the problem details for more information:\n"
+                error_msg +=  "ERROR: Problem details: %s\n" % error_string
+                exit(error_msg) 
 
 def postResult(endpoint, body, parameters=None):
   headers = {'content-type': 'application/json'}
