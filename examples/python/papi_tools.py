@@ -174,7 +174,8 @@ def findProperty(propertyName, config):
 					property = getPropertyInfo(		propertyName, 
 													groupId, 
 													contractId)
-					return property
+					if property:
+						return property
 				else:
 					print "Need a property to make this go."
 					exit(0)
