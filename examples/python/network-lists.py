@@ -30,7 +30,7 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
-section_name = "snetworklists"
+section_name = "networklists"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
