@@ -92,7 +92,7 @@ class EdgeGridConfig():
     			err_msg = "ERROR: No section named %s was found in your %s file\n" % (configuration, arguments["config_file"])
     			err_msg += "ERROR: Please generate credentials for the script functionality\n"
     			err_msg += "ERROR: and run 'python gen_edgerc.py %s' to generate the credential file\n" % configuration
-    			print err_msg
+    			sys.exit( err_msg )
             for key, value in config.items(configuration):
             	# ConfigParser lowercases magically
             	if key not in arguments or arguments[key] == None:

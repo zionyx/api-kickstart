@@ -31,7 +31,7 @@ The Akamai Developer Relations Team
 """
 
 import requests, logging, json, random, sys, re
-from random import randint
+from http_calls import EdgeGridHttpCaller
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
 from urlparse import urljoin
@@ -44,26 +44,10 @@ section_name = "papi"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-try:
-	config = EdgeGridConfig({"verbose":False},section_name)
-except:
-  error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
-  error_msg += "ERROR: Please generate credentials for the script functionality\n"
-  error_msg += "ERROR: and run 'gen_edgerc %s' to generate the credential file\n" % section_name
-  sys.exit(error_msg)
+config = EdgeGridConfig({"verbose":False},section_name)
 
-if config.debug or config.verbose:
+if hasattr(config, "debug") or hasattr(config, "verbose"):
 	debug = True
-
-# Enable debugging for the requests module
-if debug:
-  import httplib as http_client
-  http_client.HTTPConnection.debuglevel = 1
-  logging.basicConfig()
-  logging.getLogger().setLevel(logging.DEBUG)
-  requests_log = logging.getLogger("requests.packages.urllib3")
-  requests_log.setLevel(logging.DEBUG)
-  requests_log.propagate = True
 
 
 # Set the config options
@@ -77,58 +61,8 @@ if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
+httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
 
-def getResult(endpoint, parameters=None):
-  if parameters:
-    parameter_string = urllib.urlencode(parameters)
-    path = ''.join([endpoint + '?',parameter_string])
-  else:
-    path = endpoint
-  endpoint_result = session.get(urljoin(baseurl,path))
-  httpErrors(endpoint_result.status_code, path, endpoint_result.json())
-  if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
-  return endpoint_result.json()
-
-def httpErrors(status_code, endpoint, result):
-  if status_code == 403:
-                error_msg =  "ERROR: Call to %s failed with a 403 result\n" % endpoint
-                error_msg +=  "ERROR: This indicates a problem with authorization.\n"
-                error_msg +=  "ERROR: Please ensure that the credentials you created for this script\n"
-                error_msg +=  "ERROR: have the necessary permissions in the Luna portal.\n"
-                error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
-                exit(error_msg)
-
-  if status_code in [400, 401]:
-                error_msg =  "ERROR: Call to %s failed with a %s result\n" % (endpoint, status_code)
-                error_msg +=  "ERROR: This indicates a problem with authentication or headers.\n"
-                error_msg +=  "ERROR: Please ensure that the .edgerc file is formatted correctly.\n"
-                error_msg +=  "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials\n"
-                error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
-                exit(error_msg)
-
-  if status_code in [404]:
-                error_msg =  "ERROR: Call to %s failed with a %s result\n" % (endpoint, status_code)
-                error_msg +=  "ERROR: This means that the page does not exist as requested.\n"
-                error_msg +=  "ERROR: Please ensure that the URL you're calling is correctly formatted\n"
-                error_msg +=  "ERROR: or look at other examples to make sure yours matches.\n"
-                error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
-                exit(error_msg)
-
-  error_string = None
-  if "errorString" in result:
-               if result["errorString"]:
-                       error_string = result["errorString"]
-  else:
-    for key in result:
-      if type(key) is not str:
-        continue
-      if type(result[key]["errorString"]) is str:
-        error_string = result[key]["errorString"]
-  if error_string:
-                error_msg =  "ERROR: Call caused a server fault.\n"
-                error_msg +=  "ERROR: Please check the problem details for more information:\n"
-                error_msg +=  "ERROR: Problem details: %s\n" % error_string
-                exit(error_msg) 
 
 def getGroup():
 	"""
@@ -140,7 +74,7 @@ def getGroup():
 	print
 	print "Requesting the list of groups for this account"
 
-	groups_result = getResult('/papi/v0/groups')
+	groups_result = httpCaller.getResult('/papi/v0/groups')
 
 	return (groups_result)
 
@@ -150,7 +84,7 @@ def getProperties(groupId, contractId):
 	"""
 	print "Getting properties for group %s and contract %s" % (groupId, contractId)
 	property_parameters = { "contractId":contractId, "groupId":groupId }
-	property_result = getResult('/papi/v0/properties', property_parameters)
+	property_result = httpCaller.getResult('/papi/v0/properties', property_parameters)
 	
 	if "properties" in property_result:
 		property_items = property_result['properties']['items']
@@ -170,7 +104,7 @@ def getPropertyActivations(propertyId, groupId, contractId ):
 	Get the properties for the associated group/contract combination
 	"""
 	property_parameters = { "contractId":contractId, "groupId":groupId }
-	property_activations = getResult('/papi/v0/properties/%s/activations' % propertyId, 
+	property_activations = httpCaller.getResult('/papi/v0/properties/%s/activations' % propertyId, 
 								property_parameters)
 	return (property_activations)
 
@@ -213,21 +147,21 @@ def getPropertyVersion(property, version):
 	property_parameters = { "contractId":property["contractId"],  "groupId":property["groupId"] }
 	# We've got to get metadata, hostnames, and rules
 
-	result_properties = getResult('/papi/v0/properties/%s/versions/%s'
+	result_properties = httpCaller.getResult('/papi/v0/properties/%s/versions/%s'
 								% (property["propertyId"], version),
 								property_parameters)
 	if "versions" not in result_properties:
 		return
 	result["meta"] = result_properties["versions"]["items"][0]
 
-	hostname_results = getResult('/papi/v0/properties/%s/versions/%s/hostnames/'
+	hostname_results = httpCaller.getResult('/papi/v0/properties/%s/versions/%s/hostnames/'
 								% (property["propertyId"], version),
 								property_parameters)
 	if "hostnames" in hostname_results and "items" in hostname_results["hostnames"] :
 		if len(hostname_results["hostnames"]["items"])> 0:
 			result["hostnames"] = hostname_results["hostnames"]["items"][0]
 
-	rules_results = getResult('/papi/v0/properties/%s/versions/%s/rules/'
+	rules_results = httpCaller.getResult('/papi/v0/properties/%s/versions/%s/rules/'
 								% (property["propertyId"], version),
 								property_parameters)
 	if "rules" in rules_results:
