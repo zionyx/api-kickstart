@@ -32,7 +32,8 @@ or comments.
 Thanks!
 """
 
-import requests, logging, json
+import requests, logging, json, sys
+from http_calls import EdgeGridHttpCaller
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
@@ -44,15 +45,9 @@ section_name = "billingusage"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-try:
-	config = EdgeGridConfig({"verbose":False},section_name)
-except:
-  error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
-  error_msg += "ERROR: Please generate credentials for the script functionality\n"
-  error_msg += "ERROR: and run 'gen_edgerc %s' to generate the credential file\n" % section_name
-  sys.exit(error_msg)
+config = EdgeGridConfig({"verbose":False},section_name)
 
-if config.debug or config.verbose:
+if hasattr(config, "debug") or hasattr(config, "verbose"):
 	debug = True
 
 # Set the config options
@@ -66,31 +61,13 @@ if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-
-def getResult(endpoint, parameters=None):
-	if parameters:
-		parameter_string = urllib.urlencode(parameters)
-		path = ''.join([endpoint + '?',parameter_string])
-	else:
-		path = endpoint
-	endpoint_result = session.get(urljoin(baseurl,path))
-	if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
-	return endpoint_result.json()
-
-def getFileResult(endpoint, parameters=None):
-	if parameters:
-		parameter_string = urllib.urlencode(parameters)
-		path = ''.join([endpoint + '?',parameter_string])
-	else:
-		path = endpoint
-	endpoint_result = session.get(urljoin(baseurl,path))
-	return endpoint_result
+httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
 
 def getReportSources():
 	print
 	print "Requesting the list of report sources"
 
-	events_result = getResult('/billing-usage/v1/reseller/reportSources')
+	events_result = httpCaller.getResult('/billing-usage/v1/reseller/reportSources')
 	print events_result['contents']
 	return events_result['contents']
 
@@ -138,7 +115,7 @@ def getMeasures(product, startdate, enddate, source_obj):
 			'productId':product
 			}
 	path_string = '/'.join(['/billing-usage/v1/measures', product, source_obj['type'], source_obj['id'], startdate['month'], startdate['year'], enddate['month'], enddate['year']])
-	measures_result = getResult(path_string)
+	measures_result = httpCaller.getResult(path_string)
 
 def getStatisticTypes(product, startdate, enddate, source_obj):
 	print
@@ -152,13 +129,13 @@ def getStatisticTypes(product, startdate, enddate, source_obj):
 			'productId':product
 			}
 	path_string = '/'.join(['/billing-usage/v1/statisticTypes', product, source_obj['type'], source_obj['id'], startdate['month'], startdate['year'], enddate['month'], enddate['year']])
-	statistics_result = getResult(path_string)
+	statistics_result = httpCaller.getResult(path_string)
 	return statistics_result['contents']
 
 def getMonthlyReport(product, startdate, statistictype, source_obj):
 	print
 	path_string = '/'.join(['/billing-usage/v1/contractUsageData/monthly', product, source_obj['type'], source_obj['id'], statistictype, startdate['month'], startdate['year'],startdate['month'], startdate['year']])
-	report_result = getResult(path_string)
+	report_result = httpCaller.getResult(path_string)
 
 if __name__ == "__main__":
 	# getReportSources will return a list of reporting groups and/or contract ids

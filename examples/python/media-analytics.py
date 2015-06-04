@@ -14,13 +14,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
-Sample client for network-lists
-In order to "create" a new list, you'll want to 
-remove the # at the beginning of the "createNetworkList" call
-and update the IP addresses to be appropriate for your needs.
+Sample client for Media Analytics
+
+Put the credentials in ~/.edgerc using gen_edgerc.py
 """
-
-
 
 import requests, logging, json, sys
 from random import randint
@@ -28,27 +25,23 @@ from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
+import os
 session = requests.Session()
-debug = False
-section_name = "snetworklists"
+debug = True
+section_name = "media"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
 try:
 	config = EdgeGridConfig({"verbose":False},section_name)
 except:
-  sys.exit()
+  error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
+  error_msg += "ERROR: Please generate credentials for the script functionality\n"
+  error_msg += "ERROR: and run 'gen_edgerc %s' to generate the credential file\n" % section_name
+  sys.exit(error_msg)
 
-# Enable debugging for the requests module
-if debug:
-  import httplib as http_client
-  http_client.HTTPConnection.debuglevel = 1
-  logging.basicConfig()
-  logging.getLogger().setLevel(logging.DEBUG)
-  requests_log = logging.getLogger("requests.packages.urllib3")
-  requests_log.setLevel(logging.DEBUG)
-  requests_log.propagate = True
-
+if config.debug or config.verbose:
+	debug = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -114,42 +107,35 @@ def httpErrors(status_code, endpoint, result):
                 error_msg +=  "ERROR: Problem details: %s\n" % error_string
                 exit(error_msg) 
 
-def postResult(endpoint, body, parameters=None):
-	headers = {'content-type': 'application/json'}
-        if parameters:
-                parameter_string = urllib.urlencode(parameters)
-                path = ''.join([endpoint + '?',parameter_string])
-        else:
-                path = endpoint
-        endpoint_result = session.post(urljoin(baseurl,path), data=body, headers=headers)
-  	httpErrors(endpoint_result.status_code, path, endpoint_result.json())
-        if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
-        return endpoint_result.json()
-
-def getNetworkLists():
+def getReportPacks():
 	print
-	print "Requesting the list of network lists"
+	report_packs_result = getResult('/media-analytics/v1/audience-analytics/report-packs')
 
-	events_result = getResult('/network-list/v1/network_lists')
-	return events_result
+def getReportPackInfo(reportpack):
+	print
+	report_pack_info = getResult('/media-analytics/v1/audience-analytics/report-packs/%s' % reportpack)
 
-def createNetworkList(name,ips):
-	print "Creating a network list %s for ip addresses %s" % (name, json.dumps(ips))
-	headers = {'Content-Type': 'application/json'}
-	path = "/network-list/v1/network_lists"
-	data_obj = {
-		"name" : name,
-		"type" : "IP",
-		"list" : ips
-	}
+def getDataStores(reportpack):
+	print
+	report_pack_info = getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data-stores' % reportpack)
+
+def getData(reportpack):
+	# Dimensions and metrics are retrieved with getReportPackInfo
+	# Dimensions: Hourly viewers = 2002
+	# Metrics: Service Provider = 942
+	print
+	parameters = {	'startDate': '03/22/2015:15:30',
+			'endDate'  : '03/23/2015:15:30',
+			'dimensions' : 846,
+			'metrics'    : 608,
+			'filterParams' : '[{"type":"dimension","values":["BELL CANADA"],"id":846,"condition":"in"}]' 
+			}
+	data_info = getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data' % reportpack, parameters) 	
 	
-	postResult(urljoin(baseurl,path), json.dumps(data_obj))
-
 if __name__ == "__main__":
-	Id = {}
-	lists = getNetworkLists()["network_lists"]
-	def mapper(x):
-		print str(x["numEntries"]) + ", " + x["name"]
-	map(mapper, lists)
-	#createNetworkList("test",["1.2.3.4"])
+	getReportPacks()
+	getReportPackInfo(29049)
+	getDataStores(29049)
+	#get dimensions and metrics from the Info call
+	getData(29049)	
 
