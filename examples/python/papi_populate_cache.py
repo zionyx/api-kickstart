@@ -328,6 +328,8 @@ if __name__ == "__main__":
 					for version in range(1, property["latestVersion"]+1):
 						property_version = getPropertyVersion(property, version)
 						print ">>>\n" + json.dumps(property_version, indent=2) + "\n<<<\n"
+						if not property_version:
+							continue
 						with open('hostnames', 'w+') as file:
 							if "hostnames" in property_version:
 								file.write(json.dumps(property_version["hostnames"], indent=2))

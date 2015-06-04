@@ -14,13 +14,10 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
-Sample client for network-lists
-In order to "create" a new list, you'll want to 
-remove the # at the beginning of the "createNetworkList" call
-and update the IP addresses to be appropriate for your needs.
+Sample client for Media Analytics
+
+Put the credentials in ~/.edgerc using gen_edgerc.py
 """
-
-
 
 import requests, logging, json, sys
 from http_calls import EdgeGridHttpCaller
@@ -28,9 +25,10 @@ from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
+import os
 session = requests.Session()
-debug = False
-section_name = "snetworklists"
+debug = True
+section_name = "media"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
@@ -53,31 +51,35 @@ if hasattr(config, 'headers'):
 baseurl = '%s://%s/' % ('https', config.host)
 httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
 
-
-def getNetworkLists():
+def getReportPacks():
 	print
-	print "Requesting the list of network lists"
+	report_packs_result = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs')
 
-	events_result = httpCaller.getResult('/network-list/v1/network_lists')
-	return events_result
+def getReportPackInfo(reportpack):
+	print
+	report_pack_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s' % reportpack)
 
-def createNetworkList(name,ips):
-	print "Creating a network list %s for ip addresses %s" % (name, json.dumps(ips))
-	headers = {'Content-Type': 'application/json'}
-	path = "/network-list/v1/network_lists"
-	data_obj = {
-		"name" : name,
-		"type" : "IP",
-		"list" : ips
-	}
+def getDataStores(reportpack):
+	print
+	report_pack_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data-stores' % reportpack)
+
+def getData(reportpack):
+	# Dimensions and metrics are retrieved with getReportPackInfo
+	# Dimensions: Hourly viewers = 2002
+	# Metrics: Service Provider = 942
+	print
+	parameters = {	'startDate': '03/22/2015:15:30',
+			'endDate'  : '03/23/2015:15:30',
+			'dimensions' : 846,
+			'metrics'    : 608,
+			'filterParams' : '[{"type":"dimension","values":["BELL CANADA"],"id":846,"condition":"in"}]' 
+			}
+	data_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data' % reportpack, parameters) 	
 	
-	httpCaller.postResult(urljoin(base.rl,path), json.dumps(data_obj))
-
 if __name__ == "__main__":
-	Id = {}
-	lists = getNetworkLists()["network_lists"]
-	def mapper(x):
-		print str(x["numEntries"]) + ", " + x["name"]
-	map(mapper, lists)
-	#createNetworkList("test",["1.2.3.4"])
+	getReportPacks()
+	getReportPackInfo(29049)
+	getDataStores(29049)
+	#get dimensions and metrics from the Info call
+	getData(29049)	
 

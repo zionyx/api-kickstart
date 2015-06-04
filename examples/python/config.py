@@ -36,33 +36,22 @@ if sys.version_info[0] != 2 or sys.version_info[1] < 7:
     sys.exit(1)
 
 logger = logging.getLogger(__name__)
-
 parser = argparse.ArgumentParser(description='Process command line options.')
-
 class EdgeGridConfig():
 
-    def __init__(self, config_values, configuration):
+    def __init__(self, config_values, configuration, opts=None):
 
         parser.add_argument('--verbose', '-v', action='count')
-        parser.add_argument('--debug', '-d', action='count')
-        parser.add_argument('--write', '-w', action='store_true')
-        parser.add_argument('--find', '-f', action='store_true')
-        parser.add_argument('--diff', action='store_true')
-        parser.add_argument('--prop', action='store')
-        parser.add_argument('--propId', action='store')
-        parser.add_argument('--contractId', action='store')
-        parser.add_argument('--groupId', action='store')
-        parser.add_argument('--from_ver', action='store')
-        parser.add_argument('--to_ver', action='store')
-
-        required_options = ['client_token','client_secret','host','access_token']
-        optional_options = {'max-body':131072}
-
-        options = Set(required_options) | Set(optional_options.keys())
-        arguments = {}
-        
+        parser.add_argument('--debug', '-d', default=False, action='count')
         parser.add_argument('--max_body', default=131072, type=int)
-        parser.add_argument('--config_file', default='~/.edgerc')
+        parser.add_argument('--config_file', '-c', default='~/.edgerc')
+        parser.add_argument('--config_section', '-s', action='store')
+ 
+        required_options = ['client_token','client_secret','host','access_token']
+        options = Set(required_options) 
+        if opts:
+		  for argument in opts.keys:
+			parser.add_argument('--' + argument, action=opts[argument])
 
         for argument in required_options:
         	parser.add_argument('--' + argument)
@@ -78,14 +67,13 @@ class EdgeGridConfig():
         			parser.add_argument('--' + argument, action='count')
         		parser.add_argument('--' + argument)
         		arguments[argument] = config_values[argument]
-        	
-        args = parser.parse_args()
+        try:
+            args = parser.parse_args()
+        except:
+            sys.exit()
         arguments = vars(args)
 
-        if arguments['debug'] != None:
-        	arguments['verbose'] = arguments['debug']
-
-        if arguments['verbose']:
+        if arguments['debug']:
             import httplib as http_client
             http_client.HTTPConnection.debuglevel = 1
             logging.basicConfig()
@@ -94,35 +82,32 @@ class EdgeGridConfig():
             requests_log.setLevel(logging.DEBUG)
             requests_log.propagate = True
 
-
-        # Environment variables are next
-        # Only use AKA_<VAR> environment options
-        akamai_options = Set(['AKA_%s' % option.upper() for option in options])
-        for key in Set(os.environ) & akamai_options:
-            lower_key = re.sub('AKA_','',key).lower()
-            if lower_key not in arguments or arguments[lower_key] == None:
-                arguments[lower_key] = os.environ[key]
-
+        if "config_section" in arguments and arguments["config_section"]:
+            configuration = arguments["config_section"]
         arguments["config_file"] = os.path.expanduser(arguments["config_file"])	
-
         if os.path.isfile(arguments["config_file"]):
-        	config = ConfigParser.ConfigParser()
-        	config.readfp(open(arguments["config_file"]))
-        	for key, value in config.items(configuration):
-        		# ConfigParser lowercases magically
-        		if key not in arguments or arguments[key] == None:
-        			arguments[key] = value
+            config = ConfigParser.ConfigParser()
+            config.readfp(open(arguments["config_file"]))
+            if not config.has_section(configuration):
+    			err_msg = "ERROR: No section named %s was found in your %s file\n" % (configuration, arguments["config_file"])
+    			err_msg += "ERROR: Please generate credentials for the script functionality\n"
+    			err_msg += "ERROR: and run 'python gen_edgerc.py %s' to generate the credential file\n" % configuration
+    			sys.exit( err_msg )
+            for key, value in config.items(configuration):
+            	# ConfigParser lowercases magically
+            	if key not in arguments or arguments[key] == None:
+            		arguments[key] = value
         else:
-        	print "Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA."
-        	exit()
+            	print "Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA."
+            	return None
         missing_args = []
         for argument in required_options:
-        	if argument not in arguments:
-        		missing_args.append(argument)
+            if argument not in arguments:
+                missing_args.append(argument)
 
         if len(missing_args) > 0:
-        	print "Missing args: %s" % missing_args
-        	exit()
+            	print "Missing args: %s" % missing_args
+            	exit()
 
         for option in arguments:
             setattr(self,option,arguments[option])
