@@ -128,18 +128,7 @@ def getUsers():
   print "Users: %s" % user_result
 
 def createUserRequest():
-    	user_obj = {
-    		"roleAssignments": [
-      			{
-        		"roleId": 14, 
-        		"groupId": 41241
-      			}
-    		], 
-    		"firstName": "Kirsten", 
-    		"phone": "8315887563", 
-    		"lastName": "Hunter", 
-    		"email": "synedra@princesspolymath.com"
-   	}
+    	user_obj = {"firstName":"Kirsten","lastName":"Hunter","email":"kirsten.isa.hunter@akamai.com","phone":"(831) 588-7563","timezone":"GMT","roleAssignments":[{"groupId":"41241","roleId":14}],"authPolicies":[]}
 
 	print "creating user"
 	purge_post_result = postResult('/user-admin/v1/users', json.dumps(user_obj))

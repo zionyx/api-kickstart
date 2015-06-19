@@ -39,10 +39,17 @@ session = requests.Session()
 debug = False
 section_name = "papi"
 
+opts = { "find":"count",
+		"prop":"store",
+		"diff":"count",
+		"from_ver":"store",
+		"to_ver":"store"
+		}
+
 # If all parameters are set already, use them.  Otherwise
 # use the config
 try:
-	config = EdgeGridConfig({"verbose":False},section_name)
+	config = EdgeGridConfig({"verbose":False},section_name, opts)
 except:
   error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
   error_msg += "ERROR: Please generate credentials for the script functionality\n"
@@ -174,7 +181,7 @@ def getSingleProperty(propertyId, groupId, contractId ):
 
 def findProperty(propertyName, config):
 	print "Propname is %s" % propertyName
-	if config.prop and not config.groupId or not config.contractId:
+	if hasattr(config,"prop") and not hasattr(config,"groupId")or not hasattr(config,"contractId"):
 		groups = getGroup()["groups"]["items"]
 	else:
 		groups = [{	
@@ -283,20 +290,22 @@ def compareDeeply(from_version, to_version, version_diff, top_from_ver, top_to_v
 	return version_diff
 
 if __name__ == "__main__":
-	if hasattr(config, "find") and config.find:
+	if hasattr(config, "find") and config.find and hasattr(config, "prop"):
 		property = findProperty(config.prop, config)
 		print json.dumps(property, indent=2) + "\n"
 		exit(0)
 		
-	if hasattr(config, "diff") and config.diff:
-		if not config.from_ver:
+	if hasattr(config, "diff"):
+		if not hasattr(config,"from_ver"):
 			setattr(config, "from_ver", 1)
-		if not config.to_ver:
+		if not hasattr(config,"to_ver"):
 			setattr(config, "to_ver", "LATEST")
+	print config.from_ver
+	print config.to_ver
 
-	if not config.prop:
+	if not hasattr(config, "prop"):
 			if not hasattr(config, "from_ver") or not hasattr(config, "to_ver"):
-				print "Can't do it, man"
+				print "Can't do it, man.  Need versions to work with"
 				exit()
 			else:
 				(from_property_name, from_version) = config.from_ver.split('@')
@@ -308,6 +317,8 @@ if __name__ == "__main__":
 				to_property = findProperty(to_property_name, config)
 				diff = getDiff(from_version, from_property, to_version, to_property)
 	else:
+			if not hasattr(config, "prop") or not hasattr(config, "to_ver"):
+				exit()
 			property = findProperty(config.prop, config)
 			diff = getDiff(config.from_ver, property, config.to_ver, property)
 	keys = diff.keys()

@@ -39,27 +39,16 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description='Process command line options.')
 class EdgeGridConfig():
 
-    def __init__(self, config_values, configuration, opts=None):
-
+    def __init__(self, config_values, configuration, flags=None):
+        
         parser.add_argument('--verbose', '-v', action='count')
         parser.add_argument('--debug', '-d', default=False, action='count')
-        parser.add_argument('--max_body', default=131072, type=int)
         parser.add_argument('--config_file', '-c', default='~/.edgerc')
         parser.add_argument('--config_section', '-s', action='store')
  
-        required_options = ['client_token','client_secret','host','access_token']
-        options = Set(required_options) 
-        if opts:
-		  for argument in opts.keys:
-			parser.add_argument('--' + argument, action=opts[argument])
-
-        for argument in required_options:
-        	parser.add_argument('--' + argument)
-        	if argument in config_values and config_values[argument]:
-        		arguments[argument] = config_values[argument]
-        		config_values.remove[argument]
-        		if argument in required_options:
-        			required_options.remove(argument)		
+        if flags:
+            for argument in flags.keys():
+                parser.add_argument('--' + argument, action=flags[argument])
 
         for argument in config_values:
         	if config_values[argument]:
