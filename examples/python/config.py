@@ -78,9 +78,10 @@ class EdgeGridConfig():
         			parser.add_argument('--' + argument, action='count')
         		parser.add_argument('--' + argument)
         		arguments[argument] = config_values[argument]
-
+        	
         args = parser.parse_args()
         arguments = vars(args)
+
         if arguments['debug'] != None:
         	arguments['verbose'] = arguments['debug']
 
