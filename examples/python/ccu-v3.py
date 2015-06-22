@@ -45,7 +45,10 @@ logging.getLogger("requests").setLevel(logging.DEBUG)
 # If all parameters are set already, use them.  Otherwise
 # use the config
 try:
-        config = EdgeGridConfig({"verbose":False}, section_name)
+        config_values = {"verbose":False,
+                         "ccu_host":True,
+                         "ccu_paths":True}
+        config = EdgeGridConfig(config_values, section_name)
 except:
         error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
         error_msg += "ERROR: Please generate credentials for the script functionality\n"
@@ -148,8 +151,17 @@ def postPurgeRequest(host, paths):
 	return purge_post_result
 
 if __name__ == "__main__":
-        host = "fima-site.test.com"
-        paths = ["/test.txt"]
+        if not config.ccu_host or not config.ccu_paths:
+                print "The arguments --ccu_host and --ccu_paths must be specified"
+                print "where "
+                print "   --ccu_host is the hostname to invalidate and"
+                print "   --ccu_path is the space separated list of paths to invalidate"
+                print "For example:"
+                print '   --ccu_host="example.com" --ccu_paths="/index.html /image.jpg"'
+                exit(1)
+
+        host = config.ccu_host
+        paths = config.ccu_paths.split()
         print "invalidating paths %s on host %s"%(paths, host)
 	purge_post_result = postPurgeRequest(host, paths)
         print "result:", purge_post_result
