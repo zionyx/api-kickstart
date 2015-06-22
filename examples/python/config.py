@@ -80,7 +80,7 @@ class EdgeGridConfig():
         		arguments[argument] = config_values[argument]
 
         args = parser.parse_args()
-        arguments.update(vars(args))
+        arguments = vars(args)
         if arguments['debug'] != None:
         	arguments['verbose'] = arguments['debug']
 
