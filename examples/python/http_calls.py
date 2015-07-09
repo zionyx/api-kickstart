@@ -44,8 +44,8 @@ class EdgeGridHttpCaller():
       else:
         path = endpoint
       endpoint_result = self.session.get(urljoin(self.baseurl,path))
-      self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
       if self.debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+      self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
       return endpoint_result.json()
 
     def httpErrors(self, status_code, endpoint, result):
