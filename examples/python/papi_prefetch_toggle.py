@@ -51,7 +51,7 @@ section_name = "papi"
 # If all parameters are set already, use them.  Otherwise
 # use the config
 try:
-	config = EdgeGridConfig({"verbose":False},section_name)
+	config = EdgeGridConfig({"verbose":False},section_name, {"write":"count"})
 except:
   error_msg = "ERROR: No section named %s was found in your ~/.edgerc file\n" % section_name
   error_msg += "ERROR: Please generate credentials for the script functionality\n"
@@ -259,7 +259,7 @@ if __name__ == "__main__":
 	(Id['property'], propertyVersion) = getProperties(Id,testProperty)
 	(rules) = getPropertyRules(Id,propertyVersion,testRule)
 	print
-	if config.write:
+	if hasattr(config, "write") and config.write:
 		switchPropertyStatus(Id,propertyVersion,testRule,rules)
 		getPropertyRules(Id,propertyVersion,testRule)
 

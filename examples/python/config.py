@@ -89,10 +89,6 @@ class EdgeGridConfig():
         else:
             	print "Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA."
             	return None
-        missing_args = []
-        if len(missing_args) > 0:
-            	print "Missing args: %s" % missing_args
-            	exit()
 
         for option in arguments:
             setattr(self,option,arguments[option])

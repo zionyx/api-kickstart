@@ -72,7 +72,7 @@ def getData(reportpack):
 			'endDate'  : '03/23/2015:15:30',
 			'dimensions' : 846,
 			'metrics'    : 608,
-			'filterParams' : '[{"type":"dimension","values":["BELL CANADA"],"id":846,"condition":"in"}]' 
+			'filterParams' : '[{"type":"dimension","values":["XXX XXXX"],"id":846,"condition":"in"}]' 
 			}
 	data_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data' % reportpack, parameters) 	
 	

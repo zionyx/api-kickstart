@@ -173,29 +173,6 @@ def getSingleProperty(propertyId, groupId, contractId ):
 								property_parameters)
 	return (property_result)
 
-def findProperty(propertyName, config):
-	print "Propname is %s" % propertyName
-	groups = getGroup()
-	if config.prop and not config.groupId or not config.contractId and "groups" in groups:
-		groups = getGroup()["groups"]["items"]
-	else:
-		groups = [{	
-					"groupId":config.groupId,
-				  	"contractIds":[config.contractId]
-				}]
-	for group in groups:
-		groupId = group["groupId"]
-		if "contractIds" in group:
-			for contractId in group["contractIds"]:
-				if propertyName:
-					property = getPropertyInfo(
-									propertyName, 
-									groupId, 
-									contractId)
-					return property
-				else:
-					print "Need a property to make this go."
-					exit(0)
 
 def getRealValue(version, property):
 	if version == "STAGING":
