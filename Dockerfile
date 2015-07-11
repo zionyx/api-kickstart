@@ -12,10 +12,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-FROM ubuntu:15.04
+FROM python:2.7.10
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl build-essential libffi-dev libz-dev libxml2-dev libxslt1-dev python-dev python-all wget vim
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl 
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
 WORKDIR /opt/examples/python
