@@ -16,6 +16,7 @@ FROM python:2.7.10
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl 
+RUN pip install httpie-edgegrid 
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
 WORKDIR /opt/examples/python
