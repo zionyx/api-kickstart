@@ -9,5 +9,6 @@ env:
   - secure: BiTn8SPLtOAq073LXyNfFl8SehjHFHemJuAcyJQhcOtn4XPZgOBlu82WJAf8mBroT8RM6aRJObKlZY/iSgGr6NT6nNQ8rIGnn/KvJgpImQSAwPNHso6HS33aiA+KfivBV8KMd0co0+HECekj7mO7/m+5kmKC8SuZTqi/3Zx/6kg=
   - secure: ahnQE/JEJLLNAbFf7D6pKhLNx4VolNcSjzEPYttRaykw3DU+tfyKCQjWCfy7M2UYfU4ZiBnQ3xkx5o+bAa0aS4U0UFXunV5wdVWt5E1hdCf0MKchFoKXgkZJS10mXr0kd3bHDuZD0W5Iks6/x9kdrNTN++X58hkt0qLMZYsiE1Y=
   - secure: FLnSn7UwME8ob2OTcu+gBWo6gH2B6LNqGItmH5dwVNlovOaCO4v6SCW0LgDudji67UCd5yPz0eDQjeqNudvGo0vwIrG4fSte5JEFV6Qn1XG0uDRcNLlfsKBjRM1bxZV0PKaibhIHE5YI6ube4Yhn28fLjgiwYiGPHRM3Pp30nBQ=
-install: python examples/python/setup.py
-script: travis/run.sh
+script: 
+	- python examples/python/setup.py
+	- travis/run.sh
