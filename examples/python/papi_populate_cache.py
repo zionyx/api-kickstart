@@ -291,6 +291,8 @@ if __name__ == "__main__":
 			for contractId in group["contractIds"]:
 				properties = getProperties(groupId, contractId)
 				for property in properties:
+					if property["propertyId"] == "prp_101920":
+						continue
 					call (["git", "checkout", "master"])
 					call (["git", "checkout", "-b", property["propertyName"]])
 					LATEST = property["latestVersion"]
