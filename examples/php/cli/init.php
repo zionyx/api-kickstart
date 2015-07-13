@@ -51,20 +51,59 @@ if (!file_exists(__DIR__ . '/../vendor')) {
     require_once __DIR__  . '/../vendor/autoload.php';
 }
 
-$cli_factory = new \Aura\Cli\CliFactory();
-$context = $cli_factory->newContext($GLOBALS);
+$cli = new League\CLImate\CLImate();
+$cli->arguments->add(
+    [
+        'debug' => [
+            'prefix' => 'd',
+            'longPrefix' => 'debug',
+            'description' => 'Enable Debug Mode: Output HTTP traffic to STDOUT',
+            'defaultValue' => false,
+            'noValue' => true
+        ],
+        'verbose' => [
+            'prefix' => 'v',
+            'longPrefix' => 'verbose',
+            'description' => 'Enable Verbose Mode: Output response bodies (JSON) to STDOUT',
+            'defaultValue' => false,
+            'noValue' => true
+        ],
+        'file' => [
+            'prefix' => 'e',
+            'longPrefix' => 'edgerc',
+            'description' => 'Path to .edgerc file',
+            'defaultValue' => null,
+        ],
+        'section' => [
+            'prefix' => 's',
+            'longPrefix' => 'section',
+            'description' => '.edgerc section to use',
+            'defaultValue' => 'default',
+        ],
+        'help' => [
+            'prefix' => 'h',
+            'longPrefix' => 'help',
+            'description' => 'Show this help',
+            'defaultValue' => false,
+            'noValue' => true
+        ]
+    ]
+);
 
-$options = [
-    'debug,d',
-    'verbose,v'
-];
+$cli->arguments->parse($_SERVER['argv']);
 
-$flags = $context->getopt($options);
+if ($cli->arguments->get('help')) {
+    $cli->usage();
+    exit;
+}
 
-if ($flags->get('--debug')) {
+if ($cli->arguments->get('debug')) {
     \Akamai\Open\EdgeGrid\Client::setDebug(true);
 }
 
-if ($flags->get('--verbose')) {
+if ($cli->arguments->get('verbose')) {
     \Akamai\Open\EdgeGrid\Client::setVerbose(true);
 }
+
+$configFile = $cli->arguments->get('config');
+$configSection = $cli->arguments->get('section');

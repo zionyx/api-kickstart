@@ -2,7 +2,7 @@
 <?php
 require_once __DIR__ . '/cli/init.php';
 
-$client = Akamai\Open\EdgeGrid\Client::createFromEdgeRcFile();
+$client = Akamai\Open\EdgeGrid\Client::createFromEdgeRcFile($configSection, $configFile);
 
 # Request locations that support the diagnostic-tools
 echo "Requesting locations that support the diagnostic-tools API.\n";
@@ -33,5 +33,5 @@ try {
     # Display the results from dig
     echo $dig_result->dig->result;
 } catch (GuzzleHttp\Exception\GuzzleException $e) {
-    var_dump(json_decode($e->getResponse()->getBody()));
+    echo "An error occurred: " . $e->getMessage() . "\n";
 }

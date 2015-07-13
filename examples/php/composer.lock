@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "68b18b32c6607f9fb75c4fad1f491891",
+    "hash": "9189a034b0317c1dbdd9aa87dc7aa8bd",
     "packages": [
         {
             "name": "akamai-open/edgegrid-client",
@@ -12,7 +12,7 @@
             "source": {
                 "type": "git",
                 "url": "/Users/dshafik/src/akamai-open/edgegrid-auth-php",
-                "reference": "bb4cbbceffef5a8a30a9f3896e2c93215ffdd81a"
+                "reference": "357f9eccff2e87846b0a6653f5417237ad83bee5"
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.0",
@@ -50,67 +50,7 @@
                 "edgegrid",
                 "open"
             ],
-            "time": "2015-07-13 06:45:56"
-        },
-        {
-            "name": "aura/cli",
-            "version": "2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/auraphp/Aura.Cli.git",
-                "reference": "b550cd79beff793ec5feeea248ccd4ba537c8603"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/auraphp/Aura.Cli/zipball/b550cd79beff793ec5feeea248ccd4ba537c8603",
-                "reference": "b550cd79beff793ec5feeea248ccd4ba537c8603",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "require-dev": {
-                "aura/di": "~2.0"
-            },
-            "type": "library",
-            "extra": {
-                "aura": {
-                    "type": "library",
-                    "config": {
-                        "common": "Aura\\Cli\\_Config\\Common"
-                    }
-                },
-                "branch-alias": {
-                    "dev-develop-2": "2.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Aura\\Cli\\": "src/",
-                    "Aura\\Cli\\_Config\\": "config/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-2-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Aura.Cli Contributors",
-                    "homepage": "https://github.com/auraphp/Aura.Cli/contributors"
-                }
-            ],
-            "description": "Provides the equivalent of request (Context) and response (Stdio) classes for a command line environment, including Getopt support.",
-            "homepage": "https://github.com/auraphp/Aura.Cli",
-            "keywords": [
-                "cli",
-                "command",
-                "command line",
-                "getopt",
-                "options",
-                "stdio"
-            ],
-            "time": "2015-03-27 17:23:08"
+            "time": "2015-07-13 08:00:55"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -284,6 +224,57 @@
             "time": "2015-06-24 19:55:15"
         },
         {
+            "name": "league/climate",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/climate.git",
+                "reference": "04026b95fa3eddc937573bfd6a6b542fb204500b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/climate/zipball/04026b95fa3eddc937573bfd6a6b542fb204500b",
+                "reference": "04026b95fa3eddc937573bfd6a6b542fb204500b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0",
+                "seld/cli-prompt": "~1.0"
+            },
+            "require-dev": {
+                "mikey179/vfsstream": "~1.4",
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "~4.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\CLImate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joe Tannenbaum",
+                    "email": "hey@joe.codes",
+                    "homepage": "http://joe.codes/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP's best friend for the terminal. CLImate allows you to easily output colored text, special formats, and more.",
+            "keywords": [
+                "cli",
+                "colors",
+                "command",
+                "php",
+                "terminal"
+            ],
+            "time": "2015-05-01 11:19:42"
+        },
+        {
             "name": "psr/http-message",
             "version": "1.0",
             "source": {
@@ -331,6 +322,54 @@
                 "response"
             ],
             "time": "2015-05-04 20:22:00"
+        },
+        {
+            "name": "seld/cli-prompt",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Seldaek/cli-prompt.git",
+                "reference": "fe114c7a6ac5cb0ce76932ae4017024d9842a49c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Seldaek/cli-prompt/zipball/fe114c7a6ac5cb0ce76932ae4017024d9842a49c",
+                "reference": "fe114c7a6ac5cb0ce76932ae4017024d9842a49c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Seld\\CliPrompt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jordi Boggiano",
+                    "email": "j.boggiano@seld.be"
+                }
+            ],
+            "description": "Allows you to prompt for user input on the command line, and optionally hide the characters they type",
+            "keywords": [
+                "cli",
+                "console",
+                "hidden",
+                "input",
+                "prompt"
+            ],
+            "time": "2015-04-30 20:24:49"
         }
     ],
     "packages-dev": [],

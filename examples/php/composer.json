@@ -16,6 +16,6 @@
     ],
     "require": {
         "akamai-open/edgegrid-client": "dev-rewrite",
-        "aura/cli": "^2.1"
+        "league/climate": "~3.1"
     }
 }
