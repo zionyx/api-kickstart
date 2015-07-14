@@ -12,7 +12,7 @@ $colors = [
 
 extract($colors);
 
-if (!file_exists(__DIR__ . '/../vendor')) {
+if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
     echo "{$yellow}You must first run \"{$cyan}composer.phar install${yellow}\" inside this directory to run this script.${reset}\n";
     echo "Would you like to run it now? [{$green}Y{$reset}/{$red}n{$reset}] ";
     while ($input = fgets(STDIN)) {
