@@ -171,5 +171,7 @@ if __name__ == "__main__":
 
 					print "Latest Version is %s for %s" % (property["latestVersion"], property["propertyName"])
 					for version in range(1, property["latestVersion"]+1):
+						if property["propertyId"] == "prp_101920" and version < 40:
+							continue
 						property_version = getPropertyVersion(property, version)
 						print "\n" + json.dumps(property_version, indent=2) + "\n"
