@@ -4,7 +4,8 @@ api-kickstart
 Examples and libraries to get started using the Akamai {OPEN} APIs
 
 Currently, this repository has:
-* Libraries and clients for python
+* Sample code clients for python
+* Sample code clients for php
 
 ## Installation
 After cloning, get the needed libraries by doing the following from the examples/python directory:
