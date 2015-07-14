@@ -8,14 +8,8 @@
             "email": "dshafik@akamai.com"
         }
     ],
-    "repositories": [
-        {
-            "type":"vcs",
-            "url":"/Users/dshafik/src/akamai-open/edgegrid-auth-php"
-        }
-    ],
     "require": {
-        "akamai-open/edgegrid-client": "dev-rewrite",
+        "akamai-open/edgegrid-client": "0.1.*",
         "league/climate": "~3.1"
     }
 }

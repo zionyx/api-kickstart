@@ -4,23 +4,32 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9189a034b0317c1dbdd9aa87dc7aa8bd",
+    "hash": "d8a8f6b33ea55ec665ef887d6105e51d",
     "packages": [
         {
             "name": "akamai-open/edgegrid-client",
-            "version": "dev-rewrite",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "/Users/dshafik/src/akamai-open/edgegrid-auth-php",
-                "reference": "357f9eccff2e87846b0a6653f5417237ad83bee5"
+                "url": "https://github.com/akamai-open/edgegrid-auth-php.git",
+                "reference": "29d214e2bcd0ee163940d335491e2715116ca686"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/akamai-open/edgegrid-auth-php/zipball/29d214e2bcd0ee163940d335491e2715116ca686",
+                "reference": "29d214e2bcd0ee163940d335491e2715116ca686",
+                "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "~6.0",
                 "php": ">=5.5"
             },
             "require-dev": {
+                "fabpot/php-cs-fixer": "^1.9",
+                "kherge/box": "^2.5",
                 "phploc/phploc": "^2.1",
                 "phpunit/phpunit": "~4.7",
+                "squizlabs/php_codesniffer": "^2.3",
                 "theseer/phpdox": "~0.8"
             },
             "type": "library",
@@ -29,11 +38,7 @@
                     "Akamai\\Open\\EdgeGrid\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "GuzzleHttp\\Tests\\": "vendor/guzzlehttp/guzzle/tests"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Apache-2.0"
             ],
@@ -50,7 +55,7 @@
                 "edgegrid",
                 "open"
             ],
-            "time": "2015-07-13 08:00:55"
+            "time": "2015-07-14 01:27:13"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -375,9 +380,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "akamai-open/edgegrid-client": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
