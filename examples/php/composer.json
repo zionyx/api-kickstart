@@ -1,0 +1,21 @@
+{
+    "name": "akamai/edgegrid-examples-php",
+    "description": "Example usage of the akamai-open/edgegrid-client",
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "Davey Shafik",
+            "email": "dshafik@akamai.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type":"vcs",
+            "url":"/Users/dshafik/src/akamai-open/edgegrid-auth-php"
+        }
+    ],
+    "require": {
+        "akamai-open/edgegrid-client": "dev-rewrite",
+        "league/climate": "~3.1"
+    }
+}
