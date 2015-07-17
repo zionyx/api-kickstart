@@ -33,7 +33,6 @@ scriptname = sys.argv[1]
 name = sys.argv[2]
 now = local_now.isoformat()
 now = now[:-13] + now[-6:]
-print now
 
 error_results = {}
 output_results = {}
