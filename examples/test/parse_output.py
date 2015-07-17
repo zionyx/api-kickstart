@@ -14,6 +14,7 @@
 # % generate_junit.py diagnostic_tools dig
 
 import sys, glob, re
+from datetime import time
 
 if len(sys.argv) < 3:
 	exit('Usage: %s <scriptname_base> <classname>' % sys.argv[0])
