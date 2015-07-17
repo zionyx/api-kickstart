@@ -1,0 +1,4 @@
+ERROR: No section named default was found in your ~/.edgerc file
+ERROR: Please generate credentials for the script functionality
+ERROR: and run 'gen_edgerc default' to generate the credential file
+

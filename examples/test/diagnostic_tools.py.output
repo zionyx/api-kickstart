@@ -1,0 +1,231 @@
+
+Requesting locations that support the diagnostic-tools API.
+
+>>>
+{
+  "locations": [
+    "Miami, United States", 
+    "Newark, United States", 
+    "Manassas, United States", 
+    "Secaucus, United States", 
+    "Philadelphia, United States", 
+    "Paloalto, United States", 
+    "Santaclara, United States", 
+    "Reston, United States", 
+    "Atlanta, United States", 
+    "Chicago, United States", 
+    "Piscataway, United States", 
+    "Sanjose, United States", 
+    "Seattle, United States", 
+    "Mountprospect, United States", 
+    "Dallas, United States", 
+    "Ashburn, United States", 
+    "Newyork, United States", 
+    "Losangeles, United States", 
+    "Oakbrook, United States", 
+    "Marietta, United States", 
+    "Kowloon, Hong Kong", 
+    "Hongkong, Hong Kong", 
+    "Madrid, Spain", 
+    "Nonthaburi, Thailand", 
+    "Dublin, Ireland", 
+    "Jakarta, Indonesia", 
+    "Moscow, Russian Federation", 
+    "Santiago, Chile", 
+    "Rome, Italy", 
+    "Milano, Italy", 
+    "Glattbrugg, Switzerland", 
+    "Zurich, Switzerland", 
+    "Paris, France", 
+    "Aubervilliers, France", 
+    "Villepinte, France", 
+    "Nanterre, France", 
+    "Cyberjaya, Malaysia", 
+    "Adelaide, Australia", 
+    "Brisbane, Australia", 
+    "Perth, Australia", 
+    "Melbourne, Australia", 
+    "Sydney, Australia", 
+    "Ballerup, Denmark", 
+    "Schiphol, Netherlands", 
+    "Amsterdam, Netherlands", 
+    "Vienna, Austria", 
+    "Slough, United Kingdom", 
+    "Chessington, United Kingdom", 
+    "London, United Kingdom", 
+    "Montreal, Canada", 
+    "Toronto, Canada", 
+    "Warsaw, Poland", 
+    "Brussels, Belgium", 
+    "Saopaulo, Brazil", 
+    "Curitiba, Brazil", 
+    "Riodejaneiro, Brazil", 
+    "Taiseng, Singapore", 
+    "Singapore, Singapore", 
+    "Munich, Germany", 
+    "Berlin, Germany", 
+    "Hamburg, Germany", 
+    "Frankfurt, Germany", 
+    "Dusseldorf, Germany", 
+    "Tokyo, Japan", 
+    "Osaka, Japan", 
+    "Goteborg, Sweden", 
+    "Skondal, Sweden", 
+    "Stockholm, Sweden", 
+    "Skarholmen, Sweden", 
+    "Seoul, South Korea"
+  ], 
+  "errorString": null
+}
+<<<
+
+LOG: GET /diagnostic-tools/v1/locations 200 application/json ../python/diagnostic_tools.py 2015-07-17T11:17:37.856958
+There are 70 locations that can run dig in the Akamai Network
+We will make our call from Nonthaburi, Thailand
+
+Running dig from Nonthaburi, Thailand
+>>>
+{
+  "dig": {
+    "authoritySection": [
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n6dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n2dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n7dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n3dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n4dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n0dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n1dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "dscb.akamaiedge.net.", 
+        "recordType": "NS", 
+        "value": "n5dscb.akamaiedge.net.", 
+        "ttl": "4000", 
+        "recordClass": "IN"
+      }
+    ], 
+    "errorString": null, 
+    "hostname": "developer.akamai.com.", 
+    "result": "\n; <<>> DiG 9.8.1-P1 <<>> developer.akamai.com -t A\n;; global options: +cmd\n;; Got answer:\n;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7785\n;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 8, ADDITIONAL: 8\n\n;; QUESTION SECTION:\n;developer.akamai.com.\t\tIN\tA\n\n;; ANSWER SECTION:\ndeveloper.akamai.com.\t300\tIN\tCNAME\tdeveloper.akamai.com.edgekey.net.\ndeveloper.akamai.com.edgekey.net. 21600\tIN CNAME e8952.dscb.akamaiedge.net.\ne8952.dscb.akamaiedge.net. 20\tIN\tA\t104.66.10.87\n\n;; AUTHORITY SECTION:\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn6dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn2dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn7dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn3dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn4dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn0dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn1dscb.akamaiedge.net.\ndscb.akamaiedge.net.\t4000\tIN\tNS\tn5dscb.akamaiedge.net.\n\n;; ADDITIONAL SECTION:\nn0dscb.akamaiedge.net.\t4000\tIN\tA\t203.144.145.241\nn1dscb.akamaiedge.net.\t6000\tIN\tA\t88.221.81.194\nn2dscb.akamaiedge.net.\t8000\tIN\tA\t184.28.100.38\nn3dscb.akamaiedge.net.\t4000\tIN\tA\t110.164.253.210\nn4dscb.akamaiedge.net.\t6000\tIN\tA\t184.28.100.39\nn5dscb.akamaiedge.net.\t8000\tIN\tA\t110.164.253.209\nn6dscb.akamaiedge.net.\t4000\tIN\tA\t184.28.100.44\nn7dscb.akamaiedge.net.\t6000\tIN\tA\t110.164.253.208\n\n;; Query time: 235 msec\n;; SERVER: 127.0.0.1#53(127.0.0.1)\n;; WHEN: Fri Jul 17 01:17:42 2015\n;; MSG SIZE  rcvd: 432\n\n", 
+    "answerSection": [
+      {
+        "preferenceValues": null, 
+        "domain": "developer.akamai.com.", 
+        "recordType": "CNAME", 
+        "value": "developer.akamai.com.edgekey.net.", 
+        "ttl": "300", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "developer.akamai.com.edgekey.net.", 
+        "recordType": "CNAME", 
+        "value": "e8952.dscb.akamaiedge.net.", 
+        "ttl": "21600", 
+        "recordClass": "IN"
+      }, 
+      {
+        "preferenceValues": null, 
+        "domain": "e8952.dscb.akamaiedge.net.", 
+        "recordType": "A", 
+        "value": "104.66.10.87", 
+        "ttl": "20", 
+        "recordClass": "IN"
+      }
+    ], 
+    "queryType": "A"
+  }
+}
+<<<
+
+LOG: GET /diagnostic-tools/v1/dig?hostname=developer.akamai.com&location=Nonthaburi%2C+Thailand&queryType=A 200 application/json ../python/diagnostic_tools.py 2015-07-17T11:17:41.237802
+
+; <<>> DiG 9.8.1-P1 <<>> developer.akamai.com -t A
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7785
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 8, ADDITIONAL: 8
+
+;; QUESTION SECTION:
+;developer.akamai.com.		IN	A
+
+;; ANSWER SECTION:
+developer.akamai.com.	300	IN	CNAME	developer.akamai.com.edgekey.net.
+developer.akamai.com.edgekey.net. 21600	IN CNAME e8952.dscb.akamaiedge.net.
+e8952.dscb.akamaiedge.net. 20	IN	A	104.66.10.87
+
+;; AUTHORITY SECTION:
+dscb.akamaiedge.net.	4000	IN	NS	n6dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n2dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n7dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n3dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n4dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n0dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n1dscb.akamaiedge.net.
+dscb.akamaiedge.net.	4000	IN	NS	n5dscb.akamaiedge.net.
+
+;; ADDITIONAL SECTION:
+n0dscb.akamaiedge.net.	4000	IN	A	203.144.145.241
+n1dscb.akamaiedge.net.	6000	IN	A	88.221.81.194
+n2dscb.akamaiedge.net.	8000	IN	A	184.28.100.38
+n3dscb.akamaiedge.net.	4000	IN	A	110.164.253.210
+n4dscb.akamaiedge.net.	6000	IN	A	184.28.100.39
+n5dscb.akamaiedge.net.	8000	IN	A	110.164.253.209
+n6dscb.akamaiedge.net.	4000	IN	A	184.28.100.44
+n7dscb.akamaiedge.net.	6000	IN	A	110.164.253.208
+
+;; Query time: 235 msec
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Fri Jul 17 01:17:42 2015
+;; MSG SIZE  rcvd: 432
+
+
