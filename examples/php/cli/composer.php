@@ -34,7 +34,7 @@ function installComposer()
         echo "\n{$yellow}Running composer... {$reset}";
     }
     $rundir = __DIR__ . '/../';
-    echo `cd $rundir && php composer.phar update $quiet`;
+    echo `cd "$rundir" && php composer.phar update $quiet`;
     if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
         require_once __DIR__  . '/../vendor/autoload.php';
         if ($quiet) {
