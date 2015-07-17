@@ -102,6 +102,10 @@ class EdgeGridHttpCaller():
             path = endpoint
         endpoint_result = self.session.post(urljoin(self.baseurl,path), data=body, headers=headers)
         self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
+	now = datetime.now().isoformat()
+	status = endpoint_result.status_code
+	if self.verbose: print "LOG: POST %s %s %s %s %s" % (path,status,"application/json",sys.argv[0],now)
+
         if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
         return endpoint_result.json()
 
