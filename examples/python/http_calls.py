@@ -22,7 +22,6 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 import os
-from datetime import datetime
 
 if sys.version_info[0] != 2 or sys.version_info[1] < 7:
     print("This script requires Python version 2.7")
@@ -46,9 +45,8 @@ class EdgeGridHttpCaller():
         path = endpoint
       endpoint_result = self.session.get(urljoin(self.baseurl,path))
       if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
-      now = datetime.now().isoformat()
       status = endpoint_result.status_code
-      if self.verbose: print "LOG: GET %s %s %s %s %s" % (path,status,"application/json",sys.argv[0],now)
+      if self.verbose: print "LOG: GET %s %s %s" % (endpoint,status,endpoint_result.headers["content-type"])
       self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
       return endpoint_result.json()
 
@@ -102,9 +100,8 @@ class EdgeGridHttpCaller():
             path = endpoint
         endpoint_result = self.session.post(urljoin(self.baseurl,path), data=body, headers=headers)
         self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
-	now = datetime.now().isoformat()
 	status = endpoint_result.status_code
-	if self.verbose: print "LOG: POST %s %s %s %s %s" % (path,status,"application/json",sys.argv[0],now)
+	if self.verbose: print "LOG: POST %s %s %s" % (path,status,endpoint_result.headers["content-type"])
 
         if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
         return endpoint_result.json()

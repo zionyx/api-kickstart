@@ -13,14 +13,16 @@
 #
 # % generate_junit.py diagnostic_tools dig
 
-import sys, glob, re
+import sys, glob, re, string
 import time
+from datetime import datetime
 
 if len(sys.argv) < 3:
 	exit('Usage: %s <scriptname_base> <classname>' % sys.argv[0])
 
 scriptname = sys.argv[1]
 name = sys.argv[2]
+now = datetime.now().isoformat()
 
 error_results = {}
 output_results = {}
@@ -31,9 +33,29 @@ for file in glob.glob("%s.*.*" % scriptname):
 			error_results[file] = error_file.read()	
 
 	if "output" in file:
-		print "Found an output"
 		with open (file, 'r') as output_file:
-			output_content = output_file.read()
+			output_content = string.split(output_file.read(),'\n')
+			base_filename = file[:-7]
+			output_string = ""
+			method = ""
+			endpoint = ""
+			status = ""
+			for line in output_content:
+				if ".py" in base_filename: 
+					if "LOG: " in line:
+						output_string = "%s %s %s" % (line[5:],base_filename,now)
+						print output_string
+				elif ".php" in base_filename:
+					if "> GET" in line or "> POST" in line:
+						items = string.split(line,' ')
+						method = items[1]
+						endpoint = string.split(items[2],'?')[0]
+					if "< HTTP/1.1" in line:
+						status = line[11:14]
+					if "< Content-Type:" in line:
+						content_type = line[16:-1]
+						output_string = "%s %s %s %s %s %s" % (method, endpoint, status, content_type,base_filename,now)
+						print output_string
 			output_results[file] = output_file.read()
 
 with open ('test.xml', 'w') as xml_file:
@@ -49,4 +71,3 @@ with open ('test.xml', 'w') as xml_file:
 			xml_file.write('/>\n')
 	xml_file.write('</testsuite>\n')
 	xml_file.close()
-time.sleep(5)
