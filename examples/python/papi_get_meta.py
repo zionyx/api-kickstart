@@ -40,15 +40,18 @@ from subprocess import call
 import os
 session = requests.Session()
 debug = False
+verbose = False
 section_name = "papi"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({"verbose":False},section_name)
 
-if hasattr(config, "debug") or hasattr(config, "verbose"):
+if hasattr(config, "debug") and config.debug:
 	debug = True
 
+if hasattr(config, "verbose") and config.verbose:
+	verbose = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -61,7 +64,7 @@ if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
+httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 
 def getGroup():
