@@ -47,3 +47,5 @@ with open ('test.xml', 'w') as xml_file:
 		else:
 			xml_file.write('/>\n')
 	xml_file.write('</testsuite>\n')
+	xml_file.close()
+time.sleep(5)
