@@ -22,7 +22,7 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 import os
-
+from datetime import datetime
 
 if sys.version_info[0] != 2 or sys.version_info[1] < 7:
     print("This script requires Python version 2.7")
@@ -31,8 +31,9 @@ if sys.version_info[0] != 2 or sys.version_info[1] < 7:
 logger = logging.getLogger(__name__)       
 
 class EdgeGridHttpCaller():
-    def __init__(self, session, debug, baseurl):
+    def __init__(self, session, debug, verbose, baseurl):
         self.debug = debug
+	self.verbose = verbose
         self.session = session
         self.baseurl = baseurl
         return None
@@ -45,6 +46,9 @@ class EdgeGridHttpCaller():
         path = endpoint
       endpoint_result = self.session.get(urljoin(self.baseurl,path))
       if self.debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+      now = datetime.now().isoformat()
+      status = endpoint_result.status_code
+      if self.verbose: print "LOG: GET %s %s %s %s %s" % (path,status,"application/json",sys.argv[0],now)
       self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
       return endpoint_result.json()
 

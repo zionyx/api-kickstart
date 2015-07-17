@@ -25,14 +25,18 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
+verbose = False
 section_name = "default"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig({"verbose":debug},section_name)
+config = EdgeGridConfig({},section_name)
 
-if hasattr(config, "debug") or hasattr(config, "verbose"):
+if hasattr(config, "debug"):
   debug = True
+
+if hasattr(config, "verbose"):
+  verbose = True
 
 
 # Set the config options
@@ -46,7 +50,7 @@ if hasattr(config, 'headers'):
   session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
+httpCaller = EdgeGridHttpCaller(session, debug,verbose, baseurl)
 
 # Request locations that support the diagnostic-tools
 print
