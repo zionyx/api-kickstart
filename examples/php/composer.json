@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "akamai-open/edgegrid-client": "0.1.*",
+        "akamai-open/edgegrid-client": "0.2.*",
         "league/climate": "~3.1"
     }
 }
