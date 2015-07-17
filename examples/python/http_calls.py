@@ -45,7 +45,7 @@ class EdgeGridHttpCaller():
       else:
         path = endpoint
       endpoint_result = self.session.get(urljoin(self.baseurl,path))
-      if self.debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+      if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
       now = datetime.now().isoformat()
       status = endpoint_result.status_code
       if self.verbose: print "LOG: GET %s %s %s %s %s" % (path,status,"application/json",sys.argv[0],now)
@@ -102,7 +102,7 @@ class EdgeGridHttpCaller():
             path = endpoint
         endpoint_result = self.session.post(urljoin(self.baseurl,path), data=body, headers=headers)
         self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
-        if self.debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+        if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
         return endpoint_result.json()
 
     def putResult(endpoint, body, parameters=None):
@@ -113,6 +113,6 @@ class EdgeGridHttpCaller():
           else:
                   path = endpoint
           endpoint_result = session.put(urljoin(self.baseurl,path), data=body, headers=headers)
-          if debug: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+          if verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
           return endpoint_result.json()
 

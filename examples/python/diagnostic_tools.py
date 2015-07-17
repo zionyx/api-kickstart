@@ -32,10 +32,10 @@ section_name = "default"
 # use the config
 config = EdgeGridConfig({},section_name)
 
-if hasattr(config, "debug"):
+if hasattr(config, "debug") and config.debug:
   debug = True
 
-if hasattr(config, "verbose"):
+if hasattr(config, "verbose") and config.verbose:
   verbose = True
 
 
