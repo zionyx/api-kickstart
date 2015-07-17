@@ -16,13 +16,24 @@
 import sys, glob, re, string
 import time
 from datetime import datetime
+from tzlocal import get_localzone
+import pytz
+
+local_tz = get_localzone() 
+ts = time.time()
+utc_now, now = datetime.utcfromtimestamp(ts), datetime.fromtimestamp(ts)
+local_now = utc_now.replace(tzinfo=pytz.utc).astimezone(local_tz)
+assert local_now.replace(tzinfo=None) == now
+
 
 if len(sys.argv) < 3:
 	exit('Usage: %s <scriptname_base> <classname>' % sys.argv[0])
 
 scriptname = sys.argv[1]
 name = sys.argv[2]
-now = datetime.now().isoformat()
+now = local_now.isoformat()
+now = now[:-13] + now[-6:]
+print now
 
 error_results = {}
 output_results = {}
