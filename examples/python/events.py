@@ -32,24 +32,18 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 section_name = "events"
+debug = False
+verbose = False
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({"verbose":False},section_name)
 
-if hasattr(config, "debug") or hasattr(config, "verbose"):
+if hasattr(config, "debug") and config.debug:
   debug = True
 
-# Enable debugging for the requests module
-if debug:
-  import httplib as http_client
-  http_client.HTTPConnection.debuglevel = 1
-  logging.basicConfig()
-  logging.getLogger().setLevel(logging.DEBUG)
-  requests_log = logging.getLogger("requests.packages.urllib3")
-  requests_log.setLevel(logging.DEBUG)
-  requests_log.propagate = True
-
+if hasattr(config, "verbose") and config.verbose:
+  verbose = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -62,7 +56,7 @@ if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
+httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getEvents(account_id):
 	print
@@ -75,14 +69,14 @@ def getEvents(account_id):
 	# to get all information about the event itself.
 
 	# Bandwidth can be retrieved for a particular event.  Available choices are origin, edge, or both.
-	#event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/bandwidth' % (account_id))
-	#event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/origin/bandwidth' % (account_id))
-	#event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/bandwidth' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/bandwidth' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/origin/bandwidth' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/bandwidth' % (account_id))
 
 	# Requests can be retrieved for a particular event.  Available choices are origin, edge, or both.
-	#event_result = httpCaller.getResult('/events/v2/%s/events/1041567/trafficdata/cpcode/edge/requests' % (account_id))
-	#event_result = httpCaller.getResult('/events/v2/%s/events/1041567/trafficdata/cpcode/origin/requests' % (account_id))
-	#event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/requests' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1041567/trafficdata/cpcode/edge/requests' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1041567/trafficdata/cpcode/origin/requests' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/requests' % (account_id))
 
 	# Status can be retrieved for a particular event.  Available choices are origin or edge
 	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/status' % (account_id))
