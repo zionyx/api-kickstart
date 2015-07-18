@@ -106,14 +106,20 @@ class EdgeGridHttpCaller():
         if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
         return endpoint_result.json()
 
-    def putResult(endpoint, body, parameters=None):
+    def putResult(self, endpoint, body, parameters=None):
           headers = {'content-type': 'application/json'}
           if parameters:
                   parameter_string = urllib.urlencode(parameters)
                   path = ''.join([endpoint + '?',parameter_string])
           else:
                   path = endpoint
-          endpoint_result = session.put(urljoin(self.baseurl,path), data=body, headers=headers)
-          if verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+          endpoint_result = self.session.put(urljoin(self.baseurl,path), data=body, headers=headers)
+          if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+	  if self.verbose: print "LOG: PUT %s %s %s" % (endpoint,status,endpoint_result.headers["content-type"])
           return endpoint_result.json()
 
+    def deleteResult(self, endpoint):
+          endpoint_result = self.session.delete(urljoin(self.baseurl,endpoint))
+          if self.verbose: print ">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n"
+	  if self.verbose: print "LOG: DELETE %s %s %s" % (endpoint,status,endpoint_result.headers["content-type"])
+          return endpoint_result.json()
