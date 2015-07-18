@@ -41,14 +41,18 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
+verbose = False
 section_name = "billingusage"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({"verbose":False},section_name)
 
-if hasattr(config, "debug") or hasattr(config, "verbose"):
-	debug = True
+if hasattr(config, "debug") and config.debug:
+  debug = True
+
+if hasattr(config, "verbose") and config.verbose:
+  verbose = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -61,7 +65,7 @@ if hasattr(config, 'headers'):
 	session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
+httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getReportSources():
 	print
