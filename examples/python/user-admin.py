@@ -30,6 +30,7 @@ from config import EdgeGridConfig
 from urlparse import urljoin
 import urllib
 import os
+import time
 session = requests.Session()
 debug = False
 verbose = False
@@ -64,7 +65,9 @@ def getUsers():
   print
 
 def createUserRequest():
-    	user_obj = {"firstName":"Kirsten","lastName":"Hunter","email":"kirsten.lynn.hunter@akamai.com","phone":"(831) 588-7563","timezone":"GMT","roleAssignments":[{"groupId":"41241","roleId":14}],"authPolicies":[]}
+	ts = time.time()
+	username = "kirsten.%s.hunter@akamai.com" % ts
+    	user_obj = {"firstName":"Kirsten","lastName":"Hunter","email":username,"phone":"(831) 588-7563","timezone":"GMT","roleAssignments":[{"groupId":"41241","roleId":14}],"authPolicies":[]}
 
 	print "Creating user"
 	user_post_result = httpCaller.postResult('/user-admin/v1/users', json.dumps(user_obj))
