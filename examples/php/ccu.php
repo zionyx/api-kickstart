@@ -73,8 +73,16 @@ class CcuClient
 }
 
 $ccu = new CcuClient();
-$ccu->getQueue();
-$purge= $ccu->postPurgeRequest();
-$progress = $ccu->checkProgress(json_decode($purge->getBody())->progressUri);
-$seconds_to_wait = $progress->pingAfterSeconds;
-printf("You should wait %s seconds before checking queue again...\n", $seconds_to_wait);
+
+try {
+	$ccu->getQueue();
+	$purge = $ccu->postPurgeRequest();
+	$progress = $ccu->checkProgress(json_decode($purge->getBody())->progressUri);
+
+	$seconds_to_wait = $progress->pingAfterSeconds;
+	printf("You should wait %s seconds before checking queue again...\n", $seconds_to_wait);
+} catch (\GuzzleHttp\Exception\ClientException $e) {
+	// Handle errors
+	echo "An error occurred: " .$e->getMessage(). "\n";
+	echo "Please try again with --debug or --verbose flags.\n";
+}
