@@ -132,45 +132,51 @@ class BillingUsageClient
  */
 $client = new BillingUsageClient();
 
-$reportSource = $client->getReportSources();
-$contractId = $reportSource[0]->id;
-$reportType = $reportSource[0]->type;
-$measures = [];
-$statisticTypes = [];
+try {
+	$reportSource = $client->getReportSources();
+	$contractId = $reportSource[0]->id;
+	$reportType = $reportSource[0]->type;
+	$measures = [];
+	$statisticTypes = [];
 
-# Now, for a list of the products available for the reporting dates for these reporting sources
+	# Now, for a list of the products available for the reporting dates for these reporting sources
 
-$source = [
-	"id" => $contractId,
-	"type" => $reportType
-];
+	$source = [
+		"id" => $contractId,
+		"type" => $reportType
+	];
 
-$startDate = [
-	"month" => "9", 
-	"year" => "2014"
-];
+	$startDate = [
+		"month" => "9",
+		"year" => "2014"
+	];
 
-$endDate = [
-	"month" => "9",
-	"year" => "2014"
-];
+	$endDate = [
+		"month" => "9",
+		"year" => "2014"
+	];
 
-$products = $client->getProducts($source, $startDate, $endDate);
-$productList = [];
-foreach ($products as $product) {
-	$productList[] = ["id" => $product->id];
-	$measures[$product->id] = $client->getMeasures($product->id, $startDate, $endDate, $source);
-	$statisticTypes = $client->getStatisticTypes($product->id, $startDate, $endDate, $source);
-	foreach ($statisticTypes as $statisticType) {
-		echo $client->getMonthlyReport($product->id, $startDate, $statisticType->statisticType, $source) . "\n";
+	$products = $client->getProducts($source, $startDate, $endDate);
+	$productList = [];
+	foreach ($products as $product) {
+		$productList[] = ["id" => $product->id];
+		$measures[$product->id] = $client->getMeasures($product->id, $startDate, $endDate, $source);
+		$statisticTypes = $client->getStatisticTypes($product->id, $startDate, $endDate, $source);
+		foreach ($statisticTypes as $statisticType) {
+			echo $client->getMonthlyReport($product->id, $startDate, $statisticType->statisticType, $source) . "\n";
+		}
 	}
-}
 
-	
-/*
- * Get a CSV report for all products here, using the information we gathered above
- */
-$report = $client->getCsvReport($productList, $startDate, $endDate, $source);
-echo $report . "\n";
+
+	/*
+	 * Get a CSV report for all products here, using the information we gathered above
+	 */
+	$report = $client->getCsvReport($productList, $startDate, $endDate, $source);
+	echo $report . "\n";
+} catch (\GuzzleHttp\Exception\ClientException $e) {
+	// handle errors
+	echo "An error occurred: " .$e->getMessage(). "\n";
+	echo "Please try again with --debug or --verbose flags.\n";
+}
 
 

@@ -52,3 +52,7 @@ if ($cli->arguments->get('verbose')) {
 }
 $configFile = $cli->arguments->get('config');
 $configSection = $cli->arguments->get('section');
+
+if (!extension_loaded('curl')) {
+    $cli->whisper("PHP curl extension not enabled. Output from --debug may be less useful.");
+}

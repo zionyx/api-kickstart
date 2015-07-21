@@ -50,6 +50,7 @@ try {
     
     # Display the results from dig
     echo $dig_result->dig->result;
-} catch (GuzzleHttp\Exception\GuzzleException $e) {
-    echo "An error occurred: " . $e->getMessage() . "\n";
+} catch (GuzzleHttp\Exception\ClientException $e) {
+    echo "An error occurred: " .$e->getMessage(). "\n";
+    echo "Please try again with --debug or --verbose flags.\n";
 }
