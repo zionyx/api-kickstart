@@ -16,6 +16,11 @@
  limitations under the License.
 """
 
+#
+# usage: verify_creds.py [-h] [--verbose] [--debug] 
+#        [--config_file CONFIG_FILE] [--config_section CONFIG_SECTION]
+#
+
 import requests, logging, json, sys
 from http_calls import EdgeGridHttpCaller
 from akamai.edgegrid import EdgeGridAuth
@@ -51,7 +56,7 @@ session.auth = EdgeGridAuth(
 if hasattr(config, 'headers'):
   session.headers.update(config.headers)
 
-#
+# Set up the base URL
 baseurl = '%s://%s/' % ('https', config.host)
 httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
