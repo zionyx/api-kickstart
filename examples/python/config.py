@@ -41,7 +41,7 @@ class EdgeGridConfig():
 
     def __init__(self, config_values, configuration, flags=None):
         
-        parser.add_argument('--verbose', '-v', action='count')
+        parser.add_argument('--verbose', '-v', default=False, action='count')
         parser.add_argument('--debug', '-d', default=False, action='count')
         parser.add_argument('--config_file', '-c', default='~/.edgerc')
         parser.add_argument('--config_section', '-s', action='store')

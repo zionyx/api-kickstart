@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 class EdgeGridHttpCaller():
     def __init__(self, session, debug, verbose, baseurl):
         self.debug = debug
-	self.verbose = verbose
+        self.verbose = verbose
         self.session = session
         self.baseurl = baseurl
         return None
