@@ -7,6 +7,8 @@ Currently, this repository has:
 * Sample code clients for python
 * Sample code clients for php
 
+> **Note:** For details on running the PHP examples, please see `examples/php/README.md`.
+
 ## Installation
 After cloning, get the needed libraries by doing the following from the examples/python directory:
 ```bash
