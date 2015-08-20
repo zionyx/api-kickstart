@@ -14,14 +14,14 @@ Currently, this repository has:
 $ git clone https://github.com/akamai-open/api-kickstart.git
 $ cd examples/python
 ```
-See the README in the examples/python directory for additional instructions
+See the [README](examples/python/README.md) in the examples/python directory for additional instructions
 
 ## PHP
 ``` bash
 $ git clone https://github.com/akamai-open/api-kickstart.git
 $ cd examples/php
 ```
-See the README in the examples/php directory for additional instructions
+See the [README](examples/php/README.md) in the examples/php directory for additional instructions
 
 # Additional Resources
 We have example applications available for review.
