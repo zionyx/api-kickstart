@@ -31,7 +31,7 @@ We have example applications available for review.
 	Note that the Image Manager product is required for this example
 
 # Exploring the API using HTTPie:
-	This [blog post](https://goo.gl/T4VR10) explains how to use HTTPie to access and explore our APIs from the command line
+This [blog post](https://goo.gl/T4VR10) explains how to use HTTPie to access and explore our APIs from the command line
 
 
 
