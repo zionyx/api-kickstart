@@ -7,54 +7,32 @@ Currently, this repository has:
 * Sample code clients for python
 * Sample code clients for php
 
-## Installation
-After cloning, get the needed libraries by doing the following from the examples/python directory:
-```bash
+# Installation
+
+## Python
+``` bash
 $ git clone https://github.com/akamai-open/api-kickstart.git
-$ python tools/setup.py install --user
+$ cd examples/python
 ```
+See the README in the examples/python directory for additional instructions
 
-## Installation support
-If you have issues with the setup command, check the following link:
-http://stackoverflow.com/questions/4495120/combine-user-with-prefix-error-with-setup-py-install
-
-## How To
-The easiest way to walk through the needed provisioning and authentication to get your credentials is under "provisioning" in the Getting started guide on our site:
-https://developer.akamai.com/introduction/index.html
-
-### Credentials
-You can get your credentials set up by using the gen_edgerc.py command in the examples/python directory:
-```bash
-$ python gen_edgerc.py
-``` 
-
-## Example: Diagnostic tools
-For examples other than diagnostic_tools you'll want to pass the name of the appropriate section as an
-argument, for example this is how you'd set up ccu.py:
-```bash
-python gen_edgerc.py ccu
-python ccu.py
+## PHP
+``` bash
+$ git clone https://github.com/akamai-open/api-kickstart.git
+$ cd examples/php
 ```
+See the README in the examples/php directory for additional instructions
 
-## Debugging
-To debug this library, you can turn on debugging:
-```bash
-python diagnostic_tools.py --verbose
-```
+# Additional Resources
+We have example applications available for review.
 
-The diagnostic_tools.py script will work automatically, and the diagnostic_tools_exercises.py has some broken pieces to play with and fix
+[PAPI Demo App](https://github.com/akamai-open/papi-demo-app)
+[Image Manager Demo App](https://github.com/akamai-open/imaging-sample-ui)
+	Note that the Image Manager product is required for this example
 
-Future libraries and clients will be developed for other languages as we can, and developers are welcome to send pull requests for examples they have created.
+# Exploring the API using HTTPie:
+	This [blog post](https://community.akamai.com/community/developer/blog/2015/07/27/exploring-akamai-open-apis-from-the-command-line-using-httpie-and-jq explains how to use HTTPie to access and explore our APIs from the command line)
 
-## Further examples
-Some more complete applications have been placed into the /apps subdirectory, and they can be retrieved using Git submodules:
-```bash
-$ git submodule init
-$ git submodule update
-```
-Each has a README explaining what it is and how it works.
 
-## Authors & Feedback
-Contact khunter@akamai.com open-developer@akamai.com for help, comments, suggestions.
 
-Tweet your thoughts to @synedra
+

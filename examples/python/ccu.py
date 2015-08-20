@@ -75,13 +75,15 @@ def checkProgress(resource):
   purge_queue_result =  httpCaller.getResult(resource)
   return purge_queue_result
 
-def postPurgeRequest():
+def postPurgeRequest(action = "invalidate"):
+	
 	purge_obj = {
+			"action"    : action,
 			"objects" : [
 				"https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaiTimeReference.html"
 			]
 		    }
-	print "Adding %s to queue" % json.dumps(purge_obj)
+	print "Adding %s to queue - %s" % (type, json.dumps(purge_obj));
 	purge_post_result = httpCaller.postResult('/ccu/v2/queues/default', json.dumps(purge_obj))
 	return purge_post_result
 
