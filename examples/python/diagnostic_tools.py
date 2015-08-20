@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 # Very basic script demonstrating diagnostic tools functionality
 #
 """ Copyright 2015 Akamai Technologies, Inc. All Rights Reserved.

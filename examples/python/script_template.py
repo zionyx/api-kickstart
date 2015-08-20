@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/env python
 # Very basic script template.  Use this to build new
 # examples for use in the api-kickstart repository
 #
