@@ -31,7 +31,7 @@ We have example applications available for review.
 	Note that the Image Manager product is required for this example
 
 # Exploring the API using HTTPie:
-	This [blog post](https://community.akamai.com/community/developer/blog/2015/07/27/exploring-akamai-open-apis-from-the-command-line-using-httpie-and-jq) explains how to use HTTPie to access and explore our APIs from the command line
+The [Blog Post](https://goo.gl/T4VR10) https://goo.gl/T4VR10explains how to use HTTPie to access and explore our APIs from the command line
 
 
 
