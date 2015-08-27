@@ -55,9 +55,9 @@ else:
 	print "export the credentials and paste the contents of the export file below," 
 	print "followed by control-D."
 	print
-	sys.stdout.write('>>> ')
+	sys.stdout.write('>>>\n')
 	text = sys.stdin.read()
-	sys.stdout.write('>>> ')
+	sys.stdout.write('<<<\n\n')
 
 # load the cred data
 home = expanduser("~")
