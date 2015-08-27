@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 
 # This script will generate a ~/.edgerc credentials file based on
-# Copy/paste of the "{OPEN} API Administration" output
+# the output of the "{OPEN} API Administration" tool in Luna Control Center.
 #
 # Usage: python gen_edgerc.py -s <section_name> -f <export_file>
 
@@ -28,14 +28,8 @@ import ConfigParser
 from os.path import expanduser
 
 # This script will create a configuration section with the name of the client in your 
-# ~/.edgerc credential store. Many of the sample applications use API specific
-# section names for clarity when reviewed during API Bootcamps. For example, the 
-# diagnostic tools application expects that section name is set to 'diagnostic_tools'. 
-#
-# If you wish to use a section name other then 'default', call the script with 
-# the desired section name as the '-s' argument.
-#
-# For example: gen_edgerc.py -s diagnostic-tools
+# ~/.edgerc credential store. Many of the sample applications use the a section 
+# named 'default' for ease when running them during API Bootcamps.  
 
 parser = argparse.ArgumentParser(description='After authorizing your client \
 	in the {OPEN} API Administration tool, export the credentials and process \
@@ -46,7 +40,13 @@ parser.add_argument('--cred_file', '-f', action='store',
 	help='use the exported file from the OPEN API Administration tool.')
 args= parser.parse_args()
 
+print "Akamai OPEN API EdgeGrid Credentials"
+print
+print "This script will create a configuration section in the local ~/.edgerc credential file."
+print
+
 if args.cred_file:
+	print "+++ Reading from EdgeGrid credentials file:", args.cred_file
 	with open (os.path.expanduser(args.cred_file), "r") as credFile:
 			text = credFile.read()
 			credFile.close()
@@ -56,9 +56,8 @@ else:
 	print "followed by control-D."
 	print
 	sys.stdout.write('>>> ')
-
-	# Slurp in creds
 	text = sys.stdin.read()
+	sys.stdout.write('>>> ')
 
 # load the cred data
 home = expanduser("~")
@@ -79,30 +78,50 @@ if args.config_section:
 else:
 	section_name = fields['Name:']
 	section_name_pretty = fields['Name:']
+	print "+++ Found client credentials with the name: %s" % section_name
 
 # Fix up default sections
 if section_name.lower() == "default":
 	section_name = "----DEFAULT----"
 	section_name_pretty = "default"
 
-# Verify section name
-print "This program will create a section from the %s client credentials." % section_name_pretty
-print 
-
-# Process the config data
-Config = ConfigParser.ConfigParser()
+# Process the original .edgerc file
+origConfig = ConfigParser.ConfigParser()
 filename = "%s/.edgerc" % home
 
-# If this is a new file, recommend setting the section name to default
+# If this is a new file, create it
 if not os.path.isfile(filename):
-	print "Creating new %s" % filename
-	if section_name_pretty != 'default':
-		# Force the first section created to be named default
+	print "+++ Creating new credentials file: %s" % filename
+	open(filename, 'a+').close()
+else:
+	print "+++ Found credentials file: %s" % filename
+	
+# Recommend default section name if not present
+origConfig.read(filename)
+if 'default' not in origConfig.sections():
+	reply = str(raw_input('\nThe is no default section in ~/.edgerc, do you want to use these credentials as default? [y/n]: ')).lower().strip()
+	print
+	if reply[0] == 'y':
 		section_name = "----DEFAULT----"
 		section_name_pretty = "default"
-	open(filename, 'a+').close()
-	
-# First, if we have a 'default' section protect it here
+
+if section_name_pretty in origConfig.sections():
+	print ">>> Replacing section: %s" % section_name_pretty
+	replace_section = True
+else:
+	print "+++ Creating section: %s" % section_name_pretty
+	replace_section = False
+
+# Make sure that this is ok ~ any key to continue
+try:
+	input("\nPress Enter to continue or ctrl-c to exit.")
+except SyntaxError:
+	pass
+
+# We need a line for the output to look nice
+print 
+
+# If we have a 'default' section hide it from ConfigParser
 with open (filename, "r+") as myfile:
  	data=myfile.read().replace('default','----DEFAULT----')
 	myfile.close()
@@ -110,15 +129,18 @@ with open (filename, "w") as myfile:
 	myfile.write(data)
 	myfile.close()
 
+# Open the ~/.edgerc file for writing
+Config = ConfigParser.ConfigParser()
 Config.read(filename)
 configfile = open(filename,'w')
 
-if section_name in Config.sections():
-	print "Replacing section: %s" % section_name_pretty
+# Remove a section that is being replaced
+if replace_section: 
+	print "--- Removing section: %s" % section_name_pretty
 	Config.remove_section(section_name)
-else:
-	print "Creating section: %s" % section_name_pretty
 
+# Add the new section
+print "+++ Adding section: %s" % section_name_pretty
 Config.add_section(section_name)
 Config.set(section_name,'client_secret',fields['Secret:'])
 Config.set(section_name,'host',fields['URL:'].replace('https://',''))
@@ -129,8 +151,9 @@ Config.write(configfile)
 
 configfile.close()
 
+# Undo the ConfigParser work around
 with open (filename, "r") as myfile:
- 	data=myfile.read().replace('----DEFAULT----','default')
+	data=myfile.read().replace('----DEFAULT----','default')
 	myfile.close()
 with open (filename, "w") as myfile:
 	myfile.write(data)
