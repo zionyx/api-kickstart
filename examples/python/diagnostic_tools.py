@@ -65,7 +65,7 @@ print "There are %s locations that can run dig in the Akamai Network" % location
 rand_location = randint(0, location_count-1)
 location = location_result['locations'][rand_location]
 print "We will make our call from " + location + "\n"
-location = "Seoul, South Korea"
+
 # Request the dig request the {OPEN} Developer Site IP informantion
 print "Running dig from " + location
 dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
