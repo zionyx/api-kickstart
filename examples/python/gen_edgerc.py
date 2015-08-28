@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # Simple script to generate credentials file based on
 # Copy/paste of the "{OPEN} API Administration" output
 # Usage: python gen_edgerc.py <section_name>
