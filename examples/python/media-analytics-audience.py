@@ -14,7 +14,11 @@
  See the License for the specific language governing permissions and
  limitations under the License.
 
-Sample client for Media Analytics
+Sample client for Media Analytics - Audience Analytics
+
+This client pulls the report packs that are available, 
+grabs the first data source for the first pack, and
+then runs a request with all dimensions and metrics.
 
 Put the credentials in ~/.edgerc using gen_edgerc.py
 """
@@ -27,16 +31,19 @@ from urlparse import urljoin
 import urllib
 import os
 session = requests.Session()
-debug = True
+debug = False
+verbose = False
 section_name = "media"
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
 config = EdgeGridConfig({"verbose":False},section_name)
 
-if hasattr(config, "debug") or hasattr(config, "verbose"):
-  debug = True
+if hasattr(config, "debug") and config.debug:
+        debug = True
 
+if hasattr(config, "verbose") and config.verbose:
+        verbose = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -49,37 +56,53 @@ if hasattr(config, 'headers'):
   session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
+httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getReportPacks():
 	print
 	report_packs_result = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs')
+	return report_packs_result
 
 def getReportPackInfo(reportpack):
 	print
 	report_pack_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s' % reportpack)
+	return report_pack_info
 
 def getDataStores(reportpack):
 	print
-	report_pack_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data-stores' % reportpack)
+	data_stores = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data-stores' % reportpack)
+	return data_stores
 
-def getData(reportpack):
+def getData(reportpack,dimensionstring,metricstring):
 	# Dimensions and metrics are retrieved with getReportPackInfo
 	# Dimensions: Hourly viewers = 2002
 	# Metrics: Service Provider = 942
 	print
 	parameters = {	'startDate': '03/22/2015:15:30',
-			'endDate'  : '03/23/2015:15:30',
-			'dimensions' : 846,
-			'metrics'    : 608,
-			'filterParams' : '[{"type":"dimension","values":["XXX XXXX"],"id":846,"condition":"in"}]' 
+			'endDate'  : '03/23/2016:15:30',
+			'dimensions' : dimensionstring,
+			'metrics'    : metricstring,
+			'aggregation': 'month'
 			}
 	data_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data' % reportpack, parameters) 	
 	
 if __name__ == "__main__":
-	getReportPacks()
-	getReportPackInfo(29049)
-	getDataStores(29049)
-	#get dimensions and metrics from the Info call
-	getData(29049)	
+	reportpacks = getReportPacks()
+	# To iterate over report packs, you can do a 
+	reportpackinfo = getReportPackInfo(reportpacks[0]["id"])
+	datastores = getDataStores(reportpacks[0]["id"])
+	metrics = []
+	dimensions = []
+	datastore = datastores[0]
+	for metric in datastore["metrics"]:
+		metrics.append(str(metric["id"]))
+	for dimension in datastore["dimensions"]:
+		dimensions.append(str(dimension["id"]))
+	dimensionstring = ','.join(dimensions)
+	metricstring = ','.join(metrics)
+
+	print metricstring
+	print dimensionstring
+
+	getData(reportpacks[0]["id"],dimensionstring, metricstring)	
 
