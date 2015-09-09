@@ -78,22 +78,22 @@ def getData(reportpack,dimensionstring,metricstring):
 	# Dimensions: Hourly viewers = 2002
 	# Metrics: Service Provider = 942
 	print
-	parameters = {	'startDate': '03/22/2015:15:30',
-			'endDate'  : '03/23/2016:15:30',
+	parameters = {	'startDate': '09/01/2015:15:30',
+			'endDate'  : '09/09/2016:15:30',
 			'dimensions' : dimensionstring,
 			'metrics'    : metricstring,
-			'aggregation': 'month'
+			'aggregation': 'day'
 			}
 	data_info = httpCaller.getResult('/media-analytics/v1/audience-analytics/report-packs/%s/data' % reportpack, parameters) 	
 	
 if __name__ == "__main__":
 	reportpacks = getReportPacks()
 	# To iterate over report packs, you can do a 
-	reportpackinfo = getReportPackInfo(reportpacks[0]["id"])
-	datastores = getDataStores(reportpacks[0]["id"])
+	reportpackinfo = getReportPackInfo(reportpacks[1]["id"])
+	datastores = getDataStores(reportpacks[1]["id"])
 	metrics = []
 	dimensions = []
-	datastore = datastores[0]
+	datastore = datastores[17]
 	for metric in datastore["metrics"]:
 		metrics.append(str(metric["id"]))
 	for dimension in datastore["dimensions"]:
