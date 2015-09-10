@@ -95,8 +95,12 @@ if __name__ == "__main__":
 	dimensions = []
 	datastore = datastores[17]
 	for metric in datastore["metrics"]:
+		if metric["id"] == 544:
+			continue
 		metrics.append(str(metric["id"]))
 	for dimension in datastore["dimensions"]:
+		if dimension["id"] == 845:
+			continue
 		dimensions.append(str(dimension["id"]))
 	dimensionstring = ','.join(dimensions)
 	metricstring = ','.join(metrics)
