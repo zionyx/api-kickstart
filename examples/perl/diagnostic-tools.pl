@@ -27,8 +27,8 @@ use Getopt::Long;
 
 my %args;
 
-my $debug;
-my $verbose;
+my $debug = 0;
+my $verbose = 0;
 
 GetOptions ("debug" => \$debug, 
             "verbose"  => \$verbose)
@@ -74,11 +74,9 @@ sub runDig {
 # Grab the locations  #
 #######################
 print "Getting the locations to run 'dig' from\n";
-my $location_hash = getLocations();
-my $location_ref = $$location_hash{locations};
-my @locations = @$location_ref;
+my @locations = @{ getLocations()->{locations}};
 
-print "There are " . $#locations . " locations available.\n";
+print "There are " . scalar(@locations) . " locations available.\n";
 
 #######################
 # Select a random loc #

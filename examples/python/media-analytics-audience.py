@@ -79,7 +79,7 @@ def getData(reportpack,dimensionstring,metricstring):
 	# Metrics: Service Provider = 942
 	print
 	parameters = {	'startDate': '09/01/2015:15:30',
-			'endDate'  : '09/09/2016:15:30',
+			'endDate'  : '09/02/2016:15:30',
 			'dimensions' : dimensionstring,
 			'metrics'    : metricstring,
 			'aggregation': 'day'

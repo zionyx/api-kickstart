@@ -88,7 +88,6 @@ def postPurgeRequest(action = "invalidate"):
 	return purge_post_result
 
 if __name__ == "__main__":
-	Id = {}
 	getQueue()
 	purge_post_result = postPurgeRequest()
 	
