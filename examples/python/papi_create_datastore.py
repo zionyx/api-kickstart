@@ -166,6 +166,7 @@ def gitCheckout(branch, existingProperties):
 	if branch == "master" or branch in existingProperties:
 		call(["git", "checkout", branch])
 	else:
+		call(["git", "checkout", "master"])
 		call(["git", "checkout", "-b", branch]) 
 
 def gitAdd(file):
@@ -220,7 +221,7 @@ if __name__ == "__main__":
 			contractIds = group["contractIds"]
 		else:
 			continue
-
+		print contractIds
 		for contractId in contractIds:
 			properties = getProperties(group["groupId"], contractId)
 		
