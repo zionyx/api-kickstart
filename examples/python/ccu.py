@@ -69,7 +69,7 @@ httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getQueue():
 	purge_queue_result = httpCaller.getResult('/ccu/v2/queues/default')
-	print "The queue currently has %s items in it" % int(purge_queue_result['queueLength'])
+	print ("The queue currently has %s items in it" % int(purge_queue_result['queueLength']))
 
 def checkProgress(resource):
   purge_queue_result =  httpCaller.getResult(resource)
@@ -83,7 +83,7 @@ def postPurgeRequest(action = "invalidate"):
 				"https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaiTimeReference.html"
 			]
 		    }
-	print "Adding %s to queue - %s" % (type, json.dumps(purge_obj));
+	print ("Adding %s to queue - %s" % (type, json.dumps(purge_obj)));
 	purge_post_result = httpCaller.postResult('/ccu/v2/queues/default', json.dumps(purge_obj))
 	return purge_post_result
 

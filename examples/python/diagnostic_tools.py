@@ -21,7 +21,6 @@ from http_calls import EdgeGridHttpCaller
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
-from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
@@ -54,22 +53,21 @@ httpCaller = EdgeGridHttpCaller(session, debug,verbose, baseurl)
 
 # Request locations that support the diagnostic-tools
 print
-print "Requesting locations that support the diagnostic-tools API.\n"
+print ("Requesting locations that support the diagnostic-tools API.\n")
 
 location_result = httpCaller.getResult('/diagnostic-tools/v1/locations')
 
 # Select a random location to host our request
 location_count = len(location_result['locations'])
 
-print "There are %s locations that can run dig in the Akamai Network" % location_count
+print("There are {} locations that can run dig in the Akamai Network".format(location_count))
 rand_location = randint(0, location_count-1)
 location = location_result['locations'][rand_location]
-print "We will make our call from " + location + "\n"
+print ("We will make our call from " + location + "\n")
 
 # Request the dig request the {OPEN} Developer Site IP informantion
-print "Running dig from " + location
 dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
 dig_result = httpCaller.getResult("/diagnostic-tools/v1/dig",dig_parameters)
 
 # Display the results from dig
-print dig_result['dig']['result']
+print (dig_result['dig']['result'])
