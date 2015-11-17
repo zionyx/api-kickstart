@@ -15,11 +15,17 @@
  limitations under the License.
 """
 
-import ConfigParser,os,sys
+import sys, os
+
+if sys.version_info[0] >= 3:
+     # python3
+     from configparser import ConfigParser
+else:
+     # python2.7
+     from ConfigParser import ConfigParser
+
 import argparse
-import httplib
 import urllib
-import urllib2
 import logging
 import uuid
 import hashlib
@@ -27,13 +33,7 @@ import hmac
 import base64
 import re
 import json
-from sets import Set
 from time import gmtime, strftime
-from urlparse import urlparse, parse_qsl, urlunparse
-
-if sys.version_info[0] != 2 or sys.version_info[1] < 7:
-    print("This script requires Python version 2.7")
-    sys.exit(1)
 
 logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description='Process command line options.')
@@ -75,19 +75,19 @@ class EdgeGridConfig():
             configuration = arguments["config_section"]
         arguments["config_file"] = os.path.expanduser(arguments["config_file"])	
         if os.path.isfile(arguments["config_file"]):
-            config = ConfigParser.ConfigParser()
+            config = ConfigParser()
             config.readfp(open(arguments["config_file"]))
             if not config.has_section(configuration):
-    			err_msg = "ERROR: No section named %s was found in your %s file\n" % (configuration, arguments["config_file"])
-    			err_msg += "ERROR: Please generate credentials for the script functionality\n"
-    			err_msg += "ERROR: and run 'python gen_edgerc.py %s' to generate the credential file\n" % configuration
-    			sys.exit( err_msg )
+                err_msg = "ERROR: No section named %s was found in your %s file\n" % (configuration, arguments["config_file"])
+                err_msg += "ERROR: Please generate credentials for the script functionality\n"
+                err_msg += "ERROR: and run 'python gen_edgerc.py %s' to generate the credential file\n" % configuration
+                sys.exit( err_msg )
             for key, value in config.items(configuration):
             	# ConfigParser lowercases magically
             	if key not in arguments or arguments[key] == None:
             		arguments[key] = value
         else:
-            	print "Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA."
+            	print ("Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA.")
             	return None
 
         for option in arguments:

@@ -146,7 +146,7 @@ Config.set(section_name,'client_secret',fields['Secret:'])
 Config.set(section_name,'host',fields['URL:'].replace('https://',''))
 Config.set(section_name,'access_token',fields['Tokens:'])
 Config.set(section_name,'client_token',fields['token:'])
-Config.set(section_name,'max-body',131072)
+Config.set(section_name,'max_body',131072)
 Config.write(configfile)
 
 configfile.close()
