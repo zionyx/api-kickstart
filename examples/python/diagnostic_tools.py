@@ -66,9 +66,8 @@ location = location_result['locations'][rand_location]
 print ("We will make our call from " + location + "\n")
 
 # Request the dig request the {OPEN} Developer Site IP informantion
-dig_parameters = { "hostname":"www.nuskin.com", "location":"Tokyo, Japan", "queryType":"A" }
+dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
 dig_result = httpCaller.getResult("/diagnostic-tools/v1/dig",dig_parameters)
 
 # Display the results from dig
 print (dig_result['dig']['result'])
-
