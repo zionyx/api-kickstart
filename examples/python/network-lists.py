@@ -74,7 +74,7 @@ def createNetworkList(name,ips):
 		"list" : ips
 	}
 	
-	httpCaller.postResult(urljoin(base.rl,path), json.dumps(data_obj))
+	httpCaller.postResult(urljoin(baseurl,path), json.dumps(data_obj))
 
 if __name__ == "__main__":
 	Id = {}
