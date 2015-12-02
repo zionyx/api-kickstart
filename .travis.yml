@@ -7,7 +7,8 @@ python:
 - '3.5'
 - 3.5-dev
 install: pip install -r examples/python/requirements.txt
-script: python examples/python/diagnostic_tools.py --config_file .edgerc --verbose
+script: python examples/python/diagnostic_tools.py --verbose
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
   -in .edgerc.enc -out .edgerc -d
+- mv .edgerc /home/travis
