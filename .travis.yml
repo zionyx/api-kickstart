@@ -14,7 +14,8 @@ install:
 - sudo apt-get install php5 perl ruby1.9.3
 script: 
 - python examples/python/diagnostic_tools.py --verbose
-- php examples/php/diagnostic_tools.php
+- php -version
+- php5 examples/php/diagnostic_tools.php
 - ruby examples/ruby/diagnostic_tools.rb
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
