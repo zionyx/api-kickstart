@@ -11,7 +11,7 @@ install:
 - pip install --upgrade pip
 - pip install -r examples/python/requirements.txt
 - sudo apt-get update
-- sudo apt-get install php ruby
+- sudo apt-get install php5 perl ruby1.9.3
 script: 
 - python examples/python/diagnostic_tools.py --verbose
 - php examples/php/diagnostic_tools.php
