@@ -12,4 +12,4 @@ install: pip install -r examples/python/requirements.txt
 script: python examples/python/verify_creds.py --config_file .edgerc --verbose
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
-  -in .edgerc.enc -out ~\/.edgerc -d
+  -in .edgerc.enc -out .edgerc -d
