@@ -10,9 +10,8 @@ python:
 install: 
 - pip install --upgrade pip
 - pip install -r examples/python/requirements.txt
-- rvm install
 - sudo apt-get update
-- sudo apt-get install php
+- sudo apt-get install php ruby
 script: 
 - python examples/python/diagnostic_tools.py --verbose
 - php examples/php/diagnostic_tools.php
