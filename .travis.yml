@@ -11,5 +11,3 @@ script: python examples/python/diagnostic_tools.py --config_file .edgerc --verbo
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
   -in .edgerc.enc -out .edgerc -d
-- git clone https://github.com/akamai-open/Akamai-OPEN-python
-- python examples/python/tools/setup.py install --user
