@@ -12,7 +12,7 @@ setup(
     packages=find_packages(),
     install_requires = [
 	'httpie-edgegrid>=0.0.1',
-        'edgegrid-python>=1.0.9',
+        'edgegrid-python>=1.0.10',
 	'GitPython>=0.3.6'
     ],
     license='MIT'
