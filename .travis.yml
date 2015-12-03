@@ -15,7 +15,7 @@ install:
 - gem install json
 - cd ..
 - python python/tools/setup.py install --user
-- pip3 python/tools/setup.py install --user
+- python python/tools/setup.py install --user
 script: 
 - php php/diagnostic_tools.php
 - python python/diagnostic_tools.py
