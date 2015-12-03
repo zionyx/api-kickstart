@@ -1,8 +1,7 @@
 language: php
 php:
-  - 5.4
   - 5.5
-sudo: required
+sudo: none
 install:
 - composer install
 script: 
