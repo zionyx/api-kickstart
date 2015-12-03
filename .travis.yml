@@ -11,14 +11,13 @@ install:
 - composer install
 - gem install akamai-edgegrid
 - gem install json
-- gem list
 - cd ../..
 - python3 --version
 - sudo -H pip install edgegrid-python
 - sudo -H pip3 install edgegrid-python
 script: 
 - php php/diagnostic_tools.php
-- sudo ython python/diagnostic_tools.py
+- sudo python python/diagnostic_tools.py
 - sudo python3 python/diagnostic_tools.py
 - ruby ruby/diagnostic_tools.rb
 before_install:
