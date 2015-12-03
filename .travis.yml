@@ -1,8 +1,10 @@
 language: php
 php:
   - 5.5
-sudo: none
+sudo: required
 install:
+- sudo apt-get update
+- sudo apt-get install python-pip python-dev python3 perl ruby1.9.3
 - cd examples/php
 - composer self-update
 - composer install
