@@ -1,4 +1,5 @@
-from ez_setup import use_setuptools
+f
+om ez_setup import use_setuptools
 use_setuptools()
 
 from setuptools import setup, find_packages
@@ -11,7 +12,6 @@ setup(
     url='https://github.com/akamai-open/api-kickstart',
     packages=find_packages(),
     install_requires = [
-	'httpie-edgegrid>=0.0.1',
         'edgegrid-python>=1.0.9',
 	'GitPython>=0.3.6'
     ],
