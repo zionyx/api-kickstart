@@ -9,11 +9,13 @@ install:
 - cd examples/php
 - composer self-update
 - composer install
+- which ruby
+- gem env | grep 'RUBY EXECUTABLE'
 - gem install akamai-edgegrid
 - gem install json
 - cd ..
-- pip install edgegrid-python --user
-- pip3 install edgegrid-python --user
+- python python/tools/setup.py install --user
+- pip3 python/tools/setup.py install --user
 script: 
 - php php/diagnostic_tools.php
 - python python/diagnostic_tools.py
