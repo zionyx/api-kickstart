@@ -11,8 +11,8 @@ install:
 - composer install
 - cd ../python
 - python3 --version
-- sudo pip install edgegrid-python
-- sudo pip3 install edgegrid-python
+- sudo -H pip install edgegrid-python
+- sudo -H pip3 install edgegrid-python
 - cd ..
 script: 
 - php php/diagnostic_tools.php
