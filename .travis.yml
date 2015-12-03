@@ -7,7 +7,7 @@ install:
 - composer self-update
 - composer install
 script: 
-- php examples/php/diagnostic_tools.php
+- php diagnostic_tools.php
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
   -in .edgerc.enc -out .edgerc -d
