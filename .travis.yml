@@ -9,9 +9,9 @@ install:
 - composer self-update
 - composer install
 - cd ../python
+- python -V
 - sudo pip install edgegrid-python
 - sudo pip3 install edgegrid-python
-- python -V
 - cd ..
 script: 
 - php php/diagnostic_tools.php
