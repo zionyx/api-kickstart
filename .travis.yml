@@ -1,24 +1,15 @@
-language: python
+language: php
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - hhvm
+  - nightly
 sudo: required
-python:
-- '2.7'
-- '3.2'
-- '3.3'
-- '3.4'
-- '3.5'
-- 3.5-dev
-install: 
-- pip install --upgrade pip
-- pip install -r examples/python/requirements.txt
-- sudo apt-get update && sudo apt-get install python-software-properties
-- sudo add-apt-repository -y ppa:ondrej/php5
-- sudo apt-get update && sudo apt-get dist-upgrade
-- sudo apt-get -y install php5 php5-cli perl ruby1.9.3
+install:
+- composer install
 script: 
-- python examples/python/diagnostic_tools.py --verbose
-- php -version
 - php5 examples/php/diagnostic_tools.php
-- ruby examples/ruby/diagnostic_tools.rb
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
   -in .edgerc.enc -out .edgerc -d
