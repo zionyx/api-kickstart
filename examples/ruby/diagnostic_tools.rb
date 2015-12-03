@@ -21,7 +21,7 @@ Copyright 2015 Akamai Technologies, Inc. All Rights Reserved.
 require 'akamai/edgegrid'
 require 'net/http'
 require 'uri'
-require 'JSON'
+require 'json'
 require 'optparse'
 address = get_host()
 
