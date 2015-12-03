@@ -12,6 +12,7 @@ install:
 - cd ../python
 - python3 --version
 - sudo -H pip install edgegrid-python
+- sudo python python/tools/setup.py install
 - sudo -H pip3 install edgegrid-python
 - cd ..
 script: 
