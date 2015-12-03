@@ -3,6 +3,7 @@ php:
   - 5.5
 sudo: none
 install:
+- cd examples/php
 - composer install
 script: 
 - php5 examples/php/diagnostic_tools.php
