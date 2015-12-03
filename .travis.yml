@@ -10,6 +10,7 @@ install:
 - composer install
 - cd ../python
 - sudo python tools/setup.py install
+- sudo python3 tools/setup.py install
 - cd ..
 script: 
 - php diagnostic_tools.php
