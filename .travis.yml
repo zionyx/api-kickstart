@@ -11,9 +11,10 @@ install:
 - cd ../python
 - sudo python tools/setup.py install
 - sudo python3 tools/setup.py install
+- python -V
 - cd ..
 script: 
-- php diagnostic_tools.php
+- php php/diagnostic_tools.php
 - python python/diagnostic_tools.py
 - python3 python/diagnostic_tools.py
 - ruby ruby/diagnostic_tools.rb
