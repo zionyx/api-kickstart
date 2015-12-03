@@ -9,10 +9,11 @@ install:
 - cd examples/php
 - composer self-update
 - composer install
-- gem install akamai-edgegrid
-- gem install json
-- gem list
-- cd ..
+- cd ../ruby
+- git clone https://www.github.com/AkamaiOPEN-edgegrid-ruby
+- cd AkamaiOPEN-edgegrid-ruby
+- sudo bundle install
+- cd ../..
 - python3 --version
 - sudo -H pip install edgegrid-python
 - sudo -H pip3 install edgegrid-python
