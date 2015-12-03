@@ -15,7 +15,6 @@ install:
 - cd ..
 - python3 --version
 - sudo -H pip install edgegrid-python
-- sudo python python/tools/setup.py install
 - sudo -H pip3 install edgegrid-python
 script: 
 - php php/diagnostic_tools.php
