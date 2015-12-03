@@ -9,8 +9,8 @@ install:
 - composer self-update
 - composer install
 - cd ../python
-- sudo python tools/setup.py install
-- sudo python3 tools/setup.py install
+- sudo pip install edgegrid-python
+- sudo pip3 install edgegrid-python
 - python -V
 - cd ..
 script: 
