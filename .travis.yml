@@ -9,7 +9,8 @@ install:
 - cd examples/php
 - composer self-update
 - composer install
-- sudo gem install akamai-edgegrid
+- gem install akamai-edgegrid
+- gem install json
 - gem list
 - cd ..
 - python3 --version
