@@ -1,14 +1,22 @@
-language: python
-sudo: false
-python:
-- '3.3'
-- 3.5-dev
-install: 
-- pip install --upgrade pip
-- pip install -r examples/python/requirements.txt
+language: php
+php:
+  - 5.5
+sudo: required
+install:
+- sudo apt-get update -qq
+- sudo apt-get install python-pip python-dev python3 perl ruby1.9.3 -qq
+- cd examples/php
+- composer self-update
+- composer install
+- cd ../python
+- sudo python tools/setup.py install
+- sudo python3 tools/setup.py install
+- cd ..
 script: 
-- cat /home/travis/virtualenv/python3.3.5/lib/python3.3/site-packages/akamai/edgegrid/edgegrid.py
-- python examples/python/diagnostic_tools.py --verbose
+- php diagnostic_tools.php
+- python python/diagnostic_tools.py
+- python3 python/diagnostic_tools.py
+- ruby ruby/diagnostic_tools.rb
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
   -in .edgerc.enc -out .edgerc -d
