@@ -9,6 +9,7 @@ install:
 - python -V
 - perl -v
 script: 
+- cd examples
 - php php/diagnostic_tools.php
 - python python/diagnostic_tools.py
 - python3 python/diagnostic_tools.py
