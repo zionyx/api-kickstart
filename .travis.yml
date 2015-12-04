@@ -8,6 +8,8 @@ install:
 - ruby -V
 - python -V
 - perl -v
+- printenv HOME
+- ls /Users/travis
 script: 
 - cd examples
 - php php/diagnostic_tools.php
@@ -17,5 +19,3 @@ script:
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
   -in .edgerc.enc -out .edgerc -d
-- env
-- printenv
