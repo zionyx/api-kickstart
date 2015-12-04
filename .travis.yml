@@ -1,6 +1,6 @@
 os:
   - osx
-language: php
+language: node
 node:
   - 0.10
 sudo: required
