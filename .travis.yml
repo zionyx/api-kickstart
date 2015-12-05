@@ -5,7 +5,7 @@ node:
   - 0.10
 sudo: required
 install:
-- ruby -V
+- ruby --version
 - python -V
 - perl -v
 - printenv HOME
