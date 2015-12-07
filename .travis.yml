@@ -7,14 +7,17 @@ sudo: required
 install:
 - ruby --version
 - python -V
+- python3 -V
 - perl -v
 - printenv HOME
 - ls /Users/travis
 script: 
 - cd examples
-- php php/diagnostic_tools.php
 - python python/diagnostic_tools.py
 - python3 python/diagnostic_tools.py
+- composer php/diagnostic-tools.phar
+- php php/diagnostic_tools.php
+- perl perl/diagnostic_tools.pl
 - ruby ruby/diagnostic_tools.rb
 before_install:
 - openssl aes-256-cbc -K $encrypted_d93385c721d4_key -iv $encrypted_d93385c721d4_iv
