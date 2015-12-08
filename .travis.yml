@@ -17,6 +17,7 @@ install:
 - cd ../../php
 - curl -sS https://getcomposer.org/installer | php
 - composer.phar install
+- cd ..
 script: 
 - python python/diagnostic_tools.py
 - python3 python/diagnostic_tools.py
