@@ -5,6 +5,9 @@ node:
   - 0.10
 sudo: required
 install:
+- brew tap homebrew/dupes
+- brew tap homebrew/versions
+- brew tap homebrew/homebrew-php
 - brew install python3 python ruby php55
 - cd examples/python/tools
 - sudo python setup.py install
