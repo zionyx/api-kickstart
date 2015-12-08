@@ -5,7 +5,7 @@ node:
   - 0.10
 sudo: required
 install:
-- brew install python3 python2 ruby php55
+- brew install python3 python ruby php55
 - cd examples/python/tools
 - sudo python setup.py install
 - sudo python3 setup.py install
