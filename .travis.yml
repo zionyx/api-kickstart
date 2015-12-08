@@ -5,18 +5,12 @@ node:
   - 0.10
 sudo: required
 install:
-- ruby --version
-- python -V
-- brew install python3
-- python3 -V
+- brew install python3 python2 ruby php55
 - cd examples/python/tools
 - sudo python setup.py install
 - sudo python3 setup.py install
 - cd ../..
-- brew install composer
-- php -v
-- perl -v
-- printenv HOME
+- curl -sS https://getcomposer.org/installer | php
 script: 
 - python python/diagnostic_tools.py
 - python3 python/diagnostic_tools.py
