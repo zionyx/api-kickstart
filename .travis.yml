@@ -14,8 +14,9 @@ install:
 - cd examples/python/tools
 - sudo python setup.py install
 - sudo python3 setup.py install
-- cd ../..
+- cd ../../php
 - curl -sS https://getcomposer.org/installer | php
+- composer.phar install
 script: 
 - python python/diagnostic_tools.py
 - python3 python/diagnostic_tools.py
