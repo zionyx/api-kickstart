@@ -9,9 +9,10 @@ install:
 - python -V
 - brew install python3
 - python3 -V
-- cd examples/python
+- cd examples/python/tools
 - sudo python setup.py install
 - sudo python3 setup.py install
+- cd ../..
 - perl -v
 - printenv HOME
 - ls /Users/travis
