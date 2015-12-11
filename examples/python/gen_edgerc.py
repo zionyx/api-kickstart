@@ -114,6 +114,8 @@ Config.read(filename)
 configfile = open(filename,'w')
 
 # Add the new section
+if not Config.has_section(section_name):
+	Config.add_section(section_name)
 Config.set(section_name,'client_secret',fields['Secret:'])
 Config.set(section_name,'host',fields['URL:'].replace('https://',''))
 Config.set(section_name,'access_token',fields['Tokens:'])
