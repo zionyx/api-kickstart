@@ -39,14 +39,18 @@ import os
 import sys
 session = requests.Session()
 debug = False
+verbose = False
 section_name = "ccu"
 
 logging.getLogger("requests").setLevel(logging.DEBUG) 
 
 config = EdgeGridConfig({"verbose":False}, section_name, {"ccu_host":"store","ccu_paths":"store"})
 
-if config.debug or config.verbose:
-	debug = True
+if hasattr(config, "debug") and config.debug:
+        debug = True
+
+if hasattr(config, "verbose") and config.verbose:
+        verbose = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -60,7 +64,7 @@ if hasattr(config, 'headers'):
 
 
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
+httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 
 def postPurgeRequest(host, paths):
