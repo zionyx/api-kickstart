@@ -23,6 +23,14 @@ $ cd examples/php
 ```
 See the [README](examples/php/README.md) in the examples/php directory for additional instructions
 
+## Node.js
+``` bash
+$ git clone https://github.com/akamai-open/api-kickstart.git
+$ cd examples/node
+$ npm install
+```
+See the [README](examples/node/README.md) in the examples/node directory for additional instructions
+
 # Additional Resources
 We have example applications available for review.
 
