@@ -79,7 +79,7 @@ function makeDigRequest(location) {
     "location": location
   };
 
-  // Call auth, passing the query string parameters in via the 'qs' property
+  // Call auth, passing the query string parameters object in via the 'qs' property
   eg.auth({
     path: '/diagnostic-tools/v1/dig',
     method: 'GET',
@@ -88,11 +88,12 @@ function makeDigRequest(location) {
     qs: digParameters
   });
 
+  // Send the request and handle the response
   eg.send(function(data, response) {
     // Convert data to JSON format
     data = JSON.parse(data);
 
-    // Display the results from dig
+    // Display the results from dig (prettyJSON just cleans up the output)
     console.log("\nData received from dig request:");
     console.log(prettyJSON.render(data));
   });
