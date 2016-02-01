@@ -50,7 +50,7 @@ if ($cli->arguments->get('help')) {
 }
 
 define('HOME', $_SERVER['HOME']);
-define('EDGERC', realpath(HOME . '/.edgerc'));
+define('EDGERC', realpath(HOME . '/.edgerc') ?: realpath(HOME) . '/.edgerc' );
 define('SECTION', $cli->arguments->get('section'));  
 
 if ((file_exists(EDGERC) && !is_writable(EDGERC)) || !is_writable(HOME)) {
