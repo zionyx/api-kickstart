@@ -12,7 +12,7 @@ You can get your credentials set up for use by the sample code by using the gen_
 
 ```bash
 $ gen_edgerc 
-This script will create a section named 'default'in the local file /Users/ktyacke/.edgerc.
+This script will create a section named 'default' in the local file /Users/ktyacke/.edgerc.
 
 After authorizing your client in the OPEN API Administration tool, 
 export the credentials and paste the contents of the export file below 
