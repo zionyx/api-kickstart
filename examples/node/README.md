@@ -1,4 +1,4 @@
-# Node.js Code Samples
+# Node.js Example Code
 
 This will guide you through the steps necessary to set up credentials and start playing with the sample code. These instructions expect that you are in the examples/node subdirectory of the github repository.
 
@@ -51,6 +51,13 @@ For example: Before running the billing-usage script, you would first open billi
 $ gen_edgerc --section billingusage
 ```
 
+## Debug
+All of the sample code in the src directory also support the --debug to see all of the HTTP traffic.  These flags can help enormously in figuring out what's going wrong or how it's working. Try it out for yourself:
+
+``` bash
+$ node src/diagnostic_tools.js --debug
+```
+
 ## Diagnostic Tools
 The first, and most simple, example is diagnostic-tools.js. This script will use the 'default' credentials that were created while following the [Authorizing Your Client](https://developer.akamai.com/introduction/Prov_Creds.html) instruction. If you have not yet done this, please go back to the beginning of this README and follow those instructions before continuing. The 'default' credentials created in the previous step give you permission to run the "dig" command from the API.
 
@@ -62,10 +69,17 @@ This simple script runs the 'locations' call to find out where the Akamai server
 
 By reviewing the code you can see how simple it is to make API calls.
 
-All of the sample code in the directory also supports --debug to see all of the HTTP traffic.  These flags can help enormously in figuring out what's going wrong or how it's working. Try it out for yourself:
 
-``` bash
-$ node src/diagnostic_tools.js --debug
+
+## Content Control Utility (CCU)
+The Content Control Utility (CCU) allows you to purge Edge content by request. 
+The example first makes a GET request to `/ccu/v2/queues/default` to retrieve the
+number of items currently in the default purge queue. Next it makes a POST 
+request to `/ccu/v2/queues/default` to add a new item to the default purge queue.
+Finally, using the progressUri value that is returned from the POST request, it
+checks the status of the purge for the item that was added in the second step.
+
+```bash
+$ node src/ccu.js
 ```
-
 
