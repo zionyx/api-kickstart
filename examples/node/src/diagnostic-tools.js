@@ -49,6 +49,7 @@ eg.auth({
 
 eg.send(function(data, response) {
   console.log("\nRequesting locations that support the diagnostic-tools API.");
+  console.log("Data: ", data);
 
   // Convert data to JSON format
   data = JSON.parse(data);
