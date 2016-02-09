@@ -123,11 +123,10 @@ function parse($file) {
 	$tokens = [];
 	preg_match_all('/
 		(?:Client\sCredentials:\s+)? 	# If it starts with Client Credentials: ignore it
-		(?<name>.+?) 					# Match the field name
+		(?:\s*)(?<name>.+?) 			# Match the field name
 		:\s+ 							# Match the : and space after field name
 		(?:https:\/\/)? 				# If there is a url scheme ignore it
-		(?<value>[^\s]+?)				# Match the value
-		(?:\/|\s+?)						# Match any trailing slash or whitespace
+		(?<value>[^\s]+)				# Match the value
 		/x', $file, $tokens, PREG_SET_ORDER);
 
 	foreach ($tokens as $token) {
