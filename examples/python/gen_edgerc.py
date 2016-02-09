@@ -37,9 +37,17 @@ parser.add_argument('--cred_file', '-f', action='store',
 	help='use the exported file from the OPEN API Administration tool.')
 args= parser.parse_args()
 
+# Determine the section name giving precedence to -s value
+if args.config_section:
+	section_name = args.config_section
+	section_name_pretty = args.config_section
+if not args.config_section or args.config_section.lower() == "default":
+	section_name = "----DEFAULT----"
+	section_name_pretty = "default"
+
 print "Akamai OPEN API EdgeGrid Credentials"
 print
-print "This script will create a configuration section in the local ~/.edgerc credential file."
+print "This script will create a '%s' section in the local ~/.edgerc credential file." % section_name_pretty
 print
 
 if args.cred_file:
@@ -68,13 +76,6 @@ while index < len(fieldlist):
 		fields[fieldlist[index]] = fieldlist[index + 1]
 	index += 1
 
-# Determine the section name giving precedence to -s value
-if args.config_section:
-	section_name = args.config_section
-	section_name_pretty = args.config_section
-if not args.config_section or args.config_section.lower() == "default":
-	section_name = "----DEFAULT----"
-	section_name_pretty = "default"
 
 # Process the original .edgerc file
 origConfig = ConfigParser.ConfigParser()

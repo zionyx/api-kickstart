@@ -49,6 +49,7 @@ if hasattr(config, 'headers'):
   session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
+print baseurl
 httpCaller = EdgeGridHttpCaller(session, debug,verbose, baseurl)
 
 # Request locations that support the diagnostic-tools
@@ -66,7 +67,7 @@ location = location_result['locations'][rand_location]
 print ("We will make our call from " + location + "\n")
 
 # Request the dig request the {OPEN} Developer Site IP informantion
-dig_parameters = { "hostname":"developer.akamai.com.", "location":location, "queryType":"A" }
+dig_parameters = { "hostname":"developer.akamai.com", "location":location, "queryType":"A" }
 dig_result = httpCaller.getResult("/diagnostic-tools/v1/dig",dig_parameters)
 
 # Display the results from dig
