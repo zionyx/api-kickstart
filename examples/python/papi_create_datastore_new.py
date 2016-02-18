@@ -25,8 +25,8 @@ Thanks!
 The Akamai Developer Relations Team
 
 """
-
-import requests, logging, json, random, sys, re
+import git
+import requests, logging, json, random, sys, re, dateutil.parser, time
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
@@ -35,6 +35,8 @@ from http_calls import EdgeGridHttpCaller
 import urllib
 from subprocess import call, check_output
 import os
+
+g = git.Git()
 session = requests.Session()
 debug = False
 verbose = False
@@ -138,39 +140,39 @@ def getPropertyVersion(property, version):
 def createGitRepository():
 	# Create the git repository, or change into it if it exists
 	datastore = 'datastore'
-	if not os.path.exists(datastore):
-		os.makedirs(datastore)
+	if not os.path.isdir(datastore): 
+		os.makedirs(datastore) 
+		git.Repo.init(datastore) 
+	repo = git.Repo(datastore) 	
 	os.chdir(datastore)
-	if not os.path.exists(".git"):
-		call(["git", "init"])
-
+	return repo
+	
 def getExistingBranches():
-	branches = check_output(["git", "branch"])
+	branches = g.branch()
 	branches = branches.replace(" ","").replace("*","")
 	branchlist = branches.split('\n')
 	return branchlist
 
 def getAccount(groupInfo):
 	account = groupInfo["accountId"]
-        account_string = re.search('act_(.+?)$', account)
-        return account_string.group(1)
-
-def gitCommit(message, author=None, date=None):
-	if author != None and date != None:
-		author = "%s <%s@akamai.com>" % (author, author)
-		call(["git", "commit", "--author=" + author, "--date=" + date, "-a", "-m", message])
-	else:
-		call(["git", "commit", "-a", "-m", message])
+	account_string = re.search('act_(.+?)$', account)
+	return account_string.group(1)
 
 def gitCheckout(branch, existingProperties):
-	if branch == "master" or branch in existingProperties:
-		call(["git", "checkout", branch])
+	if branch == "master":
+		g.checkout('HEAD', "master")
+		#repo.head.ref = repo.heads["master"]
+	elif branch in existingProperties:
+		g.checkout(branch)
+		#repo.head.ref = repo.heads[branch]
+		#repo.head.reset(index=True, working_tree=True)
+		print "Returning 0"
+		return 0
 	else:
-		call(["git", "checkout", "master"])
-		call(["git", "checkout", "-b", branch]) 
-
-def gitAdd(file):
-	call(["git","add",file])
+		repo.head.ref = repo.heads.master
+		new_branch = repo.create_head(branch)
+		repo.head.ref = repo.heads[branch]
+		return 1
 
 def additionalLabels(property, version):
 	additionalLabels = []
@@ -180,38 +182,40 @@ def additionalLabels(property, version):
 		additionalLabels.append(property["propertyName"] + "@" + "STAGING")
 	if version == property["productionVersion"]:
 		additionalLabels.append(property["propertyName"] + "@" + "PRODUCTION")
+	print additionalLabels
 	return additionalLabels
 
-def createBranchFile(existingProperties, property):
-	gitCheckout(property["propertyName"], existingProperties)
-	if os.path.exists("branch"):
-		with open('branch', 'r') as file:
+def createBranchFile(existingProperties, property, repo):
+	new = gitCheckout(property["propertyName"], existingProperties)
+	if os.path.exists("meta") and not new:
+		with open('meta', 'r') as file:
 			existing = json.load(file)
-			if existing["latestVersion"] == property["latestVersion"]:
-				return 0
-			else:
-				return existing["latestVersion"]
-	with open('branch', 'w+') as file:
-		file.write(json.dumps(property, indent=2))
-		gitAdd("branch")
-		gitCommit("Metadata for " + property["propertyName"])
-		call(["git", "tag", property["propertyName"] + "_META"])
-		return 1
+			file.close()
+			return existing["propertyVersion"] + 1
+	else:
+		with open('branch', 'w+') as file:
+			file.write(json.dumps(property, indent=2))
+			file.close();
+			repo.index.add(['branch'])
+
+			repo.index.commit("Metadata for " + property["propertyName"])
+			call(["git", "tag", property["propertyName"] + "_META"])
+			return 1
 
 if __name__ == "__main__":
-	createGitRepository()
+	repo = createGitRepository()
 
 	groupInfo = getGroup()
 	existingProperties = getExistingBranches()
 
 	# Create the account file
 	account = getAccount(groupInfo)
+
 	if not os.path.exists("account"):
-		gitCheckout("master", existingProperties)
 		with open("account", "w+") as file:
 			file.write(account)
-			gitAdd("account")
-			gitCommit("Initial commit with account")
+			repo.index.add(["account"])
+			repo.index.commit("Initial commit with account")
 	 
 
 	groups = groupInfo["groups"]["items"]
@@ -226,10 +230,12 @@ if __name__ == "__main__":
 			properties = getProperties(group["groupId"], contractId)
 		
 		for property in properties:
+			if property == "master":
+				continue
 			print "Getting information for property %s" % property["propertyName"]
-			newBranch = createBranchFile(existingProperties, property)
-			if newBranch:
-			   for version in range(newBranch, property["latestVersion"]+1):
+			numberToStart = createBranchFile(existingProperties, property, repo)
+			print("Going from " + str(numberToStart) + " to " +  str(property["latestVersion"]))
+			for version in range(numberToStart, property["latestVersion"]+1):
 				print "   Getting version %s for %s" % (version, property["propertyName"])
 				property_version = getPropertyVersion(property, version)
 				if not property_version:
@@ -245,9 +251,12 @@ if __name__ == "__main__":
 						file.write(json.dumps(property_version["rules"], indent=2))
 				if version == 1:
 					call(["git", "add", "rules", "hostnames", "meta"])
-				author = property_version["meta"]["updatedByUser"] 
-				date = property_version["meta"]["updatedDate"]
-				gitCommit("Version " + property["propertyName"] + " : " + str(version), author, date)
+				author = git.Actor(property_version["meta"]["updatedByUser"],  property_version["meta"]["updatedByUser"] + "@company.com")
+				dt = dateutil.parser.parse(property_version["meta"]["updatedDate"])
+				time = int(dt.strftime('%s'))
+				os.environ["GIT_AUTHOR_DATE"] = "%s %s" % (time, "+0000")
+				os.environ["GIT_COMMITTER_DATE"] = "%s %s" % (time, "+0000")
+				repo.index.commit("Version " + property["propertyName"] + " : " + str(version), author=author, committer=author)
 				tags = additionalLabels(property, version)
 				tags.append(property["propertyName"] + "@" + str(version))
 				for tag in tags:
