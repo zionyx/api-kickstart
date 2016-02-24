@@ -18,17 +18,15 @@ limitations under the License.
 **/
 
 /**
- * Example of calculating Origin Offload using the Akamai Events Center API
+ * Example of retrieving, modifying, and adding DNS Zone Configurations
  *
  * Instructions:
+ * Update the 'sectionName' property to the name of the section in the .edgerc 
+ * file that has Read/Write authorization for the DNS—Zone Record Management API.
+ * Update the 'zone' property to the zone you want to run the examples against.
  *
- * Property Manager: https://developer.akamai.com/api/luna/papi/overview.html
- * Event Center: https://developer.akamai.com/api/luna/events/overview.html
- *
- * TODO:
- * - Add instructions on provisioning credentials to include PAPI and EventCenter
- * - Find an account with Data that we can pull to test out bandwidth calcs. 
- * currently, data is not being returned in getBandwidthUsage so can't test.
+ * Helpful Links
+ * - DNS Zone Management: https://developer.akamai.com/api/luna/config-dns/overview.html
  */
 
 var path = require('path');
@@ -44,9 +42,22 @@ var verbose = argv.verbose ? true : false;
 var edgercPath = path.join(os.homedir(), "/.edgerc");
 var headers = argv.headers ? argv.headers : {};
 
+/////////////////////////////////////////////////
+// EDIT THE TWO PROPERTIES BELOW
+///////////////////////////////////////////////// 
+
 // The name of the section in the .edgerc with Read and Write access to the 
 // DNS Zone Management APIs.
 var sectionName = "dns";
+
+// Property must be set to a zone controlled by the account to which the 
+// authorization credentials were issued (your domain). 
+// Ex: test.com
+var zone = "";
+
+/////////////////////////////////////////////////
+// END EDITS
+///////////////////////////////////////////////// 
 
 // Instantiate the EdgeGrid object with the local .edgerc file path and 
 // appropriate section name.
@@ -55,6 +66,19 @@ var eg = new EdgeGrid({
   section: sectionName,
   debug: debug
 });
+
+// Example of adding a new A-Record to the zone configuration file by first
+// retrieving the existing file, then adding the A-Record to the configuration
+// data and sending it back.
+
+if (zone !== "") {
+  async.waterfall([
+    async.apply(getZoneConfiguration, zone),
+    modifyZoneConfiguration
+  ]);
+} else {
+  console.log("You must supply a value for the 'zone' property in the source code.");
+}
 
 /**
  * Retrieves the zone configuration for the specified zone.
@@ -73,8 +97,6 @@ function getZoneConfiguration(zone, callback) {
   });
 
   eg.send(function(data, response) {
-    console.log("Status: " + response.statusCode);
-
     // If a 404 is returned, this means that the configuration does not yet 
     // exist and a record must be added to the zone.
     if (response.statusCode == "404") {
@@ -83,7 +105,8 @@ function getZoneConfiguration(zone, callback) {
     }
 
     data = JSON.parse(data);
-    console.log(prettyJSON.render(data));
+    console.log("Zone configuration retrieved: \n" + prettyJSON.render(data));
+    return callback(null, zone, data);
   });
 }
 
@@ -114,9 +137,7 @@ function modifyZoneConfiguration(zone, config, callback) {
   }
 
   // Increment the serial on the configuration
-  console.log("Updating serial: " + config.zone.soa.serial);
   config.zone.soa.serial++;
-  console.log("Serial updated: " + config.zone.soa.serial);
 
   // PUSH the updated configuration
   eg.auth({
@@ -127,14 +148,16 @@ function modifyZoneConfiguration(zone, config, callback) {
   });
 
   eg.send(function(data, response) {
-    console.log("Request returned:");
-    data = JSON.parse(data);
-    console.log(prettyJSON.render(data));
+    if (response.statusCode == 204) {
+      console.log("Record updated successfully!");
+    } else {
+      console.log("Request returned status code " + response.statusCode);
+    }
   });
 }
 
 /**
- * Creates and adds a new zone configuration file. This will be used when 
+ * Creates and adds a new zone configuration file. This will be used only when 
  * creating a zone configuration file for the first time.
  *
  * @param  {String}   zone     The zone who configuration should be retrieved.
@@ -143,8 +166,9 @@ function modifyZoneConfiguration(zone, config, callback) {
 function addZoneConfiguration(zone, callback) {
   console.log("Adding new configuration to zone: " + zone + " ...");
 
-  // Sample configuration containing a single a-record. Note that the "token"
-  // property must be set to "new" when creating a new zone configuration.
+  // Sample configuration containing a single a-record and two ns records. 
+  // Note that the "token" property must be set to "new" when creating a new 
+  // zone configuration.
   var config = {
     "token": "new",
     "zone": {
@@ -165,6 +189,17 @@ function addZoneConfiguration(zone, callback) {
         "target": "1.2.3.4",
         "ttl": 3600
       }],
+      "ns": [{
+        target: a.test.com,
+        active: true,
+        name: null,
+        ttl: 172800
+      }, {
+        target: b.test.net,
+        active: true,
+        name: null,
+        ttl: 172800
+      }]
     }
   };
 
@@ -177,8 +212,10 @@ function addZoneConfiguration(zone, callback) {
   });
 
   eg.send(function(data, response) {
-    console.log("Request returned:");
-    data = JSON.parse(data);
-    console.log(prettyJSON.render(data));
+    if (response.statusCode == 204) {
+      console.log("Record updated successfully!");
+    } else {
+      console.log("Request returned status code " + response.statusCode);
+    }
   });
 }
