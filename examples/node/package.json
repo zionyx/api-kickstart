@@ -24,7 +24,9 @@
   "preferGlobal": true,
   "dependencies": {
     "akamai-gen-edgerc": "^1.0.0",
+    "async": "^1.5.2",
     "edgegrid": "^2.0.0",
+    "log4js": "^0.6.31",
     "minimist": "^1.2.0",
     "prettyjson": "^1.1.3"
   },
