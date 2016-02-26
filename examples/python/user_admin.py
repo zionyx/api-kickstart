@@ -88,6 +88,9 @@ def deleteUserRoleRequest(contactid):
   print "\tUser role removed\n"
 
 if __name__ == "__main__":
+  account_result = httpCaller.getResult('/user-admin/v1/accounts')
+
+
   getUsers()
   # First, create the user then delete them 
   contactid = createUserRequest()

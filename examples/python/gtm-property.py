@@ -88,8 +88,6 @@ if __name__ == "__main__":
       			"testInterval": 60, 
       			"testObjectProtocol": "HTTP"
 		} ]
-	print json.dumps(property_object, indent=2)
-
   
 	result = httpCaller.putResult(endpoint, json.dumps(property_object))
 	print "Success!"
