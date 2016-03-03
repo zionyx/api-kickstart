@@ -27,12 +27,16 @@ from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
-config_section = "default"
+verbose = False
+section_name = "default"
 
 config = EdgeGridConfig({"verbose":debug},section_name)
 
-if hasattr(config, "debug") or hasattr(config, "verbose"):
+if hasattr(config, "debug") and config.debug:
   debug = True
+
+if hasattr(config, "verbose") and config.verbose:
+  verbose = True
 
 # Set the config options
 session.auth = EdgeGridAuth(
@@ -43,8 +47,7 @@ session.auth = EdgeGridAuth(
 
 # Set the baseurl based on config.host
 baseurl = '%s://%s/' % ('https', config.host)
-httpCaller = EdgeGridHttpCaller(session, debug, baseurl)
-
+httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 if __name__ == "__main__":
 	# If you're just doing a simple GET the call is very simple
@@ -52,8 +55,8 @@ if __name__ == "__main__":
 	# result_value = endpoint_result["VARIABLE")
 
 	# Add parameters
-	# request_parameters = { "name1":value1, "name2":value2 } 
-	# endpoint_result = httpCaller.getResult("ENDPOINT",request_parameters)
+	request_parameters = { "value1":"foo","value2":"bar" }
+	endpoint_result = httpCaller.getResult("ENDPOINT",request_parameters)
 	# result_value = endpoint_result["VARIABLE")
 
 	# POST example

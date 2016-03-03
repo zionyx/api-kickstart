@@ -250,7 +250,9 @@ if __name__ == "__main__":
 					if "rules" in property_version:
 						file.write(json.dumps(property_version["rules"], indent=2))
 				if version == 1:
-					call(["git", "add", "rules", "hostnames", "meta"])
+					repo.index.add(["rules"])
+					repo.index.add(["hostnames"])
+					repo.index.add(["meta"])
 				author = git.Actor(property_version["meta"]["updatedByUser"],  property_version["meta"]["updatedByUser"] + "@company.com")
 				dt = dateutil.parser.parse(property_version["meta"]["updatedDate"])
 				time = int(dt.strftime('%s'))
