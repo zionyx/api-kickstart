@@ -15,10 +15,15 @@
 FROM python:2.7.10
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vim python-pip php5 ruby-dev nodejs-dev npm
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vim python-pip php5 ruby-dev nodejs-dev npm php-pear php5-dev ruby perl5 
 RUN pip install httpie-edgegrid 
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
+WORKDIR /opt/examples/ruby
+RUN gem install bundler
+RUN bundler install
+WORKDIR /opt/examples/node
+RUN npm install
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
 ADD ./MOTD /opt/MOTD
