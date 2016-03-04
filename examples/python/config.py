@@ -87,7 +87,7 @@ class EdgeGridConfig():
             	if key not in arguments or arguments[key] == None:
             		arguments[key] = value
         else:
-            	print ("Missing configuration file.  Run python gen_creds.py to get your credentials file set up once you've provisioned credentials in LUNA.")
+            	print ("Missing configuration file.  Run python gen_edgerc.py to get your credentials file set up once you've provisioned credentials in LUNA.")
             	return None
 
         for option in arguments:

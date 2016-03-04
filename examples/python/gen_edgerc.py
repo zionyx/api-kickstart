@@ -134,5 +134,5 @@ with open (filename, "w") as myfile:
 	myfile.write(data)
 	myfile.close()
 
-print "\nDone. Please verify your credentials with the verify_creds.py scripti using verify_creds.py -s %s." % section_name_pretty
+print "\nDone. Please verify your credentials with the verify_creds.py script using verify_creds.py -s %s." % section_name_pretty
 print	
