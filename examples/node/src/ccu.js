@@ -25,10 +25,11 @@ Helpful information:
 - https://community.akamai.com/community/developer/blog/2015/08/19/getting-started-with-the-v2-open-ccu-api
 */
 
-var path = require('path');
-var os = require('os');
-var prettyJSON = require('prettyjson');
-var argv = require('minimist')(process.argv.slice(2));
+path = require('path'),
+os = require('os'),
+prettyJSON = require('prettyjson'),
+logger = require('./logger'),
+argv = require('minimist')(process.argv.slice(2));
 
 // Akamai EdgeGrid signing library
 var EdgeGrid = require('edgegrid');
@@ -67,6 +68,7 @@ function getPurgeQueueLength() {
 
   eg.send(function(data, response) {
     data = JSON.parse(data);
+    if (verbose) logger.logResponse(response);
     console.log("The queue currently has " + data.queueLength + " items in it.");
     addItemToQueue();
   });
@@ -118,6 +120,7 @@ function checkPurgeStatus(progressUri) {
 
   eg.send(function(data, response) {
     data = JSON.parse(data);
+    if (verbose) logger.logResponse(response);
     console.log("You should wait " + data.pingAfterSeconds + " seconds before checking again.");
   });
 }
