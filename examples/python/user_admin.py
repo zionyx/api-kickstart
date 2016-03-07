@@ -59,7 +59,7 @@ httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getUsers():
   print "Getting Users"
-  user_result = httpCaller.getResult('/user-admin/v1/accounts/B-3-112OHLC/users')
+  user_result = httpCaller.getResult('/user-admin/v1/accounts/B-C-1FRYVMN')
   for user in user_result:
     print "\t" + user["username"]
   print
@@ -88,8 +88,6 @@ def deleteUserRoleRequest(contactid):
   print "\tUser role removed\n"
 
 if __name__ == "__main__":
-  account_result = httpCaller.getResult('/user-admin/v1/accounts')
-
 
   getUsers()
   # First, create the user then delete them 
