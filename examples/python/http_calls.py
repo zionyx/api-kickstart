@@ -44,6 +44,7 @@ class EdgeGridHttpCaller():
       if self.verbose: print (">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n")
       status = endpoint_result.status_code
       if self.verbose: print( "LOG: GET %s %s %s" % (endpoint,status,endpoint_result.headers["content-type"]))
+      print endpoint_result
       self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
       return endpoint_result.json()
     
@@ -61,7 +62,7 @@ class EdgeGridHttpCaller():
                     error_msg +=  "ERROR: This indicates a problem with authentication or headers.\n"
                     error_msg +=  "ERROR: Please ensure that the .edgerc file is formatted correctly.\n"
                     error_msg +=  "ERROR: If you still have issues, please use gen_edgerc.py to generate the credentials\n"
-                    error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
+                    error_msg +=  "ERROR: Problem details: %s\n" % result
                     exit(error_msg)
       
       if status_code in [404]:

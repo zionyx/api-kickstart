@@ -80,7 +80,7 @@ def postPurgeRequest(action = "invalidate"):
 	purge_obj = {
 			"action"    : action,
 			"objects" : [
-				"https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaidddTimeReference.html"
+				"http://bc.akamaiapibootcamp.com/index.html"
 			]
 		    }
 	print ("Adding %s to queue - %s" % (type, json.dumps(purge_obj)));

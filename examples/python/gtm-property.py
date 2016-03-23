@@ -67,7 +67,7 @@ if __name__ == "__main__":
 	property_object["trafficTargets"][0]["weight"] = 1
 	property_object["trafficTargets"][0]["name"] = "mediatemple"
 
-	property_object["trafficTargets"][1]["weight"] = 1
+	property_object["trafficTargets"][1]["weight"] = .5 
 	property_object["trafficTargets"][1]["name"] = "digitalocean"
 	# Add a liveness test
 	property_object["livenessTests"] = [ 
