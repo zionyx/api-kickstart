@@ -40,6 +40,6 @@ All of the sample code in the directory also supports --verbose to see the outpu
 ```
 
 ## CCU (Purge) - ccu.py
-We have a [blog post](https://community.akamai.com/community/developer/blog/2015/08/19/getting-started-with-the-v2-open-ccu-api?sr=stream) with instructions on getting set up with the CCU API.
+We have a [blog post](https://community.akamai.com/community/developer/blog/2015/08/20/getting-started-with-the-v2-open-ccu-api) with instructions on getting set up with the CCU API.
 Prerequisites: ccu credentials and edit the filename to a valid file on your system
 
