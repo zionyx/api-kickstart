@@ -86,11 +86,11 @@ if __name__ == "__main__":
 	sample_post_body = {
 		  "cloudletId": 0,
 		  "groupId": 77649,
-		  "name": "APIBootcampERv1",
+		  "name": "APIBootcampERv6",
 		  "description": "Testing the creation of a policy"
 	}
 	sample_post_result = httpCaller.postResult('/cloudlets/api/v2/policies', json.dumps(sample_post_body))
-
+	policyId = sample_post_result['policyId']
 #{
   #"cloudletCode": "SA", 
   #"cloudletId": 2, 
@@ -145,7 +145,7 @@ if __name__ == "__main__":
 # }
 
 	# Activate by associating with a specific property
-	sample_post_url = "/cloudlets/api/v2/policies/11442/versions/1/activations"
+	sample_post_url = "/cloudlets/api/v2/policies/%s/versions/1/activations" % policyId
 	sample_post_body = {
   		"network": "staging",
   		"additionalPropertyNames": [
