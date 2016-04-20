@@ -44,7 +44,6 @@ class EdgeGridHttpCaller():
       if self.verbose: print (">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n")
       status = endpoint_result.status_code
       if self.verbose: print( "LOG: GET %s %s %s" % (endpoint,status,endpoint_result.headers["content-type"]))
-      print endpoint_result
       self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
       return endpoint_result.json()
     
