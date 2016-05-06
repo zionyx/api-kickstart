@@ -51,9 +51,6 @@ my $json = JSON->new->utf8->pretty(1);
 my $domainname = "akamaiapibootcamp.com.akadns.net";
 my $propertyname = "origin";
 
-################################
-# Grab the current gtm config  #
-################################
 my $endpoint = "$baseurl/config-gtm/v1/domains/$domainname/properties/$propertyname";
 # First, get the existing property
 my $response = $agent->get( $endpoint);
