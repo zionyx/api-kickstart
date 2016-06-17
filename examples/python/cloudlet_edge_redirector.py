@@ -86,7 +86,7 @@ if __name__ == "__main__":
 	sample_post_body = {
 		  "cloudletId": 0,
 		  "groupId": 77649,
-		  "name": "APIBootcampERv6",
+		  "name": "APIBootcampERversion6",
 		  "description": "Testing the creation of a policy"
 	}
 	sample_post_result = httpCaller.postResult('/cloudlets/api/v2/policies', json.dumps(sample_post_body))

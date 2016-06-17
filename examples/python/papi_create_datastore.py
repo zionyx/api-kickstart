@@ -187,7 +187,7 @@ def createBranchFile(existingProperties, property):
 	if os.path.exists("branch"):
 		with open('branch', 'r') as file:
 			existing = json.load(file)
-			return existing["latestVersion"] + 1
+			return existing["latestVersion"]
 	with open('branch', 'w+') as file:
 		file.write(json.dumps(property, indent=2))
 		gitAdd("branch")
@@ -224,7 +224,7 @@ if __name__ == "__main__":
 		
 		for property in properties:
 			print "Getting information for property %s" % property["propertyName"]
-			numberToStart = createBranchFile(existingProperties, property)
+			numberToStart = createBranchFile(existingProperties, property) + 1
 			print("Going from " + str(numberToStart) + " to " +  str(property["latestVersion"]))
 			for version in range(numberToStart, property["latestVersion"]):
 				print "   Getting version %s for %s" % (version, property["propertyName"])

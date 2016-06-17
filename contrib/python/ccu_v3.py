@@ -67,7 +67,7 @@ def postPurgeRequest(host, paths):
 	purge_obj = { "hostname": host,
                       "objects" : [ p for p in paths ]
 		    }
-	print "Invadating  %s" % json.dumps(purge_obj)
+	print "Invalidating  %s" % json.dumps(purge_obj)
 	purge_post_result = httpCaller.postResult('/ccu/v3/invalidate/url', json.dumps(purge_obj))
 	return purge_post_result
 

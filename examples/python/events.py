@@ -69,18 +69,18 @@ def getEvents(account_id):
 	# to get all information about the event itself.
 
 	# Bandwidth can be retrieved for a particular event.  Available choices are origin, edge, or both.
-	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/bandwidth' % (account_id))
-	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/origin/bandwidth' % (account_id))
-	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/bandwidth' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/bandwidth' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/origin/bandwidth' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/edge/bandwidth' % (account_id))
 
 	# Requests can be retrieved for a particular event.  Available choices are origin, edge, or both.
-	event_result = httpCaller.getResult('/events/v2/%s/events/1041567/trafficdata/cpcode/edge/requests' % (account_id))
-	event_result = httpCaller.getResult('/events/v2/%s/events/1041567/trafficdata/cpcode/origin/requests' % (account_id))
-	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/requests' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/edge/requests' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/origin/requests' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/requests' % (account_id))
 
 	# Status can be retrieved for a particular event.  Available choices are origin or edge
-	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/edge/status' % (account_id))
-	event_result = httpCaller.getResult('/events/v2/%s/events/1099191/trafficdata/cpcode/origin/status' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/edge/status' % (account_id))
+	event_result = httpCaller.getResult('/events/v2/%s/events/1055037/trafficdata/cpcode/origin/status' % (account_id))
 
 
 if __name__ == "__main__":
