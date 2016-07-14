@@ -30,15 +30,15 @@ my $json = JSON->new->utf8->pretty(1);
 # MAIN                #
 #######################
 
-my $propertyname = "origin";
-
 print "Printing the list of network lists";
 
-my $endpoint = "$baseurl/network-list/v1/network_lists";
-# First, get the existing network list
-my $response = $agent->get( $endpoint );
-my $network_list_object = $json->decode( $response->content );
-if ($verbose==1) { print $json->encode( $network_list_object ) };
+if ( $verbose == 1 ) {
+    my $endpoint = "$baseurl/network-list/v1/network_lists";
+    # First, get the existing network list
+    my $response = $agent->get( $endpoint );
+    my $network_list_object = $json->decode( $response->content );
+    print $json->encode( $network_list_object );
+}
 
 # POST to create a new list (commented out by default)
 
