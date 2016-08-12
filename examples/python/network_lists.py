@@ -82,5 +82,5 @@ if __name__ == "__main__":
 	def mapper(x):
 		print str(x["numEntries"]) + ", " + x["name"]
 	map(mapper, lists)
-	createNetworkList("test",["1.2.3.4"])
+	#createNetworkList("test",["1.2.3.4"])
 
