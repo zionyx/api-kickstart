@@ -49,7 +49,6 @@ if hasattr(config, 'headers'):
   session.headers.update(config.headers)
 
 baseurl = '%s://%s/' % ('https', config.host)
-print baseurl
 httpCaller = EdgeGridHttpCaller(session, debug,verbose, baseurl)
 
 # Request locations that support the diagnostic-tools
