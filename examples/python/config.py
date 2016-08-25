@@ -42,7 +42,7 @@ class EdgeGridConfig():
             for argument in flags.keys():
                 parser.add_argument('--' + argument, action=flags[argument])
 
-	arguments = {}
+        arguments = {}
         for argument in config_values:
         	if config_values[argument]:
         		if config_values[argument] == "False" or config_values[argument] == "True":
