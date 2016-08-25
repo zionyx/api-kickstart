@@ -53,7 +53,7 @@ class EdgeGridHttpCaller():
                     error_msg +=  "ERROR: This indicates a problem with authorization.\n"
                     error_msg +=  "ERROR: Please ensure that the credentials you created for this script\n"
                     error_msg +=  "ERROR: have the necessary permissions in the Luna portal.\n"
-                    error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
+                    error_msg +=  "ERROR: Problem details: %s\n" % result["details"]
                     exit(error_msg)
       
       if status_code in [400, 401]:
