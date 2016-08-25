@@ -25,15 +25,7 @@ else:
      from ConfigParser import ConfigParser
 
 import argparse
-import urllib
 import logging
-import uuid
-import hashlib
-import hmac
-import base64
-import re
-import json
-from time import gmtime, strftime
 
 logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description='Process command line options.')
@@ -50,6 +42,7 @@ class EdgeGridConfig():
             for argument in flags.keys():
                 parser.add_argument('--' + argument, action=flags[argument])
 
+	arguments = {}
         for argument in config_values:
         	if config_values[argument]:
         		if config_values[argument] == "False" or config_values[argument] == "True":
