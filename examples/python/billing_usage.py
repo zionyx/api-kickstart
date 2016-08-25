@@ -37,8 +37,13 @@ from http_calls import EdgeGridHttpCaller
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
-from urlparse import urljoin
-import urllib
+if sys.version_info[0] >= 3:
+     # python3
+     from urllib import parse
+else:
+     # python2.7
+     import urlparse as parse
+
 session = requests.Session()
 debug = False
 verbose = False
@@ -69,30 +74,30 @@ httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getReportSources():
 	print
-	print "Requesting the list of report sources"
+	print ("Requesting the list of report sources")
 
 	events_result = httpCaller.getResult('/billing-usage/v1/reseller/reportSources')
-	print events_result['contents']
+	print (events_result['contents'])
 	return events_result['contents']
 
 def getProducts(parameter_obj,startdate,enddate):
 	print
-	print "Requesting a list of products for the given time period"
+	print ("Requesting a list of products for the given time period")
 	headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
-        path = "/billing-usage/v1/products"
+	path = "/billing-usage/v1/products"
 
 	parameters = {	"reportSources"	:parameter_obj,
 			"startDate"	:startdate,
 			"endDate"	:enddate
 		}
-	data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
-	products_result = session.post(urljoin(baseurl,path),data=data_string, headers=headers)
+	data_string = parse.urlencode({p: json.dumps(parameters[p]) for p in parameters})
+	products_result = session.post(parse.urljoin(baseurl,path),data=data_string, headers=headers)
 	products_obj = json.loads(products_result.text)
 	return products_obj['contents']
 
 def getCsvReport(product_list, startdate, enddate, source_obj):
         print
-        print "Requesting a csv report for the given time period"
+        print ("Requesting a csv report for the given time period")
         headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'}
         path = "/billing-usage/v1/contractUsageData/csv"
 
@@ -102,14 +107,14 @@ def getCsvReport(product_list, startdate, enddate, source_obj):
                         "endDate"       :enddate
                 }
         print
-        data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
-        products_result = session.post(urljoin(baseurl,path),data=data_string, headers=headers)
+        data_string = parse.urlencode({p: json.dumps(parameters[p]) for p in parameters})
+        products_result = session.post(parse.urljoin(baseurl,path),data=data_string, headers=headers)
         products_csv = products_result.text
         return products_csv
 
 def getMeasures(product, startdate, enddate, source_obj):
 	print
-	print "Requesting the list of measures valid for product %s" % product
+	print ("Requesting the list of measures valid for product %s" % product)
 	parameters = {	'startMonth':startdate['month'],
 			'endMonth':enddate['month'],
 			'startYear':startdate['year'],
@@ -123,7 +128,7 @@ def getMeasures(product, startdate, enddate, source_obj):
 
 def getStatisticTypes(product, startdate, enddate, source_obj):
 	print
-	print "Requesting the list of statistic types valid for product %s" % product
+	print ("Requesting the list of statistic types valid for product %s" % product)
 	parameters = {	'startMonth':startdate['month'],
 			'endMonth':enddate['month'],
 			'startYear':startdate['year'],
@@ -182,6 +187,6 @@ if __name__ == "__main__":
 	Get a CSV report for all products here, using the information we gathered above
 	"""
 	report = getCsvReport(product_list, startdate, enddate, source_obj)
-	print report
+	print (report)
 
 

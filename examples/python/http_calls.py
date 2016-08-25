@@ -80,7 +80,7 @@ class EdgeGridHttpCaller():
         for key in result:
           if type(key) is not str:
             continue
-          if type(result[key]["errorString"]) is str:
+          if "errorString" in result[key] and type(result[key]["errorString"]) is str:
             error_string = result[key]["errorString"]
       if error_string:
                     error_msg =  "ERROR: Call caused a server fault.\n"

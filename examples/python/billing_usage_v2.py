@@ -39,12 +39,19 @@ from http_calls import EdgeGridHttpCaller
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
-from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
 verbose = False
 section_name = "billingusage"
+
+if sys.version_info[0] >= 3:
+     # python3
+     from urllib import parse
+else:
+     # python2.7
+     import urlparse as parse
+
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
@@ -69,25 +76,25 @@ httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
 def getReportSources():
 	print
-	print "Requesting the list of report sources"
+	print ("Requesting the list of report sources")
 
 	events_result = httpCaller.getResult('/billing-usage/v1/reseller/reportSources')
 	return events_result['contents']
 
 def getProducts(parameters):
         print
-        print "Requesting a list of products for the given time period"
+        print ("Requesting a list of products for the given time period")
         headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
         path = "/billing-usage/v1/products"
 
-        data_string = urllib.urlencode({p: json.dumps(parameters[p]) for p in parameters})
-        products_result = session.post(urljoin(baseurl,path),data=data_string, headers=headers)
+        data_string = parse.urlencode({p: json.dumps(parameters[p]) for p in parameters})
+        products_result = session.post(parse.urljoin(baseurl,path),data=data_string, headers=headers)
         products_obj = json.loads(products_result.text)
         return products_obj['contents']
 
 def getStatisticTypes(contractId, productId, parameters):
 	print
-	print "Requesting the list of statistic types valid for product %s" % productId
+	print ("Requesting the list of statistic types valid for product %s" % productId)
 	path = "/billing-center-api/v2/contracts/%s/products/%s/statistics" % (contractId, productId)
 	statistics_result = httpCaller.getResult(path, parameters)
 	return statistics_result
