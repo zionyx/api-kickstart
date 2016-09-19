@@ -33,5 +33,5 @@ RUN echo "alias gen_edgerc python /opt/examples/python/gen_edgerc.py"
 RUN echo "cat /opt/MOTD" >> /root/.bashrc
 RUN mkdir /.httpie
 ADD ./config.json /.httpie/config.json
-RUN PS1="Akamai OPEN Labs >> "
+RUN PS1="Akamai OPEN Bootcamp >> "
 ENTRYPOINT ["/bin/bash"]
