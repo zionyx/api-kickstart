@@ -14,9 +14,11 @@
 # limitations under the License.
 FROM python:2.7.10
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q software-properties-common curl python-all wget vim python-pip php5 nodejs-dev npm php-pear php5-dev perl5 
 RUN add-apt-repository ppa:brightbox/ruby-ng
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vim python-pip php5 ruby2.2 ruby2.2-dev nodejs-dev npm php-pear php5-dev perl5 
+RUN DEBIAN_FRONTEND=noninteractive apt-get install ruby2.2 ruby2.2-dev
 RUN pip install httpie-edgegrid 
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
