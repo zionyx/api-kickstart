@@ -15,9 +15,7 @@
 FROM python:2.7.10
 MAINTAINER Kirsten Hunter (khunter@akamai.com)
 RUN apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q software-properties-common curl python-all wget vim python-pip php5 nodejs-dev npm php-pear php5-dev perl5 
-RUN DEBIAN_FRONTEND=noninteractive add-apt-repository ppa:brightbox/ruby-ng
-RUN DEBIAN_FRONTEND=noninteractive apt-get install ruby2.2 ruby2.2-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q curl python-all wget vim python-pip php5 ruby-dev nodejs-dev npm php-pear php5-dev ruby perl5 
 RUN pip install httpie-edgegrid 
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
@@ -33,5 +31,4 @@ RUN echo "alias gen_edgerc python /opt/examples/python/gen_edgerc.py"
 RUN echo "cat /opt/MOTD" >> /root/.bashrc
 RUN mkdir /.httpie
 ADD ./config.json /.httpie/config.json
-RUN PS1="Akamai OPEN Bootcamp >> "
 ENTRYPOINT ["/bin/bash"]
