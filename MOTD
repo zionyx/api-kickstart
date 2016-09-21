@@ -6,8 +6,6 @@
 =  this can be found at                                       =
 =  https://developer.akamai.com/introduction/Prov_Creds.html  =
 ===============================================================
-=  Once you've created the credentials, use the 'export'      =
-=  function to create a text file with the credential info.   =
 =  Run the credentials generation script:                     =
 =  # gen_edgerc                                     =
 =                                                             =
