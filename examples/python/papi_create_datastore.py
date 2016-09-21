@@ -86,26 +86,15 @@ def getProperties(groupId, contractId):
 	
 	if "properties" in property_result:
 		property_items = property_result['properties']['items']
+		
+		for property in property_items:
+			print "Getting activation for %s" % property["propertyName"]
+			activations = httpCaller.getResult('/papi/v0/properties/%s/activations' % property["propertyId"], property_parameters)
+			property["activations"] = activations["activations"]["items"]
 	else:
 		property_items = []
 
 	return (property_items)
-
-def getPropertyInfo(propName, groupId, contractId):
-	properties = getProperties(groupId, contractId)
-	for property in properties:
-		if property["propertyName"] == propName:
-			return property
-
-def getSingleProperty(propertyId, groupId, contractId ):
-	"""
-	Get the properties for the associated group/contract combination
-	"""
-	property_parameters = { "contractId":contractId, "groupId":groupId }
-	property_result = httpCaller.getResult('/papi/v0/properties/%s/' % propertyId, 
-								property_parameters)
-	return (property_result)
-
 
 def getPropertyVersion(property, version):
 	result = {}
@@ -174,6 +163,8 @@ def gitAdd(file):
 
 def additionalLabels(property, version):
 	additionalLabels = []
+	print version
+	print property["latestVersion"]
 	if version == property["latestVersion"]:
 		additionalLabels.append(property["propertyName"] + "@" + "LATEST")
 	if version == property["stagingVersion"]:
@@ -186,6 +177,7 @@ def createBranchFile(existingProperties, property):
 	gitCheckout(property["propertyName"], existingProperties)
 	if os.path.exists("branch"):
 		with open('branch', 'r') as file:
+			print "Reading the branch file"
 			existing = json.load(file)
 			return existing["latestVersion"]
 	with open('branch', 'w+') as file:
@@ -203,13 +195,11 @@ if __name__ == "__main__":
 
 	# Create the account file
 	account = getAccount(groupInfo)
-	if not os.path.exists("account"):
-		gitCheckout("master", existingProperties)
-		with open("account", "w+") as file:
-			file.write(account)
-			gitAdd("account")
-			gitCommit("Initial commit with account")
-	 
+	gitCheckout("master", existingProperties)
+	with open("account", "w+") as file:
+		file.write(account)
+		gitAdd("account")
+		gitCommit("Initial commit with account")
 
 	groups = groupInfo["groups"]["items"]
 
@@ -224,7 +214,17 @@ if __name__ == "__main__":
 		
 		for property in properties:
 			print "Getting information for property %s" % property["propertyName"]
-			numberToStart = createBranchFile(existingProperties, property) + 1
+			numberToStart = createBranchFile(existingProperties, property)
+			# Activations
+			for activation in property["activations"]:
+				file = open("activation", "w")
+				file.write(json.dumps(activation))
+				file.close()
+				gitAdd("activation")
+				author = activation["notifyEmails"][0]
+				date = activation["updateDate"]
+				gitCommit("Activation commit: %s" % activation["activationId"], author, date )
+					
 			print("Going from " + str(numberToStart) + " to " +  str(property["latestVersion"]))
 			for version in range(numberToStart, property["latestVersion"]):
 				print "   Getting version %s for %s" % (version, property["propertyName"])
