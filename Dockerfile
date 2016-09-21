@@ -28,7 +28,8 @@ RUN npm install
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
 ADD ./MOTD /opt/MOTD
-RUN echo "alias gen_edgerc python /opt/examples/python/gen_edgerc.py" >> /root/.bashrc
+RUN echo "alias gen_edgerc=/opt/examples/python/gen_edgerc_new.py" >> /root/.bashrc
+RUN echo "alias verify_creds=/opt/examples/python/verify_creds.py" >> /root/.bashrc
 RUN echo "cat /opt/MOTD" >> /root/.bashrc
 RUN mkdir /root/.httpie
 ADD ./config.json /root/.httpie/config.json
