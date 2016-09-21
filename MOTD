@@ -9,7 +9,7 @@
 =  Once you've created the credentials, use the 'export'      =
 =  function to create a text file with the credential info.   =
 =  Run the credentials generation script:                     =
-=  # python gen_edgerc.py                                     =
+=  # gen_edgerc                                     =
 =                                                             =
 =  This will create the correct credentials file for you in   =
 =  the root directory so you can play with the API commands.  =
