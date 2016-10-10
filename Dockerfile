@@ -33,4 +33,5 @@ RUN echo "alias verify_creds=/opt/examples/python/verify_creds.py" >> /root/.bas
 RUN echo "cat /opt/MOTD" >> /root/.bashrc
 RUN mkdir /root/.httpie
 ADD ./config.json /root/.httpie/config.json
+RUN echo "PS1='Akamai API Bootcamp >> '" >> /root/.bashrc
 ENTRYPOINT ["/bin/bash"]
