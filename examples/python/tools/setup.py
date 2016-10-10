@@ -3,7 +3,7 @@ use_setuptools()
 
 from setuptools import setup, find_packages
 setup(
-    name='apibootcamp-python', 
+    name='akamaikickstart', 
     version='1.0.0', 
     description='Bootcamp examples for Akamai {OPEN} APIs',
     author='Kirsten Hunter',

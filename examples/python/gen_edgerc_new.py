@@ -111,7 +111,6 @@ if not Config.has_section(section_name):
 	Config.add_section(section_name)
 
 for line in range(len(lines)-1):
-	print lines[line]
 	(field, value) = lines[line].split(' = ')
 	Config.set(section_name,field,value)
 Config.write(configfile)
