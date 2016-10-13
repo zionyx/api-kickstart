@@ -48,12 +48,13 @@ class EdgeGridHttpCaller():
       return endpoint_result.json()
     
     def httpErrors(self, status_code, endpoint, result):
+      details = result.get('detail') or result.get('details') 
       if status_code == 403:
                     error_msg =  "ERROR: Call to %s failed with a 403 result\n" % endpoint
                     error_msg +=  "ERROR: This indicates a problem with authorization.\n"
                     error_msg +=  "ERROR: Please ensure that the credentials you created for this script\n"
                     error_msg +=  "ERROR: have the necessary permissions in the Luna portal.\n"
-                    error_msg +=  "ERROR: Problem details: %s\n" % result["details"]
+                    error_msg +=  "ERROR: Problem details: %s\n" % details
                     exit(error_msg)
       
       if status_code in [400, 401]:
@@ -69,7 +70,7 @@ class EdgeGridHttpCaller():
                     error_msg +=  "ERROR: This means that the page does not exist as requested.\n"
                     error_msg +=  "ERROR: Please ensure that the URL you're calling is correctly formatted\n"
                     error_msg +=  "ERROR: or look at other examples to make sure yours matches.\n"
-                    error_msg +=  "ERROR: Problem details: %s\n" % result["detail"]
+                    error_msg +=  "ERROR: Problem details: %s\n" % details
                     exit(error_msg)
       
       error_string = None
