@@ -25,7 +25,13 @@ import requests, logging, json, sys
 from http_calls import EdgeGridHttpCaller
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
-from urlparse import urljoin, urlparse
+
+if sys.version_info[0] >= 3:
+     # python3
+     from urllib import parse
+else:
+     # python2.7
+     import urlparse as parse
 
 # Establish an HTTP session
 session = requests.Session()
@@ -65,19 +71,19 @@ if __name__ == "__main__":
 	# Request the entitlement scope for the credentials
 	credential_scope = httpCaller.getResult('/-/client-api/active-grants/implicit')
 
-	if verbose: print json.dumps(credential_scope, indent=2)
+	if verbose: print (json.dumps(credential_scope, indent=2))
 
-	print "Credential Name: %s" % credential_scope['name']
-	print "---"
-	print "Created: %s by %s" % (credential_scope['created'], credential_scope['createdBy'])
-	print "Updated: %s by %s" % (credential_scope['updated'], credential_scope['updatedBy'])
-	print "Activated: %s by %s" % (credential_scope['activated'], credential_scope['activatedBy'])
-	print "---"
+	print ("Credential Name: %s" % credential_scope['name'])
+	print ("---")
+	print ("Created: %s by %s" % (credential_scope['created'], credential_scope['createdBy']))
+	print ("Updated: %s by %s" % (credential_scope['updated'], credential_scope['updatedBy']))
+	print ("Activated: %s by %s" % (credential_scope['activated'], credential_scope['activatedBy']))
+	print ("---")
 
 	for scope in credential_scope['scope'].split(" "):
-		o = urlparse(scope)
+		o = parse.urlparse(scope)
 		apis = o.path.split("/")
-		print '{0:35} {1:10}'.format(apis[3], apis[5])
+		print ('{0:35} {1:10}'.format(apis[3], apis[5]))
 
 
 

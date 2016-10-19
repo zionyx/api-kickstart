@@ -21,7 +21,12 @@
 import sys, os
 import re
 import argparse
-import ConfigParser
+if sys.version_info[0] >= 3:
+     # python3
+     import configparser as ConfigParser
+else:
+     # python2.7
+     import ConfigParser
 from os.path import expanduser
 
 # This script will create a configuration section with the name of the client in your 
@@ -45,20 +50,20 @@ if not args.config_section or args.config_section.lower() == "default":
 	section_name = "----DEFAULT----"
 	section_name_pretty = "default"
 
-print "Akamai OPEN API EdgeGrid Credentials"
+print ("Akamai OPEN API EdgeGrid Credentials")
 print
-print "This script will create a '%s' section in the local ~/.edgerc credential file." % section_name_pretty
+print ("This script will create a '%s' section in the local ~/.edgerc credential file." % section_name_pretty)
 print
 
 if args.cred_file:
-	print "+++ Reading from EdgeGrid credentials file:", args.cred_file
+	print ("+++ Reading from EdgeGrid credentials file:", args.cred_file)
 	with open (os.path.expanduser(args.cred_file), "r") as credFile:
 			text = credFile.read()
 			credFile.close()
 else:
-	print "After authorizing your client in the {OPEN} API Administration tool,"
-	print "export the credentials and paste the contents of the export file below," 
-	print "followed by control-D."
+	print ("After authorizing your client in the {OPEN} API Administration tool,")
+	print ("export the credentials and paste the contents of the export file below," )
+	print ("followed by control-D.")
 	print
 	sys.stdout.write('>>>\n')
 	text = sys.stdin.read()
@@ -83,18 +88,18 @@ filename = "%s/.edgerc" % home
 
 # If this is a new file, create it
 if not os.path.isfile(filename):
-	print "+++ Creating new credentials file: %s" % filename
+	print ("+++ Creating new credentials file: %s" % filename)
 	open(filename, 'a+').close()
 else:
-	print "+++ Found credentials file: %s" % filename
+	print ("+++ Found credentials file: %s" % filename)
 	
 origConfig.read(filename)
 
 if section_name_pretty not in origConfig.sections():
-	print ">>> Replacing section: %s" % section_name_pretty
+	print (">>> Replacing section: %s" % section_name_pretty)
 	replace_section = True
 else:
-	print "+++ Creating section: %s" % section_name_pretty
+	print ("+++ Creating section: %s" % section_name_pretty)
 	replace_section = False
 
 
@@ -103,7 +108,7 @@ print
 
 # If we have a 'default' section hide it from ConfigParser
 with open (filename, "r+") as myfile:
- 	data=myfile.read().replace('default','----DEFAULT----')
+	data=myfile.read().replace('default','----DEFAULT----')
 	myfile.close()
 with open (filename, "w") as myfile:
 	myfile.write(data)
@@ -121,7 +126,6 @@ Config.set(section_name,'client_secret',fields['Secret:'])
 Config.set(section_name,'host',fields['URL:'].replace('https://',''))
 Config.set(section_name,'access_token',fields['Tokens:'])
 Config.set(section_name,'client_token',fields['token:'])
-Config.set(section_name,'max-body',131072)
 Config.write(configfile)
 
 configfile.close()
@@ -134,5 +138,5 @@ with open (filename, "w") as myfile:
 	myfile.write(data)
 	myfile.close()
 
-print "\nDone. Please verify your credentials with the verify_creds.py script using verify_creds.py -s %s." % section_name_pretty
+print ("\nDone. Please verify your credentials with the verify_creds.py script using verify_creds.py -s %s." % section_name_pretty)
 print	
