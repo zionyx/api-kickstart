@@ -11,15 +11,15 @@ $ cpan -i Akamai::Edgegrid
 The easiest way to walk through the needed provisioning and authentication to get your credentials is by following the instructions on [Authorizing your Client](https://developer.akamai.com/introduction/Prov_Creds.html) from the Getting started guide on our site.  Once you have done this, you'll be able to run the 'diagnostic tools' example scripts.
 
 ## Credential File Creation
-You can get your credentials set up for use by the sample code by using the gen_edgerc.py command in the examples/python directory:
+You can get your credentials set up for use by the sample code by using the gen_edgerc.pl command in this directory:
 ```bash
-$ ./gen_edgerc.py
+$ perl gen_edgerc.pl
 ``` 
 
 When you run gen_edgerc.py with no command line options, the script will create a 'default' section in your ~/.edgerc file.  For examples other than diagnostic_tools.py you'll need to pass the name of the appropriate section as an
 argument, for example this is how you'd set up ccu.pl:
 ```bash
-./gen_edgerc.py --config_section ccu
+perl gen_edgerc.pl -s ccu
 ```
 
 You can find the correct name for the credentials section on the "section=" line in the example script.  If you run the script again for a specific section (including 'default') it will overwrite the previous credentials with your new ones.
