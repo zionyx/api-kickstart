@@ -71,11 +71,10 @@ else:
 	sys.stdout.write('>>>\n')
 	text = sys.stdin.read()
 
-# load the cred data
 home = expanduser("~")
-lines = text.split('\n')
 index = 0
 fields = {}
+
 
 # Process the original .edgerc file
 origConfig = ConfigParser.ConfigParser()
@@ -90,13 +89,18 @@ else:
 	
 origConfig.read(filename)
 
-if section_name_pretty not in origConfig.sections():
+if section_name_pretty in origConfig.sections():
 	print (">>> Replacing section: %s" % section_name_pretty)
+	sys.stdout.write ("*** OK TO REPLACE section %s? *** [Y|n]:" % section_name_pretty)
+	choice = raw_input().lower()
+	if choice == "n":
+		print "Not replacing section."
+		exit(0)
+
 	replace_section = True
 else:
 	print ("+++ Creating section: %s" % section_name_pretty)
 	replace_section = False
-
 
 # We need a line for the output to look nice
 print 
@@ -118,11 +122,27 @@ configfile = open(filename,'w')
 if not Config.has_section(section_name):
 	Config.add_section(section_name)
 
-for line in range(len(lines)-1):
-	if not lines[line].strip():
-		continue
-	(field, value) = lines[line].split(' = ')
-	Config.set(section_name,field,value)
+# load the cred data
+
+if "Secret:" in text:
+	fieldlist = text.split()
+	# Parse the cred data
+	while index < len(fieldlist):
+		if (re.search(r':$', fieldlist[index])):
+			fields[fieldlist[index]] = fieldlist[index + 1]
+		index += 1
+	Config.set(section_name,'client_secret',fields['Secret:'])
+	Config.set(section_name,'host',fields['URL:'].replace('https://',''))
+	Config.set(section_name,'access_token',fields['Tokens:'])
+	Config.set(section_name,'client_token',fields['token:'])
+
+else:
+	lines = text.split('\n')
+	for line in range(len(lines)-1):
+		if not lines[line].strip():
+			continue
+		(field, value) = lines[line].split(' = ')
+		Config.set(section_name,field,value)
 Config.write(configfile)
 
 configfile.close()
