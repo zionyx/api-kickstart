@@ -21,12 +21,15 @@
 import sys, os
 import re
 import argparse
+
 if sys.version_info[0] >= 3:
      # python3
      import configparser as ConfigParser
 else:
      # python2.7
      import ConfigParser
+
+
 from os.path import expanduser
 
 # This script will create a configuration section with the name of the client in your 
@@ -67,19 +70,10 @@ else:
 	print
 	sys.stdout.write('>>>\n')
 	text = sys.stdin.read()
-	sys.stdout.write('<<<\n\n')
 
-# load the cred data
 home = expanduser("~")
-fieldlist = text.split()
 index = 0
 fields = {}
-
-# Parse the cred data
-while index < len(fieldlist):
-	if (re.search(r':$', fieldlist[index])):
-		fields[fieldlist[index]] = fieldlist[index + 1]
-	index += 1
 
 
 # Process the original .edgerc file
@@ -95,13 +89,18 @@ else:
 	
 origConfig.read(filename)
 
-if section_name_pretty not in origConfig.sections():
+if section_name_pretty in origConfig.sections():
 	print (">>> Replacing section: %s" % section_name_pretty)
+	sys.stdout.write ("*** OK TO REPLACE section %s? *** [Y|n]:" % section_name_pretty)
+	choice = raw_input().lower()
+	if choice == "n":
+		print "Not replacing section."
+		exit(0)
+
 	replace_section = True
 else:
 	print ("+++ Creating section: %s" % section_name_pretty)
 	replace_section = False
-
 
 # We need a line for the output to look nice
 print 
@@ -122,10 +121,28 @@ configfile = open(filename,'w')
 # Add the new section
 if not Config.has_section(section_name):
 	Config.add_section(section_name)
-Config.set(section_name,'client_secret',fields['Secret:'])
-Config.set(section_name,'host',fields['URL:'].replace('https://',''))
-Config.set(section_name,'access_token',fields['Tokens:'])
-Config.set(section_name,'client_token',fields['token:'])
+
+# load the cred data
+
+if "Secret:" in text:
+	fieldlist = text.split()
+	# Parse the cred data
+	while index < len(fieldlist):
+		if (re.search(r':$', fieldlist[index])):
+			fields[fieldlist[index]] = fieldlist[index + 1]
+		index += 1
+	Config.set(section_name,'client_secret',fields['Secret:'])
+	Config.set(section_name,'host',fields['URL:'].replace('https://',''))
+	Config.set(section_name,'access_token',fields['Tokens:'])
+	Config.set(section_name,'client_token',fields['token:'])
+
+else:
+	lines = text.split('\n')
+	for line in range(len(lines)-1):
+		if not lines[line].strip():
+			continue
+		(field, value) = lines[line].split(' = ')
+		Config.set(section_name,field,value)
 Config.write(configfile)
 
 configfile.close()
@@ -134,6 +151,7 @@ configfile.close()
 with open (filename, "r") as myfile:
 	data=myfile.read().replace('----DEFAULT----','default')
 	myfile.close()
+
 with open (filename, "w") as myfile:
 	myfile.write(data)
 	myfile.close()
