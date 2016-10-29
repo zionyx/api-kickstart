@@ -30,6 +30,11 @@ debug = False
 verbose = False
 section_name = "cloudlet"
 
+# Let's set up exactly which policy and version we want to use
+policy = "15927"
+version = "CREATE" # CREATE OR LATEST OR SPECIFIC NUMBER
+filename = "rules.json"
+
 config = EdgeGridConfig({"verbose":debug},section_name)
 
 if hasattr(config, "debug") and config.debug:
@@ -52,109 +57,37 @@ httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 if __name__ == "__main__":
 	# Get the list of cloudlets to pick the one we want to use
 
-	endpoint_result = httpCaller.getResult("/cloudlets/api/v2/cloudlet-info")
-	
-	# Result for edge redirector:
-	# {
-	#    "location": "/cloudlets/api/v2/cloudlet-info/2", 
-	#    "cloudletId": 2, 
-	#    "cloudletCode": "SA", 
-	#    "apiVersion": "2.0", 
-	#    "cloudletName": "SAASACCESS"
-	#}, 
+	if version == "CREATE":
+		new_version_info = {
+				"description":"Adding a new version for match rules",
+				"matchRuleFormat":"1.0",
+				"matchRules": []
+		}
+		create_path = "/cloudlets/api/v2/policies/%s/versions" % policy
+		create_result = httpCaller.postResult(create_path, 
+							json.dumps(new_version_info))
 
-	# Get the group ID for the cloudlet we're looking to create
-	endpoint_result = httpCaller.getResult("/cloudlets/api/v2/group-info")
+	if version == "CREATE" or version == "LATEST":
+		version_path = "/cloudlets/api/v2/policies/%s/versions" % policy
+		version_result = httpCaller.getResult(version_path)
+		version = version_result[0]["version"]
 
-	# Result for group info:
- 	#	 "groupName": "API Bootcamp", 
-   	#	 "location": "/cloudlets/api/v2/group-info/77649", 
-    	#	 "parentId": 64867, 
-    	#	 "capabilities": [
-      	#	{
-       #	"cloudletId": 0, 
-        #	"cloudletCode": "ER", 
-        #	"capabilities": [
-        #	  "View", 
-        #	  "Edit", 
-        #	  "Activate", 
-        #	  "Internal", 
-        #	  "AdvancedEdit"
-        #	]
-      	#	}, 
+	# Now we know which version (and we've set the policy)
 
-	sample_post_body = {
-		  "cloudletId": 0,
-		  "groupId": 77649,
-		  "name": "APIBootcampERversion6",
-		  "description": "Testing the creation of a policy"
+	# Open the JSON filename with mappings
+	with open(filename) as data_file:
+		data = json.load(data_file)
+
+	for rule in data:
+		rule_path = "/cloudlets/api/v2/policies/%s/versions/%s/rules" % (policy, version)
+		rule_result = httpCaller.postResult(rule_path, json.dumps(rule))
+		print rule_result
+
+	# Activate the new version if you like
+	activation_path = "/cloudlets/api/v2/policies/%s/versions/%s/activations" % (policy, version)
+	activation_obj = {
+		"network":"production"
 	}
-	sample_post_result = httpCaller.postResult('/cloudlets/api/v2/policies', json.dumps(sample_post_body))
-	policyId = sample_post_result['policyId']
-#{
-  #"cloudletCode": "SA", 
-  #"cloudletId": 2, 
-  #"name": "APIBootcampEdgeRedirect", 
-  #"propertyName": null, 
-  #"deleted": false, 
-  #"lastModifiedDate": 1458765299155, 
-  #"description": "Testing the creation of a policy", 
-  #"apiVersion": "2.0", 
-  #"lastModifiedBy": "advocate2", 
-  #"serviceVersion": null, 
-  #"createDate": 1458765299155, 
-  #"location": "/cloudlets/api/v2/policies/11434", 
-  #"createdBy": "advocate2", 
-  #"activations": [
-    #{
-      #"serviceVersion": null, 
-      #"policyInfo": {
-        #"status": "inactive", 
-        #"name": "APIBootcampEdgeRedirect", 
-        #"statusDetail": null, 
-        #"detailCode": 0, 
-        #"version": 0, 
-        #"policyId": 11434, 
-        #"activationDate": 0, 
-        #"activatedBy": null
+	activation_result = httpCaller.postResult(activation_path, json.dumps(activation_obj))
+		
 
-      #}, 
-      #"network": "prod", 
-      #"apiVersion": "2.0", 
-      #"propertyInfo": null
-    #}, 
-    #{
-      #"serviceVersion": null, 
-      #"policyInfo": {
-        #"status": "inactive", 
-        #"name": "APIBootcampEdgeRedirect", 
-        #"statusDetail": null, 
-        #"detailCode": 0, 
-        #"version": 0, 
-        #"policyId": 11434, 
-        #"activationDate": 0, 
-        #"activatedBy": null
-      	#}, 
-      	#"network": "staging", 
-      #	"apiVersion": "2.0", 
-      	#"propertyInfo": null
-    	#}
-  	#], 
-# "groupId": 77649, 
-# "policyId": 11434  <<<<<<<<<<<
-# }
-
-	# Activate by associating with a specific property
-	sample_post_url = "/cloudlets/api/v2/policies/%s/versions/1/activations" % policyId
-	sample_post_body = {
-  		"network": "staging",
-  		"additionalPropertyNames": [
-  			  "akamaiapibootcamp.com"
-  		]
-	}
-	sample_post_result = httpCaller.postResult(sample_post_url, json.dumps(sample_post_body))
-	
-	# Next, add the behavior for cloudlets
-
-	# PUT the update to activate the cloudlet
-	
