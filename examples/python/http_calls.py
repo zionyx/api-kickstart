@@ -48,10 +48,7 @@ class EdgeGridHttpCaller():
       return endpoint_result.json()
     
     def httpErrors(self, status_code, endpoint, result):
-      if isinstance(result, list):
-	details = ""
-      else:
-      	details = result.get('detail') or result.get('details') or ""
+      details = result.get('detail') or result.get('details') or ""
       if status_code == 403:
                     error_msg =  "ERROR: Call to %s failed with a 403 result\n" % endpoint
                     error_msg +=  "ERROR: This indicates a problem with authorization.\n"
