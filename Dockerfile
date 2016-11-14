@@ -25,6 +25,7 @@ RUN gem install bundler
 RUN bundler install
 WORKDIR /opt/examples/node
 RUN npm install
+RUN npm install -g n; n 5.0.0
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
 ADD ./MOTD /opt/MOTD
