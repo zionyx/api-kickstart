@@ -25,8 +25,10 @@ RUN gem install bundler
 RUN bundler install
 WORKDIR /opt/examples/node
 RUN npm install
+RUN npm install -g n; n 5.0.0
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
+RUN cpan -i Akamai::Edgegrid LWP::Protocol::https
 ADD ./MOTD /opt/MOTD
 RUN echo "alias gen_edgerc=/opt/examples/python/gen_edgerc.py" >> /root/.bashrc
 RUN echo "alias verify_creds=/opt/examples/python/verify_creds.py" >> /root/.bashrc
