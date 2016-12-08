@@ -15,18 +15,19 @@
  limitations under the License.
 
 
-Sample client for billing-usage v2
+Sample client for billing-center v2
 
-NOTE: This code requires credentials set up for both the Legacy Billing Usage
-API and the current Billing Center API
+NOTE: This code requires a single token configured with grants for the following:
+* Billing Center API
+* Contracts API
 
-This client pulls the reportSources you have access to from the v1 API.
-For the first result, it pulls all products from the v2 API.  Then it
-creates monthly reports for the range you specify for each product, and finally 
-generates a report based on this information from the v2 API.
+This client gets a list of your contracts and products and pulls information for
+the first one of each, then retrieves billing usage for that combination.  It is
+only designed to be an example of how to access the API, you'll need to use it
+to guide your development.
 
-The combination of calls should be sufficient to let
-you do what you need with the billing-usage API.
+The combination of calls should be sufficient to show
+you how to do what you need with the billing-center API.
 
 Contact open-developer@akamai.com with questions, ideas
 or comments.
@@ -43,7 +44,7 @@ import urllib
 session = requests.Session()
 debug = False
 verbose = False
-section_name = "billingusage"
+section_name = "billingcenter"
 
 if sys.version_info[0] >= 3:
      # python3
@@ -55,7 +56,7 @@ else:
 
 # If all parameters are set already, use them.  Otherwise
 # use the config
-config = EdgeGridConfig({},"billingusage")
+config = EdgeGridConfig({},section_name)
 
 if hasattr(config, "debug") and config.debug:
   debug = True
@@ -74,70 +75,49 @@ baseurl = '%s://%s/' % ('https', config.host)
 
 httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 
-def getReportSources():
+def getContractId():
 	print
-	print ("Requesting the list of report sources")
+	print ("Requesting the first contract ID")
 
-	events_result = httpCaller.getResult('/billing-usage/v1/reseller/reportSources')
-	return events_result['contents']
+	contracts_result = httpCaller.getResult('/contract-api/v1/contracts/identifiers')
+	return contracts_result[0]
 
-def getProducts(parameters):
-        print
-        print ("Requesting a list of products for the given time period")
-        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8','Accept':'application/json'}
-        path = "/billing-usage/v1/products"
-
-        data_string = parse.urlencode({p: json.dumps(parameters[p]) for p in parameters})
-        products_result = session.post(parse.urljoin(baseurl,path),data=data_string, headers=headers)
-        products_obj = json.loads(products_result.text)
-        return products_obj['contents']
-
-def getStatisticTypes(contractId, productId, parameters):
+def getProduct(contractId, productString):
 	print
-	print ("Requesting the list of statistic types valid for product %s" % productId)
-	path = "/billing-center-api/v2/contracts/%s/products/%s/statistics" % (contractId, productId)
-	statistics_result = httpCaller.getResult(path, parameters)
-	return statistics_result
+	print ("Requesting the %s product" % productString)
+	productId = ""
+	
+	products_result = httpCaller.getResult('/contract-api/v1/contracts/%s/products/summaries' % contractId)
 
-def getMonthlyUsage(contractId, productId, parameters):
+	for product in products_result['products']['marketing-products']:
+		print "Checking %s for %s" % (product['marketingProductName'], productString)
+		if product['marketingProductName'] == productString:
+			productId = product['marketingProductId']
+			return productId
+
+def getUsage(contractId, productId, parameters):
 	print
 	path = "/billing-center-api/v2/contracts/%s/products/%s/measures" % (contractId, productId)
+	print path
 	report_result = httpCaller.getResult(path, parameters)
+	print report_result
+	return report_result
 
 if __name__ == "__main__":
 	# getReportSources will return a list of reporting groups and/or contract ids
 	# include the group or contract as contractId and the reportType as returned
 	# by getReportSources
 	# You could loop through them here, or just get one big kahuna report and chunk it up yourself
-	reportSource = getReportSources()
-	contractId = reportSource[0]['id']
+	contractId = getContractId()
+
+	productId = getProduct(contractId, "HTTP Downloads")
 
 	# Year and Month
-	v2parameters = { 
+	parameters = { 
 		"year"   : 2016,
 		"month"  : 8
 	}
 
-	# From year and from month
-	v2parameters = {
-		"fromYear" : 2016,
-		"toYear" : 2016,
-		"fromMonth" : 8,
-		"toMonth" : 8
-	}
-
-	v1parameters = {
-		"startDate" : {"month":8, "year": 2016},
-		"endDate"   : {"month":9, "year": 2016},
-		"reportSources" : reportSource[0]
-	}
-
-	products = getProducts(v1parameters)
-	# Just grab the first product
-	productId = products[0]['id']
-
 	# Grab the statistics
-	statisticTypes = getStatisticTypes(contractId, productId, v2parameters)
-	for statisticType in statisticTypes:
-		v2parameters["statisticName"] = statisticType["name"]
-		getMonthlyUsage(contractId, productId, v2parameters)
+	usage = getUsage(contractId, productId, parameters)
+	print (json.dumps(usage, indent=2))
