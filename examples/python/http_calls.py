@@ -104,6 +104,18 @@ class EdgeGridHttpCaller():
         
         if self.verbose: print (">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n")
         return endpoint_result.json()
+
+    def postFiles(self, endpoint, file):
+        path = endpoint
+        endpoint_result = self.session.post(parse.urljoin(self.baseurl,path), files=file)
+        status = endpoint_result.status_code
+        if self.verbose: print ("LOG: POST FILES %s %s %s" % (path,status,endpoint_result.headers["content-type"]))
+        if status == 204:
+           return {}
+        self.httpErrors(endpoint_result.status_code, path, endpoint_result.json())
+        
+        if self.verbose: print (">>>\n" + json.dumps(endpoint_result.json(), indent=2) + "\n<<<\n")
+        return endpoint_result.json()
     
     def putResult(self, endpoint, body, parameters=None):
         headers = {'content-type': 'application/json'}
