@@ -53,7 +53,7 @@ var sectionName = "dns";
 // Property must be set to a zone controlled by the account to which the 
 // authorization credentials were issued (your domain). 
 // Ex: test.com
-var zone = "";
+var zone = "akamaiapibootcamp.com";
 
 /////////////////////////////////////////////////
 // END EDITS
