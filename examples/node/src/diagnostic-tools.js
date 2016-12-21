@@ -32,7 +32,7 @@ var path = require('path'),
 
 var debug = argv.debug ? true : false,
   verbose = argv.verbose ? true : false,
-  sectionName = "default",
+  sectionName = "diagnostic-tools",
   edgercPath = path.join(os.homedir(), "/.edgerc"),
   headers = argv.headers ? argv.headers : {};
 
@@ -59,13 +59,19 @@ function getLocations(callback) {
     body: {}
   });
 
-  eg.send(function(data, response) {
+  eg.send(function(err, response, body) {
     console.log("Requesting locations that support the diagnostic-tools API...");
 
+    console.log("Error: ", err);
+
+    console.log("Response: ", response);
+    console.log("");
+    console.log("Body: ", body);
+
     // Pick random location
-    data = JSON.parse(data);
-    var locationCount = data.locations.length;
-    var location = data.locations[Math.floor(Math.random() * locationCount)];
+    body = JSON.parse(body);
+    var locationCount = body.locations.length;
+    var location = body.locations[Math.floor(Math.random() * locationCount)];
 
     if (verbose) logger.logResponse(response);
     console.log("\nThere are " + locationCount + " locations that can run dig in the Akamai Network,");
@@ -97,9 +103,9 @@ function makeDigRequest(location, callback) {
     qs: digParameters
   });
 
-  eg.send(function(data, response) {
+  eg.send(function(err, response, body) {
     if (verbose) logger.logResponse(response);
-    data = JSON.parse(data);
-    console.log(data.dig.result);
+    body = JSON.parse(body);
+    console.log(body.dig.result);
   });
 }

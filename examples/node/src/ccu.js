@@ -66,10 +66,10 @@ function getPurgeQueueLength() {
     body: {}
   });
 
-  eg.send(function(data, response) {
-    data = JSON.parse(data);
+  eg.send(function(error, response, body) {
+    body = JSON.parse(body);
     if (verbose) logger.logResponse(response);
-    console.log("The queue currently has " + data.queueLength + " items in it.");
+    console.log("The queue currently has " + body.queueLength + " items in it.");
     addItemToQueue();
   });
 }
@@ -83,7 +83,7 @@ function addItemToQueue() {
   var purgeObj = {
     action: "invalidate",
     objects: [
-      "https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaiTimeReference.html"
+      "https://developer.akamai.com/learn/index.html"
     ]
   };
 
@@ -95,13 +95,13 @@ function addItemToQueue() {
 
   console.log("Adding data to queue: " + JSON.stringify(purgeObj));
 
-  eg.send(function(data, response) {
-    data = JSON.parse(data);
+  eg.send(function(error, response, body) {
+    body = JSON.parse(body);
 
-    if (data.httpStatus == 201) {
-      checkPurgeStatus(data.progressUri);
+    if (body.httpStatus == 201) {
+      checkPurgeStatus(body.progressUri);
     } else {
-      console.log("Request unsuccesful. Status " + data.httpStatus + " - " + data.detail);
+      console.log("Request unsuccesful. Status " + body.httpStatus + " - " + body.detail);
     }
   });
 }
@@ -118,10 +118,10 @@ function checkPurgeStatus(progressUri) {
     method: "GET"
   });
 
-  eg.send(function(data, response) {
-    data = JSON.parse(data);
+  eg.send(function(error, response, body) {
+    body = JSON.parse(body);
     if (verbose) logger.logResponse(response);
-    console.log("You should wait " + data.pingAfterSeconds + " seconds before checking again.");
+    console.log("You should wait " + body.pingAfterSeconds + " seconds before checking again.");
   });
 }
 

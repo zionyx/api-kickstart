@@ -96,7 +96,7 @@ function getZoneConfiguration(zone, callback) {
     body: {}
   });
 
-  eg.send(function(data, response) {
+  eg.send(function(error, response, body) {
     // If a 404 is returned, this means that the configuration does not yet 
     // exist and a record must be added to the zone.
     if (response.statusCode == "404") {
@@ -104,9 +104,9 @@ function getZoneConfiguration(zone, callback) {
         "records to zone before configuration will be created.");
     }
 
-    data = JSON.parse(data);
-    console.log("Zone configuration retrieved: \n" + prettyJSON.render(data));
-    return callback(null, zone, data);
+    body = JSON.parse(body);
+    console.log("Zone configuration retrieved: \n" + prettyJSON.render(body));
+    return callback(null, zone, body);
   });
 }
 
@@ -147,7 +147,7 @@ function modifyZoneConfiguration(zone, config, callback) {
     body: config
   });
 
-  eg.send(function(data, response) {
+  eg.send(function(error, response, body) {
     if (response.statusCode == 204) {
       console.log("Record updated successfully!");
     } else {
@@ -211,7 +211,7 @@ function addZoneConfiguration(zone, callback) {
     body: config
   });
 
-  eg.send(function(data, response) {
+  eg.send(function(error, response, body) {
     if (response.statusCode == 204) {
       console.log("Record updated successfully!");
     } else {

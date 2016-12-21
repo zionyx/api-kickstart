@@ -74,8 +74,6 @@ function invalidate() {
         ]
     };
 
-    console.log("Adding data to queue: " + JSON.stringify(purgeObj));
-
     eg.auth({
         path: "/ccu/v3/invalidate/url",
         method: "POST",
@@ -83,9 +81,9 @@ function invalidate() {
         body: purgeObj
     });
 
-    eg.send(function(data, response) {
-        data = JSON.parse(data);
-        console.log("Response: ", data);
+    eg.send(function(error, response, body) {
+        body = JSON.parse(body);
+        console.log("Response: ", body);
     });
 }
 
