@@ -53,7 +53,7 @@ var purgePostResult;
 var edgercPath = path.join(os.homedir(), "/.edgerc");
 
 // The section of the .edgerc file to use for authentication
-var sectionName = "ccu-v3";
+var sectionName = "ccu";
 
 // Create a new instance of the EdgeGrid signing library
 var eg = new EdgeGrid({
