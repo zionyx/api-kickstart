@@ -40,7 +40,7 @@ class CcuClient
 
 	public function __construct()
 	{
-		$this->client = \Akamai\Open\EdgeGrid\Client::createFromEdgeRcFile('ccuv3');
+		$this->client = \Akamai\Open\EdgeGrid\Client::createFromEdgeRcFile('ccu');
 	}
 
 	public function postPurgeRequest($hostname, $objects)
