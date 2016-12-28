@@ -59,7 +59,7 @@ class CcuClient
 	{
 		$purge_body = [
 			"objects" => [
-				"https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaiTimeReference.html"
+				"http://bc.akamaiapibootcamp.com/index.html"
 			]
 		];
 

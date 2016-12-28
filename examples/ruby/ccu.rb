@@ -83,7 +83,7 @@ def postPurgeRequest(baseuri, http, options, action="invalidate")
 	post_request.body = {
     	:action => action,
     	:objects => [
-				"https://developer.akamai.com/stuff/Akamai_Time_Reference/AkamaiTimeReference.html"
+				"http://bc.akamaiapibootcamp.com/index.html"
 			]
 	}.to_json
 
