@@ -33,7 +33,7 @@ Put the credentials in ~/.edgerc as demonstrated by api-kickstart/sample_edgerc
 require 'akamai/edgegrid'
 require 'net/http'
 require 'uri'
-require 'JSON'
+require 'json'
 require 'optparse'
 
 address = get_host("~/.edgerc","ccu")
