@@ -37,7 +37,10 @@ class EdgeGridHttpCaller():
         self.session = session
         self.baseurl = baseurl
         return None
-    
+   
+    def urlJoin(self, url, path):
+        return parse.urljoin(url, path)
+ 
     def getResult(self, endpoint, parameters=None):
       path = endpoint
       endpoint_result = self.session.get(parse.urljoin(self.baseurl,path), params=parameters)
@@ -51,7 +54,7 @@ class EdgeGridHttpCaller():
       if not isinstance(result, list):
       	details = result.get('detail') or result.get('details') or ""
       else:
-	details = ""
+        details = ""
       if status_code == 403:
                     error_msg =  "ERROR: Call to %s failed with a 403 result\n" % endpoint
                     error_msg +=  "ERROR: This indicates a problem with authorization.\n"
@@ -82,7 +85,7 @@ class EdgeGridHttpCaller():
                            error_string = result["errorString"]
       else:
         for key in result:
-          if type(key) is not str:
+          if type(key) is not str or isinstance(result, dict) or not isinstance(result[key], dict):
             continue
           if "errorString" in result[key] and type(result[key]["errorString"]) is str:
             error_string = result[key]["errorString"]

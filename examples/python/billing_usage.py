@@ -39,9 +39,11 @@ from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
 if sys.version_info[0] >= 3:
      # python3
-     from urllib import parse
+     from urllib import parse as encoder
+     import urllib.parse as parse
 else:
      # python2.7
+     import urllib as encoder
      import urlparse as parse
 
 session = requests.Session()
@@ -90,7 +92,8 @@ def getProducts(parameter_obj,startdate,enddate):
 			"startDate"	:startdate,
 			"endDate"	:enddate
 		}
-	data_string = parse.urlencode({p: json.dumps(parameters[p]) for p in parameters})
+  
+	data_string = encoder.urlencode({p: json.dumps(parameters[p]) for p in parameters})
 	products_result = session.post(parse.urljoin(baseurl,path),data=data_string, headers=headers)
 	products_obj = json.loads(products_result.text)
 	return products_obj['contents']

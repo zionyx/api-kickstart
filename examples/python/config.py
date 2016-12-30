@@ -20,9 +20,11 @@ import sys, os
 if sys.version_info[0] >= 3:
      # python3
      from configparser import ConfigParser
+     import http.client as http_client
 else:
      # python2.7
      from ConfigParser import ConfigParser
+     import httplib as http_client
 
 import argparse
 import logging
@@ -56,7 +58,6 @@ class EdgeGridConfig():
         arguments = vars(args)
 
         if arguments['debug']:
-            import httplib as http_client
             http_client.HTTPConnection.debuglevel = 1
             logging.basicConfig()
             logging.getLogger().setLevel(logging.DEBUG)

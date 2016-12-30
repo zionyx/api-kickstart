@@ -23,7 +23,6 @@ from http_calls import EdgeGridHttpCaller
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
-from urlparse import urljoin
 import urllib
 session = requests.Session()
 debug = False
@@ -92,4 +91,4 @@ if __name__ == "__main__":
 		} ]
   
 	result = httpCaller.putResult(endpoint, json.dumps(property_object))
-	print "Success!"
+	print ("Success!")

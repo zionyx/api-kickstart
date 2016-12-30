@@ -90,7 +90,7 @@ def getProduct(contractId, productString):
 	products_result = httpCaller.getResult('/contract-api/v1/contracts/%s/products/summaries' % contractId)
 
 	for product in products_result['products']['marketing-products']:
-		print "Checking %s for %s" % (product['marketingProductName'], productString)
+		print ("Checking %s for %s" % (product['marketingProductName'], productString))
 		if product['marketingProductName'] == productString:
 			productId = product['marketingProductId']
 			return productId
@@ -98,9 +98,8 @@ def getProduct(contractId, productString):
 def getUsage(contractId, productId, parameters):
 	print
 	path = "/billing-center-api/v2/contracts/%s/products/%s/measures" % (contractId, productId)
-	print path
 	report_result = httpCaller.getResult(path, parameters)
-	print report_result
+	print (report_result)
 	return report_result
 
 if __name__ == "__main__":
