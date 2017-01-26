@@ -182,6 +182,7 @@ def createBranchFile(existingProperties, property):
 			return existing["latestVersion"]
 	with open('branch', 'w+') as file:
 		file.write(json.dumps(property, indent=2))
+		file.close()
 		gitAdd("branch")
 		gitCommit("Metadata for " + property["propertyName"])
 		call(["git", "tag", property["propertyName"] + "_META"])
@@ -196,10 +197,11 @@ if __name__ == "__main__":
 	# Create the account file
 	account = getAccount(groupInfo)
 	gitCheckout("master", existingProperties)
-	with open("account", "w+") as file:
-		file.write(account)
-		gitAdd("account")
-		gitCommit("Initial commit with account")
+	if not os.path.exists("account"):
+		with open("account", "w+") as file:
+			file.write(account)
+			gitAdd("account")
+			gitCommit("Initial commit with account")
 
 	groups = groupInfo["groups"]["items"]
 
@@ -223,8 +225,14 @@ if __name__ == "__main__":
 				gitAdd("activation")
 				author = activation["notifyEmails"][0]
 				date = activation["updateDate"]
-				gitCommit("Activation commit: %s" % activation["activationId"], author, date )
-					
+				propertyName = activation["propertyName"]
+				propertyVersion = activation["propertyVersion"]
+				network = activation["network"]
+				versionString = "%s@%s : %s" % (propertyName, propertyVersion, network)
+				gitCommit("Activation commit: %s\n%s" % (activation["activationId"], versionString), author, date )
+				call(["git","tag", "activation_" + activation["activationId"]])
+			if numberToStart == property["latestVersion"]:
+				continue
 			print("Going from " + str(numberToStart) + " to " +  str(property["latestVersion"]))
 			for version in range(numberToStart, property["latestVersion"]):
 				print "   Getting version %s for %s" % (version, property["propertyName"])
