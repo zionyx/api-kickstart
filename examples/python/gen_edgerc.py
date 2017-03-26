@@ -92,7 +92,8 @@ origConfig.read(filename)
 if section_name_pretty in origConfig.sections():
 	print (">>> Replacing section: %s" % section_name_pretty)
 	sys.stdout.write ("*** OK TO REPLACE section %s? *** [Y|n]:" % section_name_pretty)
-	choice = raw_input().lower()
+	real_raw_input = vars(__builtins__).get('raw_input',input)
+	choice = real_raw_input().lower()
 	if choice == "n":
 		print ("Not replacing section.")
 		exit(0)
