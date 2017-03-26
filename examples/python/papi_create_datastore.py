@@ -38,7 +38,7 @@ import os
 session = requests.Session()
 debug = False
 verbose = False
-section_name = "papi"
+section_name = "papibby"
 
 config = EdgeGridConfig({"verbose":False},section_name)
 
@@ -112,8 +112,7 @@ def getPropertyVersion(property, version):
 								% (property["propertyId"], version),
 								property_parameters)
 	if "hostnames" in hostname_results and "items" in hostname_results["hostnames"] :
-		if len(hostname_results["hostnames"]["items"])> 0:
-			result["hostnames"] = hostname_results["hostnames"]["items"][0]
+		result["hostnames"] = hostname_results["hostnames"]["items"]
 
 	rules_results = httpCaller.getResult('/papi/v0/properties/%s/versions/%s/rules/'
 								% (property["propertyId"], version),

@@ -43,7 +43,7 @@ var eg = new EdgeGrid({
 });
 
 // Retrieve random location, then make a Dig request with it
-async.waterfall([getLocations, makeDigRequest]);
+async.waterfall([getLocations, makeMtrRequest]);
 
 /**
  * Retrieves a list of locations that can perform a dig request, then returns
@@ -95,6 +95,27 @@ function makeDigRequest(location, callback) {
     headers: {},
     body: {},
     qs: digParameters
+  });
+
+  eg.send(function(data, response) {
+    if (verbose) logger.logResponse(response);
+    data = JSON.parse(data);
+    console.log(data.dig.result);
+  });
+}
+
+function makeMtrRequest(location, callback) {
+  var mtrParameters = {
+	"location": location,
+	"destinationDomain":"akamai.com"
+  }
+
+  eg.auth({
+    path: '/diagnostic-tools/v1/mtr',
+    method: 'GET',
+    headers: {},
+    body: {},
+    qs: mtrParameters
   });
 
   eg.send(function(data, response) {

@@ -94,7 +94,7 @@ if section_name_pretty in origConfig.sections():
 	sys.stdout.write ("*** OK TO REPLACE section %s? *** [Y|n]:" % section_name_pretty)
 	choice = raw_input().lower()
 	if choice == "n":
-		print "Not replacing section."
+		print ("Not replacing section.")
 		exit(0)
 
 	replace_section = True
