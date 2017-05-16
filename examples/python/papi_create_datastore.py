@@ -38,7 +38,7 @@ import os
 session = requests.Session()
 debug = False
 verbose = False
-section_name = "papibby"
+section_name = "papi"
 
 config = EdgeGridConfig({"verbose":False},section_name)
 

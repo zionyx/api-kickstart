@@ -28,7 +28,7 @@ import urllib
 session = requests.Session()
 debug = False
 verbose = False
-section_name = "cloudlet"
+section_name = "live"
 
 # Let's set up exactly which policy and version we want to use
 policy = "15927"

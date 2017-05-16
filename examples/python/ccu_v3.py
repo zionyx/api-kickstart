@@ -28,18 +28,24 @@ Add authorization
 Put the credentials in ~/.edgerc as demonstrated by api-kickstart/sample_edgerc
 """
 
-import requests, logging, json
+import requests, logging, json, sys
 from http_calls import EdgeGridHttpCaller
 from random import randint
 from akamai.edgegrid import EdgeGridAuth
 from config import EdgeGridConfig
-from urlparse import urljoin
 import urllib
 import os
 session = requests.Session()
 debug = False
 verbose = False
 section_name = "ccu"
+
+if sys.version_info[0] >= 3:
+     # python3
+     from urllib import parse
+else:
+     # python2.7
+     import urlparse as parse
 
 
 # If all parameters are set already, use them.  Otherwise
