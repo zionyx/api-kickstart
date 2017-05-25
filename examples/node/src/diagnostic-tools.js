@@ -61,9 +61,8 @@ function getLocations(callback) {
 
   eg.send(function(data, response) {
     console.log("Requesting locations that support the diagnostic-tools API...");
-
     // Pick random location
-    data = JSON.parse(data);
+    data = JSON.parse(response.body);
     var locationCount = data.locations.length;
     var location = data.locations[Math.floor(Math.random() * locationCount)];
 
@@ -99,7 +98,7 @@ function makeDigRequest(location, callback) {
 
   eg.send(function(data, response) {
     if (verbose) logger.logResponse(response);
-    data = JSON.parse(data);
+    data = JSON.parse(response.body);
     console.log(data.dig.result);
   });
 }
@@ -120,7 +119,7 @@ function makeMtrRequest(location, callback) {
 
   eg.send(function(data, response) {
     if (verbose) logger.logResponse(response);
-    data = JSON.parse(data);
-    console.log(data.dig.result);
+    data = JSON.parse(response.body);
+    console.log(data.mtr);
   });
 }
