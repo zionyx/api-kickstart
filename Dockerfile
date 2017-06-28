@@ -30,15 +30,9 @@ WORKDIR /opt/examples/node
 RUN npm install
 RUN npm install -g n; n 5.0.0
 WORKDIR /opt
-RUN git clone https://github.com/akamai-open/akamaiconfigkit-public
-RUN cd akamaiconfigkit-public
+RUN git clone https://github.com/akamai/cli-property
+RUN cd cli-property
 RUN npm install
-RUN cd ..
-RUN git clone https://github.com/stedolan/jq.git
-RUN cd jq
-RUN autoreconf -i
-RUN ./configure --disable-maintainer-mode
-RUN make install
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
 RUN cpan -i Akamai::Edgegrid LWP::Protocol::https
