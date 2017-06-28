@@ -21,7 +21,7 @@ RUN pip install httpie-edgegrid
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
 WORKDIR /opt/examples/php
-RUN composer.phar install
+RUN ./composer.phar install
 WORKDIR /opt/examples/ruby
 RUN gem install bundler
 RUN bundler install
