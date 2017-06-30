@@ -28,11 +28,12 @@ RUN bundler install
 RUN gem install akamai-edgegrid
 WORKDIR /opt/examples/node
 RUN npm install
-RUN npm install -g n; n 5.0.0
+RUN npm install -g n; n 7.0.0
 WORKDIR /opt
-RUN git clone https://github.com/akamai/cli-property
-RUN cd cli-property
-RUN npm install
+RUN mkdir /opt/bin
+RUN wget https://github.com/akamai/cli/releases/download/0.1.0/akamai-0.1.0-linuxamd64
+RUN cp akamai-0.1.0-linuxamd64 /opt/bin/akamai
+RUN /opt/bin/akamai get property
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
 RUN cpan -i Akamai::Edgegrid LWP::Protocol::https
