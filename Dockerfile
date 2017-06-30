@@ -33,6 +33,7 @@ WORKDIR /opt
 RUN mkdir /opt/bin
 RUN wget https://github.com/akamai/cli/releases/download/0.1.0/akamai-0.1.0-linuxamd64
 RUN cp akamai-0.1.0-linuxamd64 /opt/bin/akamai
+RUN chmod 755 /opt/bin/akamai
 RUN /opt/bin/akamai get property
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
