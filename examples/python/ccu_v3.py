@@ -75,9 +75,8 @@ httpCaller = EdgeGridHttpCaller(session, debug, verbose, baseurl)
 def postPurgeRequest(action = "invalidate"):
 	
 	purge_obj = {
-		      "hostname": "bc.akamaiapibootcamp.com",
 			"objects" : [
-				"/index.html"
+				"https://bc.akamaiapibootcamp.com/index.html"
 			]
 		    }
 	print ("Adding %s request to queue - %s" % (action, json.dumps(purge_obj)));
