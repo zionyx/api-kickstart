@@ -21,26 +21,27 @@ RUN pip install httpie-edgegrid
 ADD ./examples /opt/examples
 ADD ./contrib/python /opt/examples/python/contrib
 WORKDIR /opt/examples/php
-RUN composer.phar install
+RUN ./composer.phar install
 WORKDIR /opt/examples/ruby
 RUN gem install bundler
 RUN bundler install
 RUN gem install akamai-edgegrid
 WORKDIR /opt/examples/node
 RUN npm install
-RUN npm install -g n; n 5.0.0
+RUN npm install -g n; n 7.0.0
 WORKDIR /opt
-RUN git clone https://github.com/stedolan/jq.git
-RUN cd jq
-RUN autoreconf -i
-RUN ./configure --disable-maintainer-mode
-RUN make install
+RUN mkdir /opt/bin
+RUN wget https://github.com/akamai/cli/releases/download/0.1.0/akamai-0.1.0-linuxamd64
+RUN cp akamai-0.1.0-linuxamd64 /usr/local/bin/akamai
+RUN chmod 755 /usr/local/bin/akamai
+RUN /usr/local/bin/akamai get property
 WORKDIR /opt/examples/python
 RUN python /opt/examples/python/tools/setup.py install
 RUN cpan -i Akamai::Edgegrid LWP::Protocol::https
 ADD ./MOTD /opt/MOTD
 RUN echo "alias gen_edgerc=/opt/examples/python/gen_edgerc.py" >> /root/.bashrc
 RUN echo "alias verify_creds=/opt/examples/python/verify_creds.py" >> /root/.bashrc
+RUN echo "export PATH=${PATH}:/opt/bin"
 RUN echo "cat /opt/MOTD" >> /root/.bashrc
 RUN mkdir /root/.httpie
 ADD ./config.json /root/.httpie/config.json
