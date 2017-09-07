@@ -45,5 +45,5 @@ RUN echo "export PATH=${PATH}:/opt/bin"
 RUN echo "cat /opt/MOTD" >> /root/.bashrc
 RUN mkdir /root/.httpie
 ADD ./config.json /root/.httpie/config.json
-RUN echo "PS1='Akamai API Bootcamp >> '" >> /root/.bashrc
+RUN echo "PS1='DevZone Hands-On Labs  >> '" >> /root/.bashrc
 ENTRYPOINT ["/bin/bash"]
